@@ -14,7 +14,13 @@ public class Problem implements Serializable {
 
     private String title;
 
+    private String description;
+
     private String inputDescription;
 
     private String outputDescription;
+
+    private String dataDescription;
+
+    private int status;
 }
