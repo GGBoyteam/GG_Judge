@@ -1,14 +1,21 @@
 package com.zhangsiyao.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.admin.service.CompileParamService;
 import com.zhangsiyao.admin.service.CompilerService;
 import com.zhangsiyao.admin.service.ExampleService;
 import com.zhangsiyao.admin.service.ProblemService;
+import com.zhangsiyao.common.result.JudgeResult;
+import com.zhangsiyao.common.send.JudgeParam;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.*;
 
 
 @SpringBootTest
@@ -35,6 +42,36 @@ class AdminApplicationTests {
         System.out.println(objectMapper.writeValueAsString(compilerService.query().list()));
         System.out.println(objectMapper.writeValueAsString(compileParamService.query().list()));
         System.out.println(objectMapper.writeValueAsString(exampleService.query().list()));
+    }
+
+
+    String url="http://222.187.223.125:35811/run";
+    @Test
+    void Post() throws JsonProcessingException {
+        JudgeParam param=new JudgeParam();
+        JudgeParam.Cmd cmd=new JudgeParam.Cmd();
+        cmd.setArgs(Arrays.asList("/usr/bin/g++","a.cc","-o","a"));
+        cmd.setEnv(Arrays.asList("PATH=/usr/bin:/bin"));
+        cmd.setFiles(Arrays.asList(
+                new JudgeParam.MemoryFile(""),
+                new JudgeParam.Collector("stdout",10240,false),
+                new JudgeParam.Collector("stderr",10240,false)
+                ));
+        cmd.setCpuLimit(10000000000L);
+        cmd.setMemoryLimit(104857600L);
+        cmd.setProcLimit(50);
+        cmd.getCopyIn().put("a.cc",new JudgeParam.MemoryFile("#include <iostream>\nusing namespace std;\nint main() {\nint a, b;\ncin >> a >> b;\ncout << a + b << endl;\n}"));
+        cmd.setCopyOut(Arrays.asList("stdout", "stderr"));
+        cmd.setCopyOutCached(Arrays.asList("a"));
+        param.getCmd().add(cmd);
+        ObjectMapper objectMapper=new ObjectMapper();
+        RestTemplate restTemplate=new RestTemplate();
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(param),String.class);
+        List<JudgeResult> judgeResults = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
+        });
+        System.out.println(response.getBody());
+
     }
 
 }
