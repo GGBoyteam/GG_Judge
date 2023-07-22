@@ -7,6 +7,7 @@ import com.zhangsiyao.admin.service.CompileParamService;
 import com.zhangsiyao.admin.service.CompilerService;
 import com.zhangsiyao.admin.service.ExampleService;
 import com.zhangsiyao.admin.service.ProblemService;
+import com.zhangsiyao.common.compiler.CppCompiler;
 import com.zhangsiyao.common.result.JudgeResult;
 import com.zhangsiyao.common.send.JudgeParam;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,12 @@ class AdminApplicationTests {
 
     @Autowired
     ExampleService exampleService;
+
+
+    @Test
+    void a(){
+        CppCompiler compiler=new CppCompiler("http://222.187.223.125:35811");
+    }
 
 
     @Test
@@ -68,7 +75,7 @@ class AdminApplicationTests {
         RestTemplate restTemplate=new RestTemplate();
 
         ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(param),String.class);
-        List<JudgeResult> judgeResults = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
+        objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
         });
         System.out.println(response.getBody());
 

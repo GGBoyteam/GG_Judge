@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
+@SuppressWarnings("all")
 public class JudgeParam implements Serializable {
 
     List<Cmd> cmd=new ArrayList<Cmd>();
@@ -17,7 +15,7 @@ public class JudgeParam implements Serializable {
     @Data
     public static class Cmd implements Serializable{
         private List<String> args=new ArrayList<String>(); // 程序命令行参数
-        private List<String> env=new ArrayList<String>(); // 程序环境变量
+        private List<String> env= Arrays.asList("PATH=/usr/bin:/bin"); // 程序环境变量
 
         // 指定标准输入、标准输出和标准错误的文件
         private List<Object> files=new ArrayList<Object>(); // LocalFile | MemoryFile | PreparedFile | Collector
