@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
+@SuppressWarnings("all")
 public class CppCompiler {
 
     private final String judgeServerUrl;
