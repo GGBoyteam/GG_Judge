@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.Serializable;
 import java.util.*;
 
+@SuppressWarnings("all")
 public class JavaCompiler {
 
     private final String judgeServerUrl;
@@ -37,13 +38,14 @@ public class JavaCompiler {
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
-        cmd.setArgs(Arrays.asList("g++","-std=c++"+ cppVersion,"origin.cpp","-o","origin"));
+        cmd.setArgs(Arrays.asList("g++","-std=c++"+ cppVersion,"origin.cpp","-O2","origin"));
         cmd.setFiles(Arrays.<Object>asList(
                 new JudgeParam.Collector("stdout",10240,false),
                 new JudgeParam.Collector("stderr",10240,false)
         ));
-        //设置编译时间限制为10s
-        cmd.setCpuLimit(10000000000L);
+        //设置编译时间限制为600s
+        cmd.setCpuLimit(36000000000L);
+        //设置编译内存限制为256MB
         cmd.setMemoryLimit(268435456L);
         cmd.setProcLimit(50);
         cmd.setStrictMemoryLimit(false);
@@ -57,13 +59,11 @@ public class JavaCompiler {
         JudgeResult judgeResult=judgeResultList.get(0);
         fileId=judgeResult.getFileIds().get("origin");
         fileIds.addAll(judgeResult.getFileIds().values());
+        System.out.println(judgeResult);
         return judgeResult;
     }
 
     public JudgeResult run(long timeLimit,long memoryLimit,String input) throws JsonProcessingException {
-        if(StringUtils.isEmpty(fileId)){
-            return null;
-        }
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
@@ -73,8 +73,8 @@ public class JavaCompiler {
                 new JudgeParam.Collector("stdout",10240,false),
                 new JudgeParam.Collector("stderr",10240,false)
         ));
-        //设置编译时间限制为10s
         cmd.setCpuLimit(timeLimit);
+        cmd.setClockLimit(2*timeLimit);
         cmd.setMemoryLimit(memoryLimit);
         cmd.setProcLimit(50);
         cmd.setStrictMemoryLimit(false);
@@ -92,5 +92,4 @@ public class JavaCompiler {
             restTemplate.delete(url+file);
         }
     }
-
 }

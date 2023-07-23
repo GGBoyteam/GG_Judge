@@ -32,7 +32,6 @@ public class CppCompiler {
     }
 
     public JudgeResult compile(String content) throws JsonProcessingException {
-        System.out.println(content);
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
