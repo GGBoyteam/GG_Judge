@@ -40,10 +40,6 @@ public class JavaCompiler {
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Arrays.asList("/bin/bash", "-c", "javac Main.java && jar cvf Main.jar *.class"));
-        cmd.setFiles(Arrays.<Object>asList(
-                new JudgeParam.Collector("stdout",10240,false),
-                new JudgeParam.Collector("stderr",10240,false)
-        ));
         //设置编译时间限制为600s
         cmd.setCpuLimit(36000000000L);
         //设置编译内存限制为256MB
@@ -69,11 +65,7 @@ public class JavaCompiler {
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Arrays.asList("/usr/bin/java","-cp","Main.jar","Main"));
-        cmd.setFiles(Arrays.<Object>asList(
-                new JudgeParam.MemoryFile(input),
-                new JudgeParam.Collector("stdout",10240,false),
-                new JudgeParam.Collector("stderr",10240,false)
-        ));
+        cmd.getFiles().add(new JudgeParam.MemoryFile(input));
         cmd.setCpuLimit(timeLimit);
         cmd.setClockLimit(2*timeLimit);
         cmd.setMemoryLimit(memoryLimit);

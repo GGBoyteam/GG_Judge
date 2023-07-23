@@ -88,11 +88,6 @@ class AdminApplicationTests {
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Arrays.asList("/usr/bin/g++","a.cc","-o","a"));
         cmd.setEnv(Arrays.asList("PATH=/usr/bin:/bin"));
-        cmd.setFiles(Arrays.asList(
-                new JudgeParam.MemoryFile(""),
-                new JudgeParam.Collector("stdout",10240,false),
-                new JudgeParam.Collector("stderr",10240,false)
-                ));
         cmd.setCpuLimit(10000000000L);
         cmd.setMemoryLimit(104857600L);
         cmd.setProcLimit(50);

@@ -1,7 +1,6 @@
 package com.zhangsiyao.common.send;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -17,8 +16,13 @@ public class JudgeParam implements Serializable {
         private List<String> args=new ArrayList<String>(); // 程序命令行参数
         private List<String> env= Arrays.asList("PATH=/usr/bin:/bin"); // 程序环境变量
 
+        @Getter
+        @Setter(AccessLevel.NONE)
         // 指定标准输入、标准输出和标准错误的文件
-        private List<Object> files=new ArrayList<Object>(); // LocalFile | MemoryFile | PreparedFile | Collector
+        private List<Object> files=new ArrayList<Object>(Arrays.<Object>asList(
+                new JudgeParam.Collector("stdout",10240,false),
+                new JudgeParam.Collector("stderr",10240,false)
+        )); // LocalFile | MemoryFile | PreparedFile | Collector
         private boolean tty; // 开启 TTY (需要保证标准输出和标准错误为同一文件)同时需要指定 TERM 环境变量 (例如 TERM=xterm)
 
         // 资源限制

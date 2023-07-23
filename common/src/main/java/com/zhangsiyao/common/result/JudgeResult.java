@@ -1,6 +1,7 @@
 package com.zhangsiyao.common.result;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.zhangsiyao.common.send.JudgeParam;
 import lombok.Data;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,6 +23,13 @@ public class JudgeResult implements Serializable {
     private Map<String, String> fileIds; // copyFileCached 指定的文件 id
     private List<FileError> fileError; // 文件错误详细信息
 
+    public String getOutput(){
+        if(status!=Status.Accepted){
+            return files.get("stderr");
+        }else {
+            return files.get("stdout");
+        }
+    }
 
     @Data
     public static class FileError implements Serializable{
@@ -86,5 +94,6 @@ public class JudgeResult implements Serializable {
             this.name = name;
         }
     }
+
 
 }

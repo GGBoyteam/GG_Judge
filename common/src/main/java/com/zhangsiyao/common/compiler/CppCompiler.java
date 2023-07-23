@@ -37,10 +37,6 @@ public class CppCompiler {
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Arrays.asList("g++","-O2","-std=c++"+ cppVersion,"origin.cpp","-o","origin"));
-        cmd.setFiles(Arrays.<Object>asList(
-                new JudgeParam.Collector("stdout",10240,false),
-                new JudgeParam.Collector("stderr",10240,false)
-        ));
         //设置编译时间限制为600s
         cmd.setCpuLimit(36000000000L);
         //设置编译内存限制为256MB
@@ -66,11 +62,7 @@ public class CppCompiler {
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Collections.singletonList("origin"));
-        cmd.setFiles(Arrays.<Object>asList(
-                new JudgeParam.MemoryFile(input),
-                new JudgeParam.Collector("stdout",10240,false),
-                new JudgeParam.Collector("stderr",10240,false)
-        ));
+        cmd.getFiles().add(new JudgeParam.MemoryFile(input));
         //设置编译时间限制为10s
         cmd.setCpuLimit(timeLimit);
         cmd.setClockLimit(2*timeLimit);
