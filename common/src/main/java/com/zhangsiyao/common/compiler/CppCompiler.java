@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-@SuppressWarnings("all")
+@SuppressWarnings("allap")
 public class CppCompiler {
 
     private final String judgeServerUrl;
@@ -36,7 +36,7 @@ public class CppCompiler {
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
-        cmd.setArgs(Arrays.asList("g++","-std=c++"+ cppVersion,"origin.cpp","-O2","origin"));
+        cmd.setArgs(Arrays.asList("g++","-O2","-std=c++"+ cppVersion,"origin.cpp","-o","origin"));
         cmd.setFiles(Arrays.<Object>asList(
                 new JudgeParam.Collector("stdout",10240,false),
                 new JudgeParam.Collector("stderr",10240,false)
@@ -49,7 +49,7 @@ public class CppCompiler {
         cmd.setStrictMemoryLimit(false);
         cmd.getCopyIn().put("origin.cpp",new JudgeParam.MemoryFile(content));
         cmd.setCopyOut(Arrays.asList("stdout", "stderr"));
-        cmd.setCopyOutCached(Arrays.asList("origin.cpp","origin"));
+        cmd.setCopyOutCached(Collections.singletonList("origin"));
         judgeParam.getCmd().add(cmd);
         ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(judgeParam), String.class);
         List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {

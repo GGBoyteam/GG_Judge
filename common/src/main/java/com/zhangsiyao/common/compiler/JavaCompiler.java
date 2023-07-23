@@ -17,7 +17,7 @@ public class JavaCompiler {
 
     private final String judgeServerUrl;
 
-    private int cppVersion=11;
+    private int javaVersion=8;
 
     private String fileId=null;
 
@@ -29,16 +29,17 @@ public class JavaCompiler {
     private final ObjectMapper objectMapper=new ObjectMapper();
 
 
-    public JavaCompiler(String judgeServerUrl,int cppVersion) {
+    public JavaCompiler(String judgeServerUrl,int javaVersion) {
         this.judgeServerUrl = judgeServerUrl;
-        this.cppVersion=cppVersion;
+        this.javaVersion=javaVersion;
     }
 
     public JudgeResult compile(String content) throws JsonProcessingException {
+        System.out.println(content);
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
-        cmd.setArgs(Arrays.asList("g++","-std=c++"+ cppVersion,"origin.cpp","-O2","origin"));
+        cmd.setArgs(Arrays.asList("/bin/bash", "-c", "javac Main.java && jar cvf Main.jar *.class"));
         cmd.setFiles(Arrays.<Object>asList(
                 new JudgeParam.Collector("stdout",10240,false),
                 new JudgeParam.Collector("stderr",10240,false)
@@ -49,15 +50,15 @@ public class JavaCompiler {
         cmd.setMemoryLimit(268435456L);
         cmd.setProcLimit(50);
         cmd.setStrictMemoryLimit(false);
-        cmd.getCopyIn().put("origin.cpp",new JudgeParam.MemoryFile(content));
+        cmd.getCopyIn().put("Main.java",new JudgeParam.MemoryFile(content));
         cmd.setCopyOut(Arrays.asList("stdout", "stderr"));
-        cmd.setCopyOutCached(Arrays.asList("origin.cpp","origin"));
+        cmd.setCopyOutCached(Arrays.asList("Main.jar"));
         judgeParam.getCmd().add(cmd);
         ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(judgeParam), String.class);
         List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
         });
         JudgeResult judgeResult=judgeResultList.get(0);
-        fileId=judgeResult.getFileIds().get("origin");
+        fileId=judgeResult.getFileIds().get("Main.jar");
         fileIds.addAll(judgeResult.getFileIds().values());
         System.out.println(judgeResult);
         return judgeResult;
@@ -67,7 +68,7 @@ public class JavaCompiler {
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
-        cmd.setArgs(Collections.singletonList("origin"));
+        cmd.setArgs(Arrays.asList("/usr/bin/java","-cp","Main.jar","Main"));
         cmd.setFiles(Arrays.<Object>asList(
                 new JudgeParam.MemoryFile(input),
                 new JudgeParam.Collector("stdout",10240,false),
@@ -78,11 +79,12 @@ public class JavaCompiler {
         cmd.setMemoryLimit(memoryLimit);
         cmd.setProcLimit(50);
         cmd.setStrictMemoryLimit(false);
-        cmd.getCopyIn().put("origin",new JudgeParam.PreparedFile(fileId));
+        cmd.getCopyIn().put("Main.jar",new JudgeParam.PreparedFile(fileId));
         judgeParam.getCmd().add(cmd);
         ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(judgeParam), String.class);
         List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
         });
+        System.out.println(judgeResultList.get(0));
         return judgeResultList.get(0);
     }
 
