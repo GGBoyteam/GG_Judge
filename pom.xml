@@ -11,9 +11,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>admin</module>
-        <module>common</module>
-        <module>user</module>
+        <module>GG_admin</module>
+        <module>GG_common</module>
+        <module>GG_user</module>
+        <module>GG_gateway</module>
     </modules>
 
 </project>

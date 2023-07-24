@@ -1,0 +1,10 @@
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://222.187.223.125:18848/
+        username: listen
+        password: listen
+  application:
+    name: adawd
