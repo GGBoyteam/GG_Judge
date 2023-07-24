@@ -14,6 +14,7 @@
         <module>admin</module>
         <module>common</module>
         <module>user</module>
+        <module>gateway</module>
     </modules>
 
 </project>
