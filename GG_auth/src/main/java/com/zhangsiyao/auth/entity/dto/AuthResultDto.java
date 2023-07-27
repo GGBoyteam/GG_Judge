@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class LoginResultDto implements Serializable {
-    private String message;
+public class AuthResultDto implements Serializable {
     private String token;
+    private Long empireTime;
 }

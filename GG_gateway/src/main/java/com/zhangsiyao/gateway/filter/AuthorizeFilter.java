@@ -34,7 +34,7 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
-        if(request.getURI().getPath().equals("/login")||request.getURI().getPath().equals("/register")){
+        if(request.getURI().getPath().equals("/auth/login")||request.getURI().getPath().equals("/auth/register")){
             return chain.filter(exchange);
         }
         List<String> token = request.getHeaders().get(USER_TOKEN);
