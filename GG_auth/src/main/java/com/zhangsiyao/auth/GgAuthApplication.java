@@ -1,4 +1,4 @@
-package com.zhangsiyao.gg_auth;
+package com.zhangsiyao.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.zhangsiyao.gg_auth;
+package com.zhangsiyao.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

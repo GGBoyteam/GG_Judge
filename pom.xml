@@ -14,6 +14,7 @@
         <module>GG_admin</module>
         <module>GG_common</module>
         <module>GG_user</module>
+        <module>GG_auth</module>
         <module>GG_gateway</module>
     </modules>
 
