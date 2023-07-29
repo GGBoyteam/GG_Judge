@@ -1,6 +1,6 @@
 package com.zhangsiyao.auth.mapper;
 
-import com.zhangsiyao.auth.entity.dao.Userlogin;
+import com.zhangsiyao.auth.entity.dao.UserLogin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-07-27
  */
 @Mapper
-public interface UserloginMapper extends BaseMapper<Userlogin> {
+public interface UserloginMapper extends BaseMapper<UserLogin> {
 
 }

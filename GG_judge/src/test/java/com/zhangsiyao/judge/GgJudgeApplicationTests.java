@@ -1,0 +1,23 @@
+package com.zhangsiyao.judge;
+
+import com.zhangsiyao.judge.entity.vo.RoleQueryVo;
+import com.zhangsiyao.judge.service.IRoleService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class GgJudgeApplicationTests {
+
+    @Autowired
+    IRoleService roleService;
+
+    @Test
+    void contextLoads() {
+        RoleQueryVo roleQueryVo=new RoleQueryVo();
+        roleQueryVo.setPageNum(1L);
+        roleQueryVo.setPageSize(20L);
+        roleService.list(roleQueryVo);
+    }
+
+}

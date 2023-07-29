@@ -23,7 +23,7 @@ import java.util.List;
 
 @Component
 @Order(-1)
-public class AuthorizeFilter implements GlobalFilter, Ordered {
+public class AuthorizeFilter implements GlobalFilter{
 
     @Autowired
     StringRedisTemplate redisTemplate;
@@ -34,10 +34,19 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
-        if(request.getURI().getPath().equals("/auth/login")||request.getURI().getPath().equals("/auth/register")){
+        List<String> token = request.getHeaders().get(USER_TOKEN);
+        String path=request.getURI().getPath();
+        System.out.println(path.matches("/auth/.*"));
+        if(path.matches("/auth/.*")){
+            if(token!=null&&token.size()>0){
+                String t=token.get(0);
+                String key=redisTemplate.opsForValue().get(t);
+                if (key!=null){
+                    return out(response,"你已经登陆过了");
+                }
+            }
             return chain.filter(exchange);
         }
-        List<String> token = request.getHeaders().get(USER_TOKEN);
         if(token==null||token.size()==0){
             return out(response,"验证失败");
         }
@@ -60,8 +69,4 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
         return response.writeWith(Mono.just(buffer));
     }
 
-    @Override
-    public int getOrder() {
-        return -1;
-    }
 }
