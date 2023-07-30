@@ -125,8 +125,10 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
 
     @Override
     public void addRoute(RouteAddOrUpdateVo routeAddOrUpdateVo) {
+        routeAddOrUpdateVo.setName(routeAddOrUpdateVo.getPath());
         if(routeAddOrUpdateVo.getRouteType().equals("M")){
             routeAddOrUpdateVo.setComponent("Layout");
+            routeAddOrUpdateVo.setAlwaysShow(true);
             routeAddOrUpdateVo.setRedirect("noRedirect");
         }else if(routeAddOrUpdateVo.getRouteType().equals("F")){
             routeAddOrUpdateVo.setComponent(null);
