@@ -33,7 +33,7 @@ export function register(data) {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    url: '/judge-service/user/getInfo',
+    url: '/system-service/user/getInfo',
     method: 'get'
   })
 }

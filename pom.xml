@@ -17,7 +17,7 @@
         <module>GG_common</module>
         <module>GG_auth</module>
         <module>GG_gateway</module>
-        <module>GG_judge</module>
+        <module>GG_system</module>
     </modules>
 
 </project>

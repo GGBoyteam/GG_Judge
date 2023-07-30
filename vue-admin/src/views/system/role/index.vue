@@ -203,7 +203,7 @@
 
 <script setup name="Role">
 import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role";
-import { roleMenuTreeselect, treeselect as menuTreeselect } from "@/api/system/menu";
+import { roleRouteTreeSelect, treeSelect as menuTreeselect } from "@/api/system/route";
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -265,7 +265,7 @@ function resetQuery() {
 }
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const roleIds = row.roleId || ids.value;
+  const roleIds = row.id || ids.value;
   proxy.$modal.confirm('是否确认删除角色编号为"' + roleIds + '"的数据项?').then(function () {
     return delRole(roleIds);
   }).then(() => {
@@ -299,7 +299,7 @@ function handleStatusChange(row) {
 
 /** 分配用户 */
 function handleAuthUser(row) {
-  router.push("/system/role-auth/user/" + row.roleId);
+  router.push("/system/role-auth/user/" + row.id);
 }
 /** 查询菜单树结构 */
 function getMenuTreeselect() {
@@ -362,7 +362,7 @@ function handleUpdate(row) {
 }
 /** 根据角色ID查询菜单树结构 */
 function getRoleMenuTreeselect(roleId) {
-  return roleMenuTreeselect(roleId).then(response => {
+  return roleRouteTreeSelect(roleId).then(response => {
     menuOptions.value = response.data.menus;
     console.log("菜单",response.data.menus)
      menuRef.value.setCheckedKeys(response.data.checkedKeys);

@@ -42,6 +42,7 @@ const useUserStore = defineStore(
               this.roles=[]
               this.roles.push(user.info.roleId)
               this.permissions=[]
+              this.permissions.push("#")
               user.permissions.forEach((permission)=>{
                 this.permissions.push(permission.permission)
               })
