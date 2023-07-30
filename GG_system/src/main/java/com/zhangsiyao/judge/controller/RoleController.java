@@ -20,8 +20,7 @@ public class RoleController {
     @Autowired
     IRoleService roleService;
     @GetMapping("/list")
-    public R<Page<Role>> list(RoleQueryVo queryVo){
-        System.out.println(queryVo);
+    public R<Page<Role>> list( RoleQueryVo queryVo){
         return R.success(roleService.list(queryVo));
     }
 

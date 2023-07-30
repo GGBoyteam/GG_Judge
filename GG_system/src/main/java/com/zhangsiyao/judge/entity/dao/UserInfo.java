@@ -34,7 +34,11 @@ public class UserInfo implements Serializable {
      */
     private Long roleId;
 
+    private Long phone;
+
     private String username;
+
+    private Integer status;
 
 
 }
