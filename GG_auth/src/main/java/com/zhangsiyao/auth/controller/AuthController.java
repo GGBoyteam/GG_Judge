@@ -3,7 +3,7 @@ package com.zhangsiyao.auth.controller;
 import com.zhangsiyao.auth.entity.dto.AuthResultDto;
 import com.zhangsiyao.auth.entity.vo.UserPasswordVo;
 import com.zhangsiyao.auth.service.IUserloginService;
-import com.zhangsiyao.common.result.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

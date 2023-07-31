@@ -1,10 +1,10 @@
 package com.zhangsiyao.auth.service;
 
-import com.zhangsiyao.auth.entity.dao.UserLogin;
+import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.auth.entity.dto.AuthResultDto;
 import com.zhangsiyao.auth.entity.vo.UserPasswordVo;
-import com.zhangsiyao.common.result.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 
 /**
  * <p>

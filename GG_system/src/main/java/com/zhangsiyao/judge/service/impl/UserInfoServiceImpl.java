@@ -5,10 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangsiyao.common.result.R;
+import com.zhangsiyao.common.entity.dto.R;
 import com.zhangsiyao.judge.entity.dao.RolePermission;
 import com.zhangsiyao.judge.entity.dao.UserInfo;
-import com.zhangsiyao.judge.entity.dto.UserDto;
 import com.zhangsiyao.judge.entity.dto.UserInfoDto;
 import com.zhangsiyao.judge.entity.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.judge.entity.vo.UserQueryVo;
@@ -16,15 +15,12 @@ import com.zhangsiyao.judge.mapper.UserInfoMapper;
 import com.zhangsiyao.judge.service.IRolePermissionService;
 import com.zhangsiyao.judge.service.IUserInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.catalina.User;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

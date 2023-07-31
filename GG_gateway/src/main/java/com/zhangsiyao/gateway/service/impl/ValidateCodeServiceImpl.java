@@ -2,8 +2,8 @@ package com.zhangsiyao.gateway.service.impl;
 
 import cn.hutool.core.codec.Base64;
 import com.google.code.kaptcha.Producer;
+import com.zhangsiyao.common.entity.dto.R;
 import com.zhangsiyao.gateway.constant.Constants;
-import com.zhangsiyao.gateway.entity.vo.R;
 import com.zhangsiyao.gateway.service.ValidateCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

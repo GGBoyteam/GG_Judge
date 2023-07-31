@@ -2,7 +2,6 @@ package com.zhangsiyao.judge.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zhangsiyao.common.result.R;
 import com.zhangsiyao.judge.entity.dao.RolePermission;
 import com.zhangsiyao.judge.entity.dao.Route;
 import com.zhangsiyao.judge.entity.dto.DynamicRouteDto;

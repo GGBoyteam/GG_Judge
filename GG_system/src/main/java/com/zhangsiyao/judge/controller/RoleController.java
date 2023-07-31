@@ -1,7 +1,7 @@
 package com.zhangsiyao.judge.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zhangsiyao.common.result.R;
+import com.zhangsiyao.common.entity.dto.R;
 import com.zhangsiyao.judge.entity.dao.Role;
 import com.zhangsiyao.judge.entity.dto.RolePermissionDto;
 import com.zhangsiyao.judge.entity.vo.RoleQueryVo;
@@ -10,7 +10,6 @@ import com.zhangsiyao.judge.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController

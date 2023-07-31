@@ -2,14 +2,16 @@ package com.zhangsiyao.auth.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.auth.component.Md5Component;
-import com.zhangsiyao.auth.entity.dao.UserLogin;
+import com.zhangsiyao.common.component.JwtComponent;
+import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.auth.entity.dto.AuthResultDto;
 import com.zhangsiyao.auth.entity.vo.UserPasswordVo;
+import com.zhangsiyao.auth.exception.LoginException;
+import com.zhangsiyao.auth.exception.RegisterException;
 import com.zhangsiyao.auth.mapper.UserloginMapper;
 import com.zhangsiyao.auth.service.IUserloginService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zhangsiyao.common.component.JwtComponent;
-import com.zhangsiyao.common.result.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -38,11 +40,12 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
     @Autowired
     JwtComponent jwtComponent;
 
+    @SneakyThrows
     @Override
     public R<AuthResultDto> register(UserPasswordVo passwordVo) {
         List<UserLogin> list = this.query().eq("username",passwordVo.getUsername()).list();
         if(list.size()>0){
-            return R.error("账号已经被注册");
+            throw new RegisterException("账号已经被注册");
         }
         UserLogin userlogin=new UserLogin();
         userlogin.setUsername(passwordVo.getUsername());
@@ -57,10 +60,10 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
         UserLogin user = this.query().eq("username", passwordVo.getUsername()).one();
         String inputPassword=md5Component.md5Hex(passwordVo.getPassword());
         if(user==null){
-            return R.error("登录失败，账号不存在");
+            throw new LoginException("登录失败，账号不存在");
         }
         if(!user.getPassword().equals(inputPassword)){
-            return R.error("登录失败，密码错误");
+            throw new LoginException("登录失败，密码错误");
         }
         String token = jwtComponent.createToken(user.getUsername());
         ObjectMapper objectMapper=new ObjectMapper();

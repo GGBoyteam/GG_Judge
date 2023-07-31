@@ -1,4 +1,4 @@
-package com.zhangsiyao.auth.entity.dao;
+package com.zhangsiyao.common.entity.auth.dao;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;

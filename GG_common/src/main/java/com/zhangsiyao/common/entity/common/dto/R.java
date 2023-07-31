@@ -1,4 +1,4 @@
-package com.zhangsiyao.common.result;
+package com.zhangsiyao.common.entity.common.dto;
 
 
 
