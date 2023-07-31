@@ -1,7 +1,7 @@
 package com.zhangsiyao.gateway.service;
 
 
-import com.zhangsiyao.common.entity.dto.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 
 import java.io.IOException;
 

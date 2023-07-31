@@ -1,6 +1,6 @@
 package com.zhangsiyao.gateway.handle;
 
-import com.zhangsiyao.common.entity.dto.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.gateway.service.ValidateCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

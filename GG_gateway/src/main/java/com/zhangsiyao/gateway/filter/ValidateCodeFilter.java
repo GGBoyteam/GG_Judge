@@ -2,7 +2,7 @@ package com.zhangsiyao.gateway.filter;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.zhangsiyao.common.entity.dto.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.gateway.service.ValidateCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;

@@ -1,6 +1,6 @@
 package com.zhangsiyao.judge.controller;
 
-import com.zhangsiyao.common.entity.dto.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.judge.entity.dao.Route;
 import com.zhangsiyao.judge.entity.dto.DynamicRouteDto;
 import com.zhangsiyao.judge.entity.dto.RouteTreeNode;

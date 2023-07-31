@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangsiyao.common.entity.dto.R;
+import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.judge.entity.dao.RolePermission;
 import com.zhangsiyao.judge.entity.dao.UserInfo;
 import com.zhangsiyao.judge.entity.dto.UserInfoDto;
