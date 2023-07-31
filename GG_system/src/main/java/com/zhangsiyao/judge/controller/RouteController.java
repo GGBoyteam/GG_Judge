@@ -1,5 +1,7 @@
 package com.zhangsiyao.judge.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.result.R;
 import com.zhangsiyao.judge.entity.dao.Route;
 import com.zhangsiyao.judge.entity.dto.DynamicRouteDto;
@@ -42,21 +44,21 @@ public class RouteController {
         return R.success(route);
     }
 
-    @PutMapping("/update")
-    public R<String> update(@RequestBody RouteAddOrUpdateVo updateVo){
-        routeService.updateById(updateVo);
-        return R.success();
-    }
-
-    @PostMapping("/add")
-    public R<String> add(@RequestBody RouteAddOrUpdateVo updateVo){
-        routeService.addRoute(updateVo);
+    @PostMapping("/addOrUpdate")
+    public R<String> add(@RequestBody RouteAddOrUpdateVo updateVo) {
+        routeService.addOrUpdateRoute(updateVo);
         return R.success();
     }
 
     @DeleteMapping("/delete/{id}")
     public R<String> delete(@PathVariable String id){
         routeService.deleteRoute(id);
+        return R.success();
+    }
+
+    @PostMapping("/changeStatus/{id}")
+    public R<String> changeStatus(@PathVariable String id){
+        routeService.changeStatus(id);
         return R.success();
     }
 

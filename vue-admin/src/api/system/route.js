@@ -36,7 +36,7 @@ export function roleRouteTreeSelect(roleId) {
 // 新增菜单
 export function addRoute(data) {
   return request({
-    url: '/system-service/route/add',
+    url: '/system-service/route/addOrUpdate',
     method: 'post',
     data: data
   })
@@ -45,8 +45,8 @@ export function addRoute(data) {
 // 修改菜单
 export function updateRoute(data) {
   return request({
-    url: '/system-service/route/update',
-    method: 'put',
+    url: '/system-service/route/addOrUpdate',
+    method: 'post',
     data: data
   })
 }
@@ -56,5 +56,14 @@ export function delRoute(id) {
   return request({
     url: '/system-service/route/delete/' +id,
     method: 'delete'
+  })
+}
+
+
+// 改变状态
+export function changeStatus(id) {
+  return request({
+    url: '/system-service/route/changeStatus/' +id,
+    method: 'post'
   })
 }

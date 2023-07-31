@@ -1,14 +1,12 @@
 package com.zhangsiyao.judge.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.result.R;
 import com.zhangsiyao.judge.entity.dao.UserInfo;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.judge.entity.dto.UserDto;
 import com.zhangsiyao.judge.entity.dto.UserInfoDto;
+import com.zhangsiyao.judge.entity.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.judge.entity.vo.UserQueryVo;
-
-import java.util.List;
 
 /**
  * <p>
@@ -22,4 +20,6 @@ public interface IUserInfoService extends IService<UserInfo> {
     R<UserInfoDto> getInfo(String token);
 
     Page<UserInfo> list(UserQueryVo queryVo);
+
+    void addOrUpdate(UserAddOrUpdateVo addOrUpdateVo);
 }

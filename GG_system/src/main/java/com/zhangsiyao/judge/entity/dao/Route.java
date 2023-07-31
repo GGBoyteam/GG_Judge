@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
-import java.sql.DataTruncation;
-import java.sql.Date;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -59,13 +59,14 @@ public class Route implements Serializable {
      */
     private String permission;
 
-    private Boolean hidden;
+    private Integer hidden;
 
-    private Boolean alwaysShow;
+    private Integer alwaysShow;
 
     private String redirect;
 
-    private Date createDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date createTime;
 
     private Integer status;
 
@@ -77,13 +78,14 @@ public class Route implements Serializable {
 
     private String icon;
 
-    private Boolean breadcrumb;
+    private Integer breadcrumb;
 
     private String activeMenu;
 
     private String link;
 
     private String routeType;
+
 
     @TableField(exist = false)
     private Integer isFrame;

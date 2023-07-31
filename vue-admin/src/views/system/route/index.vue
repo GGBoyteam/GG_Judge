@@ -1,10 +1,10 @@
 <template>
    <div class="app-container">
       <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
-         <el-form-item label="路由名称" prop="title">
+         <el-form-item label="路由标题" prop="title">
             <el-input
                v-model="queryParams.title"
-               placeholder="请输入路由名称"
+               placeholder="请输入路由标题"
                clearable
                style="width: 200px"
                @keyup.enter="handleQuery"
@@ -59,7 +59,8 @@
          :default-expand-all="isExpandAll"
          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
-         <el-table-column prop="title" label="路由名称" :show-overflow-tooltip="true" width="160"></el-table-column>
+         <el-table-column prop="title" label="路由标题" :show-overflow-tooltip="true" width="160"></el-table-column>
+         <el-table-column prop="name" label="路由名称" :show-overflow-tooltip="true" width="160"></el-table-column>
          <el-table-column prop="icon" label="图标" align="center" width="100">
             <template #default="scope">
                <svg-icon :icon-class="scope.row.icon" />
@@ -78,12 +79,12 @@
                ></el-switch>
             </template>
          </el-table-column>
-         <el-table-column label="创建时间" align="center" width="160" prop="createTime">
+         <el-table-column label="创建时间" align="center" width="320" prop="createTime">
             <template #default="scope">
-               <span>{{ parseTime(scope.row.createTime) }}</span>
+               <span>{{ scope.row.createTime }}</span>
             </template>
          </el-table-column>
-         <el-table-column label="操作" align="center" width="210" class-name="small-padding fixed-width">
+         <el-table-column label="操作" align="center" width="400  " class-name="small-padding fixed-width">
             <template #default="scope">
                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']">修改</el-button>
                <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']">新增</el-button>
@@ -143,9 +144,22 @@
                      </el-popover>
                   </el-form-item>
                </el-col>
+              <el-col :span="12">
+                <el-form-item prop="name">
+                  <template #label>
+                        <span>
+                           <el-tooltip content="路由的唯一标识名称，请确保此项的值唯一" placement="top">
+                              <el-icon><question-filled /></el-icon>
+                           </el-tooltip>
+                           路由名称
+                        </span>
+                  </template>
+                  <el-input v-model="form.name" placeholder="请输入路由名称" />
+                </el-form-item>
+              </el-col>
                <el-col :span="12">
-                  <el-form-item label="路由名称" prop="title">
-                     <el-input v-model="form.title" placeholder="请输入路由名称" />
+                  <el-form-item label="路由标题" prop="title">
+                     <el-input v-model="form.title" placeholder="请输入路由标题" />
                   </el-form-item>
                </el-col>
                <el-col :span="12">
@@ -248,10 +262,13 @@
                      </template>
                      <el-radio-group v-model="form.hidden">
                         <el-radio
-                           v-for="dict in sys_show_hide"
-                           :key="dict.value"
-                           :label="dict.value"
-                        >{{ dict.label }}</el-radio>
+                           :key="0"
+                           :label="0"
+                        >显示</el-radio>
+                       <el-radio
+                           :key="1"
+                           :label="1"
+                       >隐藏</el-radio>
                      </el-radio-group>
                   </el-form-item>
                </el-col>
@@ -267,10 +284,13 @@
                      </template>
                      <el-radio-group v-model="form.status">
                         <el-radio
-                           v-for="dict in sys_normal_disable"
-                           :key="dict.value"
-                           :label="dict.value"
-                        >{{ dict.label }}</el-radio>
+                           :key="0"
+                           :label="0"
+                        >启用</el-radio>
+                       <el-radio
+                           :key="1"
+                           :label="1"
+                       >禁用</el-radio>
                      </el-radio-group>
                   </el-form-item>
                </el-col>
@@ -287,7 +307,7 @@
 </template>
 
 <script setup name="Menu">
-import { addRoute, delRoute, getRoute, listRoute, updateRoute } from "@/api/system/route";
+import { addRoute, delRoute, getRoute, listRoute, updateRoute ,changeStatus} from "@/api/system/route";
 import SvgIcon from "@/components/SvgIcon";
 import IconSelect from "@/components/IconSelect";
 import { ClickOutside as vClickOutside } from 'element-plus'
@@ -311,7 +331,7 @@ const data = reactive({
     hidden: undefined
   },
   rules: {
-    title: [{ required: true, message: "路由名称不能为空", trigger: "blur" }],
+    title: [{ required: true, message: "路由标题不能为空", trigger: "blur" }],
     sort: [{ required: true, message: "路由顺序不能为空", trigger: "blur" }],
     path: [{ required: true, message: "路由地址不能为空", trigger: "blur" }]
   },
@@ -328,6 +348,13 @@ function getList() {
     loading.value = false;
   });
 }
+function handleStatusChange(row){
+  const id=row.id;
+  changeStatus(id).then(res=>{
+    getList()
+  })
+}
+
 function generateTree(id,data){
    let result=[];
    data.forEach((route)=>{
@@ -366,6 +393,7 @@ function reset() {
   form.value = {
     id: undefined,
     parent: 0,
+    name: undefined,
     title: undefined,
     icon: undefined,
     c: "M",
@@ -456,7 +484,7 @@ function submitForm() {
 }
 /** 删除按钮操作 */
 function handleDelete(row) {
-  proxy.$modal.confirm('是否确认删除名称为"' + row.title + '"的数据项?').then(function() {
+  proxy.$modal.confirm('是否确认删除标题为"' + row.title + '"的数据项?').then(function() {
     return delRoute(row.id);
   }).then(() => {
     getList();

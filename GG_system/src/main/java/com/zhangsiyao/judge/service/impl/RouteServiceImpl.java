@@ -108,36 +108,25 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void updateRoute(RouteAddOrUpdateVo routeAddOrUpdateVo) {
-        if(routeAddOrUpdateVo.getRouteType().equals("M")){
-            routeAddOrUpdateVo.setComponent("Layout");
-            routeAddOrUpdateVo.setRedirect("noRedirect");
-        }else if(routeAddOrUpdateVo.getRouteType().equals("F")){
-            routeAddOrUpdateVo.setComponent(null);
-            routeAddOrUpdateVo.setPath(null);
-        }
-        if(routeAddOrUpdateVo.getIsFrame()==0){
-            routeAddOrUpdateVo.setLink(routeAddOrUpdateVo.getPath());
-        }
-        this.updateById(routeAddOrUpdateVo);
-    }
 
     @Override
-    public void addRoute(RouteAddOrUpdateVo routeAddOrUpdateVo) {
-        routeAddOrUpdateVo.setName(routeAddOrUpdateVo.getPath());
-        if(routeAddOrUpdateVo.getRouteType().equals("M")){
+    @Transactional(rollbackFor = {java.lang.Exception.class})
+    public void addOrUpdateRoute(RouteAddOrUpdateVo routeAddOrUpdateVo) {
+        if(routeAddOrUpdateVo.getParent()==0L&&!routeAddOrUpdateVo.getPath().startsWith("/")){
+            routeAddOrUpdateVo.setPath("/"+routeAddOrUpdateVo.getPath());
+        }
+        if("M".equals(routeAddOrUpdateVo.getRouteType())){
             routeAddOrUpdateVo.setComponent("Layout");
-            routeAddOrUpdateVo.setAlwaysShow(true);
+            routeAddOrUpdateVo.setAlwaysShow(0);
             routeAddOrUpdateVo.setRedirect("noRedirect");
-        }else if(routeAddOrUpdateVo.getRouteType().equals("F")){
+        }else if("F".equals(routeAddOrUpdateVo.getRouteType())){
             routeAddOrUpdateVo.setComponent(null);
             routeAddOrUpdateVo.setPath(null);
         }
         if(routeAddOrUpdateVo.getIsFrame()==0){
             routeAddOrUpdateVo.setLink(routeAddOrUpdateVo.getPath());
         }
-        this.save(routeAddOrUpdateVo);
+        this.saveOrUpdate(routeAddOrUpdateVo);
     }
 
     @Override
@@ -161,6 +150,13 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
         LambdaQueryWrapper<RolePermission> rolePermissionQuery=new LambdaQueryWrapper<>();
         rolePermissionQuery=rolePermissionQuery.eq(RolePermission::getRouteId,id);
         rolePermissionService.getBaseMapper().delete(rolePermissionQuery);
+    }
+
+    @Override
+    public void changeStatus(String id) {
+        Route route = this.getById(id);
+        route.setStatus(1-route.getStatus());
+        this.updateById(route);
     }
 
 }

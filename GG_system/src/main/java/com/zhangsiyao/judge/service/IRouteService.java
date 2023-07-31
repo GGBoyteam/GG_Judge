@@ -24,11 +24,12 @@ public interface IRouteService extends IService<Route> {
 
     List<RouteTreeNode> getRouteTree();
 
-    void updateRoute(RouteAddOrUpdateVo routeAddOrUpdateVo);
 
-    void addRoute(RouteAddOrUpdateVo routeAddOrUpdateVo);
+    void addOrUpdateRoute(RouteAddOrUpdateVo routeAddOrUpdateVo);
 
     void deleteRoute(String id);
+
+    void changeStatus(String id);
 
 
 }

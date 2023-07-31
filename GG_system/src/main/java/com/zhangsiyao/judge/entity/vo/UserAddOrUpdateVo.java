@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.entity.dto;
+package com.zhangsiyao.judge.entity.vo;
 
 import com.zhangsiyao.judge.entity.dao.UserInfo;
 import lombok.Data;
@@ -8,5 +8,5 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserDto extends UserInfo implements Serializable {
+public class UserAddOrUpdateVo extends UserInfo implements Serializable {
 }

@@ -33,7 +33,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/in  dex.vue')
+        component: () => import('@/views/redirect/index.vue')
       }
     ]
   },

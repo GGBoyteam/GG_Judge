@@ -10,6 +10,7 @@ import com.zhangsiyao.judge.entity.dao.RolePermission;
 import com.zhangsiyao.judge.entity.dao.UserInfo;
 import com.zhangsiyao.judge.entity.dto.UserDto;
 import com.zhangsiyao.judge.entity.dto.UserInfoDto;
+import com.zhangsiyao.judge.entity.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.judge.entity.vo.UserQueryVo;
 import com.zhangsiyao.judge.mapper.UserInfoMapper;
 import com.zhangsiyao.judge.service.IRolePermissionService;
@@ -20,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -75,5 +77,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
             queryWrapper=queryWrapper.eq(UserInfo::getStatus,queryVo.getStatus());
         }
         return this.getBaseMapper().selectPage(page,queryWrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addOrUpdate(UserAddOrUpdateVo addOrUpdateVo) {
+        this.saveOrUpdate(addOrUpdateVo);
     }
 }
