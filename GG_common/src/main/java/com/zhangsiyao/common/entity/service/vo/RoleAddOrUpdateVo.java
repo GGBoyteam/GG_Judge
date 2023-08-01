@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.entity.vo;
+package com.zhangsiyao.common.entity.service.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

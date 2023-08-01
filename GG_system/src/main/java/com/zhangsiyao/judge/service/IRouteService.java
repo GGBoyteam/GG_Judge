@@ -1,11 +1,11 @@
 package com.zhangsiyao.judge.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.judge.entity.dao.Route;
-import com.zhangsiyao.judge.entity.dto.DynamicRouteDto;
-import com.zhangsiyao.judge.entity.dto.RouteTreeNode;
-import com.zhangsiyao.judge.entity.vo.RouteAddOrUpdateVo;
-import com.zhangsiyao.judge.entity.vo.RouteQueryVo;
+import com.zhangsiyao.common.entity.service.dao.Route;
+import com.zhangsiyao.common.entity.service.dto.DynamicRouteDto;
+import com.zhangsiyao.common.entity.service.dto.RouteTreeNode;
+import com.zhangsiyao.common.entity.service.vo.RouteAddOrUpdateVo;
+import com.zhangsiyao.common.entity.service.vo.RouteQueryVo;
 
 import java.util.List;
 

@@ -1,7 +1,11 @@
 package com.zhangsiyao.judge.config.security;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhangsiyao.common.entity.auth.dao.UserLogin;
+import com.zhangsiyao.common.entity.service.dao.UserInfo;
+import com.zhangsiyao.judge.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +32,9 @@ public class JwtAuthencationTokenFilter extends OncePerRequestFilter {
     @Autowired
     StringRedisTemplate redisTemplate;
 
+    @Autowired
+    IUserInfoService userInfoService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String token = httpServletRequest.getHeader("Authorization");
@@ -41,7 +48,15 @@ public class JwtAuthencationTokenFilter extends OncePerRequestFilter {
             return;
         }
         ObjectMapper objectMapper=new ObjectMapper();
-        Map<String,String> map=objectMapper.readValue(userinfo, new TypeReference<Map<String, String>>() {});
+        UserLogin user=objectMapper.readValue(userinfo, UserLogin.class);
+        LambdaQueryWrapper<UserInfo> queryWrapper=new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUsername,user.getUsername());
+        UserInfo userInfo = userInfoService.getBaseMapper().selectOne(queryWrapper);
+        if(userInfo==null){
+            userInfo=new UserInfo();
+            userInfo.setUsername(user.getUsername());
+            this.userInfoService.save(userInfo);
+            userInfo = userInfoService.getBaseMapper().selectOne(queryWrapper);
+        }
         List<GrantedAuthority> permissions=new ArrayList<>();
         permissions.add(new SimpleGrantedAuthority("dawd"));
         UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userinfo,null,permissions);

@@ -2,10 +2,10 @@ package com.zhangsiyao.judge.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.judge.entity.dao.Role;
-import com.zhangsiyao.judge.entity.dto.RolePermissionDto;
-import com.zhangsiyao.judge.entity.vo.RoleQueryVo;
-import com.zhangsiyao.judge.entity.vo.RoleAddOrUpdateVo;
+import com.zhangsiyao.common.entity.service.dao.Role;
+import com.zhangsiyao.common.entity.service.dto.RolePermissionDto;
+import com.zhangsiyao.common.entity.service.vo.RoleQueryVo;
+import com.zhangsiyao.common.entity.service.vo.RoleAddOrUpdateVo;
 import com.zhangsiyao.judge.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +52,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public R<String> delete(@PathVariable String id){
+    public R<String> delete(@PathVariable String[] id){
         roleService.delete(id);
         return R.success();
     }

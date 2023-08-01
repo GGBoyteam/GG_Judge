@@ -1,6 +1,6 @@
 package com.zhangsiyao.judge.service.impl;
 
-import com.zhangsiyao.judge.entity.dao.RolePermission;
+import com.zhangsiyao.common.entity.service.dao.RolePermission;
 import com.zhangsiyao.judge.mapper.RolePermissionMapper;
 import com.zhangsiyao.judge.service.IRolePermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

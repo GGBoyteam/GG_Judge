@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.entity.dao;
+package com.zhangsiyao.common.entity.service.dao;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

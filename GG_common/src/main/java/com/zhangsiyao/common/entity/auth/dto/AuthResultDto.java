@@ -1,4 +1,4 @@
-package com.zhangsiyao.auth.entity.dto;
+package com.zhangsiyao.common.entity.auth.dto;
 
 import lombok.Data;
 

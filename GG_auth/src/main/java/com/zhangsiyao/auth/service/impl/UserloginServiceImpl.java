@@ -4,18 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.auth.component.Md5Component;
 import com.zhangsiyao.common.component.JwtComponent;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
-import com.zhangsiyao.auth.entity.dto.AuthResultDto;
-import com.zhangsiyao.auth.entity.vo.UserPasswordVo;
-import com.zhangsiyao.auth.exception.LoginException;
-import com.zhangsiyao.auth.exception.RegisterException;
+import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
+import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
+import com.zhangsiyao.common.exception.LoginException;
+import com.zhangsiyao.common.exception.RegisterException;
 import com.zhangsiyao.auth.mapper.UserloginMapper;
 import com.zhangsiyao.auth.service.IUserloginService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zhangsiyao.common.entity.common.dto.R;
 import lombok.SneakyThrows;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +44,7 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
 
     @SneakyThrows
     @Override
-    public R<AuthResultDto> register(UserPasswordVo passwordVo) {
+    public void register(UserPasswordVo passwordVo) {
         List<UserLogin> list = this.query().eq("username",passwordVo.getUsername()).list();
         if(list.size()>0){
             throw new RegisterException("账号已经被注册");
@@ -51,12 +53,11 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
         userlogin.setUsername(passwordVo.getUsername());
         userlogin.setPassword(md5Component.md5Hex(passwordVo.getPassword()));
         this.save(userlogin);
-        return loginByPassword(passwordVo);
     }
 
     @SneakyThrows
     @Override
-    public R<AuthResultDto> loginByPassword(UserPasswordVo passwordVo) {
+    public AuthResultDto loginByPassword(UserPasswordVo passwordVo) {
         UserLogin user = this.query().eq("username", passwordVo.getUsername()).one();
         String inputPassword=md5Component.md5Hex(passwordVo.getPassword());
         if(user==null){
@@ -70,13 +71,29 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
         redisTemplate.opsForValue().set(token,objectMapper.writeValueAsString(user),3,TimeUnit.HOURS);
         AuthResultDto authResultDto=new AuthResultDto();
         authResultDto.setToken(token);
-        return R.success(" 登入成功",authResultDto);
+        return authResultDto;
     }
 
 
     @Override
-    public R<String> logout(String token) {
+    public void logout(String token) {
         redisTemplate.delete(token);
-        return R.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addOrUpdate(UserLoginAddOrUpdate addOrUpdate) {
+        UserLogin id = this.getById(addOrUpdate.getUsername());
+        if(id==null){
+            id=new UserLogin();
+        }
+        BeanUtils.copyProperties(addOrUpdate,id);
+        id.setPassword(md5Component.md5Hex(addOrUpdate.getPassword()));
+        this.saveOrUpdate(id);
+    }
+
+    @Override
+    public void delete(String id) {
+        this.getBaseMapper().deleteById(id);
     }
 }

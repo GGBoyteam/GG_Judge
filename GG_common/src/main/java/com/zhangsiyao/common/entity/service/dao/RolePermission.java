@@ -1,12 +1,9 @@
-package com.zhangsiyao.judge.entity.dao;
+package com.zhangsiyao.common.entity.service.dao;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,31 +19,19 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user_info")
-public class UserInfo implements Serializable {
+@TableName("role_permission")
+public class RolePermission implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 玩家主键id
-     */
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 角色id
-     */
     private Long roleId;
 
-    private Long phone;
+    private Long routeId;
 
-    private String username;
-
-    private String nickname;
-
-    private Integer status;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date createTime;
+    private String permission;
 
 
 }

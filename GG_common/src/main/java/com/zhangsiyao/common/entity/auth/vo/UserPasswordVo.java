@@ -1,4 +1,4 @@
-package com.zhangsiyao.auth.entity.vo;
+package com.zhangsiyao.common.entity.auth.vo;
 
 import lombok.Data;
 

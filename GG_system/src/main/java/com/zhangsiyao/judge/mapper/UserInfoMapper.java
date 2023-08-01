@@ -1,6 +1,6 @@
 package com.zhangsiyao.judge.mapper;
 
-import com.zhangsiyao.judge.entity.dao.UserInfo;
+import com.zhangsiyao.common.entity.service.dao.UserInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

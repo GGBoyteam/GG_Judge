@@ -1,7 +1,8 @@
 package com.zhangsiyao.auth.controller;
 
-import com.zhangsiyao.auth.entity.dto.AuthResultDto;
-import com.zhangsiyao.auth.entity.vo.UserPasswordVo;
+import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
+import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.auth.service.IUserloginService;
 import com.zhangsiyao.common.entity.common.dto.R;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,32 @@ public class AuthController {
     IUserloginService userloginService;
 
     @PostMapping("/login")
-    public R<AuthResultDto> passwordLogin(@RequestBody UserPasswordVo userPasswordVo){
-        return userloginService.loginByPassword(userPasswordVo);
+    public R<AuthResultDto> passwordLogin(@RequestBody UserPasswordVo userPasswordVo)  {
+        return R.success(userloginService.loginByPassword(userPasswordVo));
     }
 
     @PostMapping("/register")
     public R<AuthResultDto> register(@RequestBody UserPasswordVo userPasswordVo){
-        return userloginService.register(userPasswordVo);
+        userloginService.register(userPasswordVo);
+        return R.success();
     }
 
     @PostMapping("/logout")
     public R<String> logout(@RequestHeader("Authorization") String token){
-        return  userloginService.logout(token);
+        userloginService.logout(token);
+        return  R.success();
     }
+
+    @PostMapping("/addOrUpdate")
+    public R<String> saveOrUpdate(@RequestBody UserLoginAddOrUpdate addOrUpdate){
+        userloginService.addOrUpdate(addOrUpdate);
+        return R.success();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public R<String> delete(@PathVariable String id){
+        userloginService.delete(id);
+        return R.success();
+    }
+
 }

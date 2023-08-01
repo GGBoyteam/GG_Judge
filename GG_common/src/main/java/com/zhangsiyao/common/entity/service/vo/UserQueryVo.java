@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.entity.vo;
+package com.zhangsiyao.common.entity.service.vo;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.zhangsiyao.judge.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zhangsiyao.judge.entity.dao.Route;
+import com.zhangsiyao.common.entity.service.dao.Route;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

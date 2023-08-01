@@ -3,12 +3,12 @@ package com.zhangsiyao.judge.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zhangsiyao.judge.entity.dao.Role;
-import com.zhangsiyao.judge.entity.dao.RolePermission;
-import com.zhangsiyao.judge.entity.dao.Route;
-import com.zhangsiyao.judge.entity.dto.RolePermissionDto;
-import com.zhangsiyao.judge.entity.vo.RoleQueryVo;
-import com.zhangsiyao.judge.entity.vo.RoleAddOrUpdateVo;
+import com.zhangsiyao.common.entity.service.dao.Role;
+import com.zhangsiyao.common.entity.service.dao.RolePermission;
+import com.zhangsiyao.common.entity.service.dao.Route;
+import com.zhangsiyao.common.entity.service.dto.RolePermissionDto;
+import com.zhangsiyao.common.entity.service.vo.RoleQueryVo;
+import com.zhangsiyao.common.entity.service.vo.RoleAddOrUpdateVo;
 import com.zhangsiyao.judge.mapper.RoleMapper;
 import com.zhangsiyao.judge.service.IRolePermissionService;
 import com.zhangsiyao.judge.service.IRoleService;
@@ -71,7 +71,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean update(RoleAddOrUpdateVo roleAddOrUpdateVo) {
+    public void update(RoleAddOrUpdateVo roleAddOrUpdateVo) {
         Role role=new Role();
         BeanUtils.copyProperties(roleAddOrUpdateVo,role);
         this.getBaseMapper().updateById(role);
@@ -83,7 +83,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         rolePermissionService.remove(lambdaQueryWrapper);
 
         if(roleAddOrUpdateVo.getRouteIds().size()==0){
-            return true;
+            return;
         }
 
         //然后设置新的权限信息
@@ -97,12 +97,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             permission.setPermission(route.getPermission());
             rolePermissionService.saveOrUpdate(permission);
         }
-        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean add(RoleAddOrUpdateVo roleAddOrUpdateVo) {
+    public void add(RoleAddOrUpdateVo roleAddOrUpdateVo) {
         Role role=new Role();
         BeanUtils.copyProperties(roleAddOrUpdateVo,role);
         this.getBaseMapper().insert(role);
@@ -117,17 +116,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             permission.setPermission(route.getPermission());
             rolePermissionService.saveOrUpdate(permission);
         }
-        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delete(String id) {
-        this.getBaseMapper().deleteById(id);
-        LambdaQueryWrapper<RolePermission> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper = queryWrapper.eq(RolePermission::getRoleId, id);
-        rolePermissionService.getBaseMapper().delete(queryWrapper);
-        return false;
+    public void delete(String[] ids) {
+        for (String id:ids){
+            this.getBaseMapper().deleteById(id);
+            LambdaQueryWrapper<RolePermission> queryWrapper=new LambdaQueryWrapper<>();
+            queryWrapper = queryWrapper.eq(RolePermission::getRoleId, id);
+            rolePermissionService.getBaseMapper().delete(queryWrapper);
+        }
     }
 
     @Override

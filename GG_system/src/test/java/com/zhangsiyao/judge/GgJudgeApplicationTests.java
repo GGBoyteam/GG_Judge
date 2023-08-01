@@ -1,6 +1,6 @@
 package com.zhangsiyao.judge;
 
-import com.zhangsiyao.judge.entity.vo.RoleQueryVo;
+import com.zhangsiyao.common.entity.service.vo.RoleQueryVo;
 import com.zhangsiyao.judge.service.IRoleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

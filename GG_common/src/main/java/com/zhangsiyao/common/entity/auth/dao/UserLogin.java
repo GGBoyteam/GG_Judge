@@ -24,12 +24,7 @@ public class UserLogin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 登录主键id
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
+    @TableId(value = "username", type = IdType.INPUT)
     private String username;
 
     private String password;

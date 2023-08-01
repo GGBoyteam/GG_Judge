@@ -1,7 +1,6 @@
-package com.zhangsiyao.judge.entity.dto;
+package com.zhangsiyao.common.entity.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.zhangsiyao.judge.entity.dao.Route;
 import lombok.Data;
 
 import java.io.Serializable;

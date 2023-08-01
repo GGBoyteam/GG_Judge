@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.entity.dto;
+package com.zhangsiyao.common.entity.service.dto;
 
 import lombok.Data;
 

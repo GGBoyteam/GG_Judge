@@ -1,4 +1,4 @@
-package com.zhangsiyao.auth.exception;
+package com.zhangsiyao.common.exception;
 
 public class RegisterException extends Exception{
     public RegisterException(String message) {

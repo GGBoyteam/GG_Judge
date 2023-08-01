@@ -1,11 +1,11 @@
 package com.zhangsiyao.judge.controller;
 
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.judge.entity.dao.Route;
-import com.zhangsiyao.judge.entity.dto.DynamicRouteDto;
-import com.zhangsiyao.judge.entity.dto.RouteTreeNode;
-import com.zhangsiyao.judge.entity.vo.RouteAddOrUpdateVo;
-import com.zhangsiyao.judge.entity.vo.RouteQueryVo;
+import com.zhangsiyao.common.entity.service.dao.Route;
+import com.zhangsiyao.common.entity.service.dto.DynamicRouteDto;
+import com.zhangsiyao.common.entity.service.dto.RouteTreeNode;
+import com.zhangsiyao.common.entity.service.vo.RouteAddOrUpdateVo;
+import com.zhangsiyao.common.entity.service.vo.RouteQueryVo;
 import com.zhangsiyao.judge.service.IRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -41,6 +41,8 @@ public class RouteController {
         route.setIsFrame(StringUtils.isEmpty(route.getLink())?1:0);
         return R.success(route);
     }
+
+
 
     @PostMapping("/addOrUpdate")
     public R<String> add(@RequestBody RouteAddOrUpdateVo updateVo) {

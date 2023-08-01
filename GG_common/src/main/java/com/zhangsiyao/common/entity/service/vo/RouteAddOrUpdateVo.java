@@ -1,7 +1,7 @@
-package com.zhangsiyao.judge.entity.vo;
+package com.zhangsiyao.common.entity.service.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.zhangsiyao.judge.entity.dao.Route;
+import com.zhangsiyao.common.entity.service.dao.Route;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

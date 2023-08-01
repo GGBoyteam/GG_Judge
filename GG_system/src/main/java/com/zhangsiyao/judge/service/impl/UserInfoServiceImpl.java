@@ -5,16 +5,20 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.judge.entity.dao.RolePermission;
-import com.zhangsiyao.judge.entity.dao.UserInfo;
-import com.zhangsiyao.judge.entity.dto.UserInfoDto;
-import com.zhangsiyao.judge.entity.vo.UserAddOrUpdateVo;
-import com.zhangsiyao.judge.entity.vo.UserQueryVo;
+import com.zhangsiyao.common.entity.service.dao.RolePermission;
+import com.zhangsiyao.common.entity.service.dao.UserInfo;
+import com.zhangsiyao.common.entity.service.dto.UserPermissionDto;
+import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
+import com.zhangsiyao.common.entity.service.vo.UserQueryVo;
+import com.zhangsiyao.common.exception.RegisterException;
+import com.zhangsiyao.common.service.feign.UserAuthService;
 import com.zhangsiyao.judge.mapper.UserInfoMapper;
 import com.zhangsiyao.judge.service.IRolePermissionService;
 import com.zhangsiyao.judge.service.IUserInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -44,19 +48,22 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    UserAuthService userAuthService;
+
     @Override
-    public R<UserInfoDto> getInfo(String token) {
-        UserInfoDto userInfoDto=new UserInfoDto();
+    public R<UserPermissionDto> getInfo(String token) {
+        UserPermissionDto userPermissionDto =new UserPermissionDto();
         try {
             Map<String, Object> user = objectMapper.readValue(redisTemplate.opsForValue().get(token), new TypeReference<Map<String,Object>>() {});
             UserInfo one = this.query().eq("username", user.get("username")).one();
-            userInfoDto.setInfo(one);
+            userPermissionDto.setInfo(one);
             List<RolePermission> permissions = permissionService.query().eq("role_id", one.getRoleId()).list();
-            userInfoDto.setPermissions(permissions);
+            userPermissionDto.setPermissions(permissions);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return R.success(userInfoDto);
+        return R.success(userPermissionDto);
     }
 
     @Override
@@ -76,8 +83,37 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     }
 
     @Override
+    @SneakyThrows
     @Transactional(rollbackFor = Exception.class)
-    public void addOrUpdate(UserAddOrUpdateVo addOrUpdateVo) {
-        this.saveOrUpdate(addOrUpdateVo);
+    public void add(UserAddOrUpdateVo addOrUpdateVo) {
+        LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUsername, addOrUpdateVo.getUsername());
+        if(this.count(queryWrapper)!=0){
+            throw new RegisterException("该账户经存在");
+        }
+        UserLoginAddOrUpdate passwordVo=new UserLoginAddOrUpdate();
+        passwordVo.setUsername(addOrUpdateVo.getUsername());
+        passwordVo.setPassword(addOrUpdateVo.getPassword());
+        userAuthService.register(passwordVo);
+        this.save(addOrUpdateVo);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(String[] ids) {
+       for(String id:ids){
+           userAuthService.delete(this.getById(id).getUsername());
+           this.getBaseMapper().deleteById(id);
+       }
+    }
+
+    @Override
+    public void update(UserAddOrUpdateVo addOrUpdateVo) {
+        UserInfo info = this.getById(addOrUpdateVo.getId());
+        if(info==null){
+            return;
+        }
+        addOrUpdateVo.setUsername(info.getUsername());
+        this.updateById(addOrUpdateVo);
+    }
+
 }

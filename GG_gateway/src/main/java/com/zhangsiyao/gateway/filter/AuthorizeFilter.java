@@ -33,8 +33,7 @@ public class AuthorizeFilter implements GlobalFilter{
         ServerHttpResponse response = exchange.getResponse();
         List<String> token = request.getHeaders().get(USER_TOKEN);
         String path=request.getURI().getPath();
-        System.out.println(path.matches("/auth/.*"));
-        if(path.matches("/auth/.*")){
+        if(path.matches("/auth/login")||path.matches("/auth/register")){
             if(token!=null&&token.size()>0){
                 String t=token.get(0);
                 String key=redisTemplate.opsForValue().get(t);
@@ -42,6 +41,9 @@ public class AuthorizeFilter implements GlobalFilter{
                     return out(response,"你已经登陆过了");
                 }
             }
+            return chain.filter(exchange);
+        }
+        if(path.matches("/auth/logout")){
             return chain.filter(exchange);
         }
         if(token==null||token.size()==0){
