@@ -46,10 +46,7 @@ public class UserInfoController {
 
     @GetMapping("/info/{id}")
     public R<UserInfoDto> info(@PathVariable String id){
-        UserInfoDto userInfoDto =new UserInfoDto();
-        UserInfo info = userInfoService.getById(id);
-        BeanUtils.copyProperties(info, userInfoDto);
-        return R.success(userInfoDto);
+        return R.success(userInfoService.info(id));
     }
 
     @DeleteMapping("/delete/{id}")

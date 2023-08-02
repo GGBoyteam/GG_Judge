@@ -5,12 +5,12 @@
          <el-row>
             <el-col :span="8" :offset="2">
                <el-form-item label="用户昵称" prop="nickName">
-                  <el-input v-model="form.nickName" disabled />
+                  <el-input v-model="form.nickname" disabled />
                </el-form-item>
             </el-col>
             <el-col :span="8" :offset="2">
                <el-form-item label="登录账号" prop="userName">
-                  <el-input v-model="form.userName" disabled />
+                  <el-input v-model="form.username" disabled />
                </el-form-item>
             </el-col>
          </el-row>
@@ -24,8 +24,8 @@
             </template>
          </el-table-column>
          <el-table-column type="selection" :reserve-selection="true" width="55"></el-table-column>
-         <el-table-column label="角色编号" align="center" prop="roleId" />
-         <el-table-column label="角色名称" align="center" prop="roleName" />
+         <el-table-column label="角色编号" align="center" prop="id" />
+         <el-table-column label="角色名称" align="center" prop="name" />
          <el-table-column label="权限字符" align="center" prop="roleKey" />
          <el-table-column label="创建时间" align="center" prop="createTime" width="180">
             <template #default="scope">
@@ -46,7 +46,7 @@
 </template>
 
 <script setup name="AuthRole">
-import { getAuthRole, updateAuthRole } from "@/api/system/user";
+import {getAuthRole, getUser, updateAuthRole} from "@/api/system/user";
 
 const route = useRoute();
 const { proxy } = getCurrentInstance();
@@ -58,9 +58,9 @@ const pageSize = ref(10);
 const roleIds = ref([]);
 const roles = ref([]);
 const form = ref({
-  nickName: undefined,
-  userName: undefined,
-  userId: undefined
+  nickname: undefined,
+  username: undefined,
+  id: undefined
 });
 
 /** 单击选中行数据 */
@@ -69,11 +69,11 @@ function clickRow(row) {
 };
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {
-  roleIds.value = selection.map(item => item.roleId);
+  roleIds.value = selection.map(item => item.id);
 };
 /** 保存选中的数据编号 */
 function getRowKey(row) {
-  return row.roleId;
+  return row.id;
 };
 /** 关闭按钮 */
 function close() {
@@ -82,9 +82,9 @@ function close() {
 };
 /** 提交按钮 */
 function submitForm() {
-  const userId = form.value.userId;
-  const rIds = roleIds.value.join(",");
-  updateAuthRole({ userId: userId, roleIds: rIds }).then(response => {
+  const userId = form.value.id;
+  const rIds = roleIds.value;
+  updateAuthRole({ id: userId, roleIds: rIds }).then(response => {
     proxy.$modal.msgSuccess("授权成功");
     close();
   });
@@ -94,13 +94,15 @@ function submitForm() {
   const userId = route.params && route.params.userId;
   if (userId) {
     loading.value = true;
+    getUser(userId).then(response=>{
+      form.value=response.data
+    })
     getAuthRole(userId).then(response => {
-      form.value = response.user;
-      roles.value = response.roles;
+      roles.value = response.data;
       total.value = roles.value.length;
       nextTick(() => {
         roles.value.forEach(row => {
-          if (row.flag) {
+          if (row.id) {
             proxy.$refs["roleRef"].toggleRowSelection(row);
           }
         });

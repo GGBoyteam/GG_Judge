@@ -2,6 +2,10 @@ package com.zhangsiyao.system.service;
 
 import com.zhangsiyao.common.entity.service.dao.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zhangsiyao.common.entity.service.dto.RoleDto;
+import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserRoleService extends IService<UserRole> {
 
+    List<RoleDto> getRoleByUserId(String id);
+
+    void update(UserAddOrUpdateVo addOrUpdateVo);
 }

@@ -188,25 +188,16 @@
             </el-row>
             <el-row>
                <el-col :span="12">
-                  <el-form-item label="用户性别">
-                     <el-select v-model="form.sex" placeholder="请选择">
-<!--                        <el-option-->
-<!--                           v-for="dict in sys_user_sex"-->
-<!--                           :key="dict.value"-->
-<!--                           :label="dict.label"-->
-<!--                           :value="dict.value"-->
-<!--                        ></el-option>-->
-                     </el-select>
-                  </el-form-item>
-               </el-col>
-               <el-col :span="12">
                   <el-form-item label="状态">
                      <el-radio-group v-model="form.status">
-<!--                        <el-radio-->
-<!--                           v-for="dict in sys_normal_disable"-->
-<!--                           :key="dict.value"-->
-<!--                           :label="dict.value"-->
-<!--                        >{{ dict.label }}</el-radio>-->
+                        <el-radio
+                           :key="0"
+                           :label="0"
+                        >正常</el-radio>
+                       <el-radio
+                           :key="1"
+                           :label="1"
+                       >封禁</el-radio>
                      </el-radio-group>
                   </el-form-item>
                </el-col>
@@ -217,9 +208,9 @@
                      <el-select v-model="form.roleIds" multiple placeholder="请选择">
                         <el-option
                            v-for="item in roleOptions"
-                           :key="item.roleId"
-                           :label="item.roleName"
-                           :value="item.roleId"
+                           :key="item.id"
+                           :label="item.name"
+                           :value="item.id"
                            :disabled="item.status == 1"
                         ></el-option>
                      </el-select>
@@ -281,6 +272,7 @@
 <script setup name="User">
 import { getToken } from "@/utils/auth";
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser} from "@/api/system/user";
+import { listRole} from "@/api/system/role";
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -359,6 +351,10 @@ function getList() {
     loading.value = false;
     userList.value = res.data.records;
     total.value = res.data.total;
+  }).then(()=>{
+    listRole().then(res=>{
+      roleOptions.value=res.data.records;
+    })
   });
 };
 
@@ -499,11 +495,14 @@ function handleUpdate(row) {
   getUser(userId).then(response => {
     form.value = response.data;
     console.log(form)
-    roleOptions.value = response.roles;
-    form.value.roleIds = response.roleIds;
+    form.value.roleIds = response.data.roleIds;
     open.value = true;
     title.value = "修改用户";
     form.password = "";
+  }).then(res=>{
+    listRole().then(res=>{
+      roleOptions.value=res.data.records;
+    })
   });
 };
 /** 提交按钮 */

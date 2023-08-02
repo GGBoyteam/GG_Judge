@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.service.dao.UserInfo;
+import com.zhangsiyao.common.entity.service.dto.UserInfoDto;
 import com.zhangsiyao.common.entity.service.dto.UserPermissionDto;
 import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.common.entity.service.vo.UserQueryVo;
@@ -29,4 +30,6 @@ public interface IUserInfoService extends IService<UserInfo> {
     void update(UserAddOrUpdateVo addOrUpdateVo);
 
     void resetPwd(UserPasswordVo userPasswordVo);
+
+    UserInfoDto info(String id);
 }

@@ -42,7 +42,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public Page<Role> list(RoleQueryVo roleQueryVo) {
-        Page<Role> page=Page.of(roleQueryVo.getPageNum(),roleQueryVo.getPageSize());
+        Page<Role> page;
+        if(roleQueryVo==null){
+            page=Page.of(1,Long.MAX_VALUE);
+            return this.getBaseMapper().selectPage(page,new LambdaQueryWrapper<>());
+        }
+        if(roleQueryVo.getPageNum()==null||roleQueryVo.getPageSize()==null){
+            page=Page.of(1,Long.MAX_VALUE);
+        }else {
+            page=Page.of(roleQueryVo.getPageNum(),roleQueryVo.getPageSize());
+        }
         LambdaQueryWrapper<Role> lambdaQueryWrapper=new LambdaQueryWrapper<>();
         if(!StringUtils.isEmpty(roleQueryVo.getRoleName())){
             lambdaQueryWrapper=lambdaQueryWrapper.like(Role::getName,roleQueryVo.getRoleName());
