@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.service.impl;
+package com.zhangsiyao.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.service.dao.RolePermission;
 import com.zhangsiyao.common.entity.service.dao.UserInfo;
@@ -14,9 +15,9 @@ import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.common.entity.service.vo.UserQueryVo;
 import com.zhangsiyao.common.exception.RegisterException;
 import com.zhangsiyao.common.service.feign.UserAuthService;
-import com.zhangsiyao.judge.mapper.UserInfoMapper;
-import com.zhangsiyao.judge.service.IRolePermissionService;
-import com.zhangsiyao.judge.service.IUserInfoService;
+import com.zhangsiyao.system.mapper.UserInfoMapper;
+import com.zhangsiyao.system.service.IRolePermissionService;
+import com.zhangsiyao.system.service.IUserInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +115,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         }
         addOrUpdateVo.setUsername(info.getUsername());
         this.updateById(addOrUpdateVo);
+    }
+
+    @Override
+    public void resetPwd(UserPasswordVo userPasswordVo) {
+        userAuthService.resetPwd(userPasswordVo);
     }
 
 }

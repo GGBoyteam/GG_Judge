@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.service.impl;
+package com.zhangsiyao.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,10 +9,10 @@ import com.zhangsiyao.common.entity.service.dao.Route;
 import com.zhangsiyao.common.entity.service.dto.RolePermissionDto;
 import com.zhangsiyao.common.entity.service.vo.RoleQueryVo;
 import com.zhangsiyao.common.entity.service.vo.RoleAddOrUpdateVo;
-import com.zhangsiyao.judge.mapper.RoleMapper;
-import com.zhangsiyao.judge.service.IRolePermissionService;
-import com.zhangsiyao.judge.service.IRoleService;
-import com.zhangsiyao.judge.service.IRouteService;
+import com.zhangsiyao.system.mapper.RoleMapper;
+import com.zhangsiyao.system.service.IRolePermissionService;
+import com.zhangsiyao.system.service.IRoleService;
+import com.zhangsiyao.system.service.IRouteService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,13 +1,14 @@
-package com.zhangsiyao.judge.controller;
+package com.zhangsiyao.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.service.dao.UserInfo;
 import com.zhangsiyao.common.entity.service.dto.UserInfoDto;
 import com.zhangsiyao.common.entity.service.dto.UserPermissionDto;
 import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.common.entity.service.vo.UserQueryVo;
-import com.zhangsiyao.judge.service.IUserInfoService;
+import com.zhangsiyao.system.service.IUserInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +55,12 @@ public class UserInfoController {
     @DeleteMapping("/delete/{id}")
     public R<String> delete(@PathVariable String[] id){
         userInfoService.delete(id);
+        return R.success();
+    }
+
+    @PostMapping("/resetPwd")
+    public R<String> resetPwd(@RequestBody UserPasswordVo userPasswordVo){
+        userInfoService.resetPwd(userPasswordVo);
         return R.success();
     }
 

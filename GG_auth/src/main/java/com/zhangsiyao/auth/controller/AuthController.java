@@ -44,4 +44,10 @@ public class AuthController {
         return R.success();
     }
 
+    @PostMapping("/resetPwd")
+    public R<String> resetPwd(@RequestBody UserPasswordVo passwordVo){
+        userloginService.resetPwd(passwordVo);
+        return R.success();
+    }
+
 }

@@ -1,11 +1,10 @@
-package com.zhangsiyao.judge.config.security;
+package com.zhangsiyao.system.config.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.common.entity.service.dao.UserInfo;
-import com.zhangsiyao.judge.service.IUserInfoService;
+import com.zhangsiyao.system.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,9 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class JwtAuthencationTokenFilter extends OncePerRequestFilter {

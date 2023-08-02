@@ -42,8 +42,7 @@ public class AuthorizeFilter implements GlobalFilter{
                 }
             }
             return chain.filter(exchange);
-        }
-        if(path.matches("/auth/logout")){
+        }else if(path.matches("/auth/logout")){
             return chain.filter(exchange);
         }
         if(token==null||token.size()==0){

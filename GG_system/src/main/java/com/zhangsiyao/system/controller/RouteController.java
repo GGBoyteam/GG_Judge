@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.controller;
+package com.zhangsiyao.system.controller;
 
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.service.dao.Route;
@@ -6,7 +6,7 @@ import com.zhangsiyao.common.entity.service.dto.DynamicRouteDto;
 import com.zhangsiyao.common.entity.service.dto.RouteTreeNode;
 import com.zhangsiyao.common.entity.service.vo.RouteAddOrUpdateVo;
 import com.zhangsiyao.common.entity.service.vo.RouteQueryVo;
-import com.zhangsiyao.judge.service.IRouteService;
+import com.zhangsiyao.system.service.IRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.config.mybatis;
+package com.zhangsiyao.system.config.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

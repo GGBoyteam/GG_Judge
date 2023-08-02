@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.service;
+package com.zhangsiyao.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.service.dao.Route;

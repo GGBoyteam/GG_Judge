@@ -33,11 +33,6 @@ public class UserInfo implements Serializable {
     @TableId(value = "id",type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 角色id
-     */
-    private Long roleId;
-
     private Long phone;
 
     private String username;

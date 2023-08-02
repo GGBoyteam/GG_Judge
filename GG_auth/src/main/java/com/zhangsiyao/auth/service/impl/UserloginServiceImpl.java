@@ -96,4 +96,12 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
     public void delete(String id) {
         this.getBaseMapper().deleteById(id);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resetPwd(UserPasswordVo passwordVo) {
+        UserLogin userLogin = this.getById(passwordVo.getUsername());
+        userLogin.setPassword(md5Component.md5Hex(passwordVo.getPassword()));
+        this.updateById(userLogin);
+    }
 }

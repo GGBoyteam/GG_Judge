@@ -427,7 +427,7 @@ function handleResetPwd(row) {
     inputPattern: /^.{5,20}$/,
     inputErrorMessage: "用户密码长度必须介于 5 和 20 之间",
   }).then(({ value }) => {
-    resetUserPwd(row.id, value).then(response => {
+    resetUserPwd(row.username, value).then(response => {
       proxy.$modal.msgSuccess("修改成功，新密码是：" + value);
     });
   }).catch(() => {});

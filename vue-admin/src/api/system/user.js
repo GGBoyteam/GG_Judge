@@ -45,14 +45,14 @@ export function delUser(userId) {
 }
 
 // 用户密码重置
-export function resetUserPwd(userId, password) {
+export function resetUserPwd(username, password) {
   const data = {
-    userId,
+    username,
     password
   }
   return request({
-    url: '/system/user/resetPwd',
-    method: 'put',
+    url: '/system-service/user/resetPwd',
+    method: 'post',
     data: data
   })
 }

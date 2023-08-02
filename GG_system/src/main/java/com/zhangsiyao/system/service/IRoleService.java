@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.service;
+package com.zhangsiyao.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.service.dao.Role;

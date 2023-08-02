@@ -1,7 +1,8 @@
-package com.zhangsiyao.judge.service;
+package com.zhangsiyao.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.service.dao.UserInfo;
 import com.zhangsiyao.common.entity.service.dto.UserPermissionDto;
@@ -26,4 +27,6 @@ public interface IUserInfoService extends IService<UserInfo> {
     void delete(String[] id);
 
     void update(UserAddOrUpdateVo addOrUpdateVo);
+
+    void resetPwd(UserPasswordVo userPasswordVo);
 }

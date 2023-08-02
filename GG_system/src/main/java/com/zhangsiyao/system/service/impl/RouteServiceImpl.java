@@ -1,4 +1,4 @@
-package com.zhangsiyao.judge.service.impl;
+package com.zhangsiyao.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -8,9 +8,9 @@ import com.zhangsiyao.common.entity.service.dto.DynamicRouteDto;
 import com.zhangsiyao.common.entity.service.dto.RouteTreeNode;
 import com.zhangsiyao.common.entity.service.vo.RouteAddOrUpdateVo;
 import com.zhangsiyao.common.entity.service.vo.RouteQueryVo;
-import com.zhangsiyao.judge.mapper.RouteMapper;
-import com.zhangsiyao.judge.service.IRolePermissionService;
-import com.zhangsiyao.judge.service.IRouteService;
+import com.zhangsiyao.system.mapper.RouteMapper;
+import com.zhangsiyao.system.service.IRolePermissionService;
+import com.zhangsiyao.system.service.IRouteService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

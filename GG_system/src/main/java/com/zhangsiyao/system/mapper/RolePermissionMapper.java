@@ -1,6 +1,6 @@
-package com.zhangsiyao.judge.mapper;
+package com.zhangsiyao.system.mapper;
 
-import com.zhangsiyao.common.entity.service.dao.UserInfo;
+import com.zhangsiyao.common.entity.service.dao.RolePermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-07-28
  */
 @Mapper
-public interface UserInfoMapper extends BaseMapper<UserInfo> {
+public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
 }

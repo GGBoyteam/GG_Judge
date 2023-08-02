@@ -24,4 +24,6 @@ public interface IUserloginService extends IService<UserLogin> {
     void addOrUpdate(UserLoginAddOrUpdate addOrUpdate);
 
     void delete(String id);
+
+    void resetPwd(UserPasswordVo passwordVo);
 }
