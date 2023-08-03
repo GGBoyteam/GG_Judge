@@ -13,7 +13,7 @@
          </el-form-item>
          <el-form-item label="手机号码" prop="phonenumber">
             <el-input
-               v-model="queryParams.phonen"
+               v-model="queryParams.phone"
                placeholder="请输入手机号码"
                clearable
                style="width: 240px"
@@ -109,7 +109,7 @@ const userIds = ref([]);
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
-  roleId: route.params.roleId,
+  roleId: Number(route.params.roleId),
   username: undefined,
   phone: undefined,
 });
@@ -150,8 +150,8 @@ function openSelectUser() {
 }
 /** 取消授权按钮操作 */
 function cancelAuthUser(row) {
-  proxy.$modal.confirm('确认要取消该用户"' + row.userName + '"角色吗？').then(function () {
-    return authUserCancel({ userId: row.userId, roleId: queryParams.roleId });
+  proxy.$modal.confirm('确认要取消该用户"' + row.username + '"角色吗？').then(function () {
+    return authUserCancel( {userId:row.id,  roleId:queryParams.roleId} );
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("取消授权成功");

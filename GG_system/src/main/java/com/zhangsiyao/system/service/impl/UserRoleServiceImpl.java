@@ -84,12 +84,20 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         if(allocateUserVo!=null&&allocateUserVo.getRoleId()!=null){
            queryWrapper=queryWrapper.eq(UserRole::getRoleId,allocateUserVo.getRoleId());
         }
+
         Set<Long> userIds=new HashSet<>();
+        userIds.add(0L);
         this.baseMapper.selectList(queryWrapper).forEach(userRole -> userIds.add(userRole.getUserId()));
         LambdaQueryWrapper<UserInfo> lambdaQueryWrapper=new LambdaQueryWrapper<>();
-        lambdaQueryWrapper=lambdaQueryWrapper.in(UserInfo::getId,userIds);
-
-
+        if(userIds.size()>0){
+            lambdaQueryWrapper=lambdaQueryWrapper.in(UserInfo::getId,userIds);
+        }
+        if(allocateUserVo!=null&&allocateUserVo.getUsername()!=null){
+            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getUsername,allocateUserVo.getUsername());
+        }
+        if(allocateUserVo!=null&&allocateUserVo.getPhone()!=null){
+            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getPhone,allocateUserVo.getPhone());
+        }
         return userInfoService.getBaseMapper().selectPage(page,lambdaQueryWrapper);
     }
 
@@ -108,9 +116,15 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         Set<Long> userIds=new HashSet<>();
         this.baseMapper.selectList(queryWrapper).forEach(userRole -> userIds.add(userRole.getUserId()));
         LambdaQueryWrapper<UserInfo> lambdaQueryWrapper=new LambdaQueryWrapper<>();
-        lambdaQueryWrapper=lambdaQueryWrapper.notIn(UserInfo::getId,userIds);
-
-
+        if(userIds.size()>0){
+            lambdaQueryWrapper=lambdaQueryWrapper.notIn(UserInfo::getId,userIds);
+        }
+        if(allocateUserVo!=null&&allocateUserVo.getUsername()!=null){
+            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getUsername,allocateUserVo.getUsername());
+        }
+        if(allocateUserVo!=null&&allocateUserVo.getPhone()!=null){
+            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getPhone,allocateUserVo.getPhone());
+        }
         return userInfoService.getBaseMapper().selectPage(page,lambdaQueryWrapper);
     }
 

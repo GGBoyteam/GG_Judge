@@ -2,9 +2,9 @@
    <!-- 授权用户 -->
    <el-dialog title="选择用户" v-model="visible" width="800px" top="5vh" append-to-body>
       <el-form :model="queryParams" ref="queryRef" :inline="true">
-         <el-form-item label="用户名称" prop="userName">
+         <el-form-item label="用户名称" prop="username">
             <el-input
-               v-model="queryParams.userName"
+               v-model="queryParams.username"
                placeholder="请输入用户名称"
                clearable
                style="width: 200px"
@@ -28,13 +28,13 @@
       <el-row>
          <el-table @row-click="clickRow" ref="refTable" :data="userList" @selection-change="handleSelectionChange" height="260px">
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-            <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
+            <el-table-column label="用户名称" prop="username" :show-overflow-tooltip="true" />
+            <el-table-column label="用户昵称" prop="nickname" :show-overflow-tooltip="true" />
             <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-            <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+            <el-table-column label="手机" prop="phone" :show-overflow-tooltip="true" />
             <el-table-column label="状态" align="center" prop="status">
                <template #default="scope">
-                  <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
+
                </template>
             </el-table-column>
             <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -80,8 +80,8 @@ const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   roleId: undefined,
-  userName: undefined,
-  phonenumber: undefined
+  username: undefined,
+  phone: undefined
 });
 
 // 显示弹框
@@ -96,13 +96,14 @@ function clickRow(row) {
 }
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  userIds.value = selection.map(item => item.userId);
+  userIds.value = selection.map(item => item.id
+  );
 }
 // 查询表数据
 function getList() {
   unallocatedUserList(queryParams).then(res => {
-    userList.value = res.rows;
-    total.value = res.total;
+    userList.value = res.data.records;
+    total.value = res.data.total;
   });
 }
 /** 搜索按钮操作 */

@@ -86,9 +86,9 @@ export function unallocatedUserList(query) {
 // 取消用户授权角色
 export function authUserCancel(data) {
   return request({
-    url: '/system/role/authUser/cancel',
+    url: '/system-service/userRole/cancelAllocateUser',
     method: 'put',
-    data: data
+    params: data
   })
 }
 

@@ -10,5 +10,5 @@ public class RoleAllocateUserVo implements Serializable {
     private Long pageSize;
     private String roleId;
     private Long phone;
-    private String name;
+    private String username;
 }

@@ -1,8 +1,10 @@
 package com.zhangsiyao.system.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.service.dao.UserInfo;
+import com.zhangsiyao.common.entity.service.dao.UserRole;
 import com.zhangsiyao.common.entity.service.dto.RoleDto;
 import com.zhangsiyao.common.entity.service.vo.RoleAllocateUserVo;
 import com.zhangsiyao.common.entity.service.vo.RoleUserQueryVo;
@@ -39,6 +41,13 @@ public class UserRoleController {
     @GetMapping("/unallocatedUser")
     public R<Page<UserInfo>> unallocatedUserList(RoleAllocateUserVo allocateUserVo){
         return R.success(userRoleService.unallocateUserList(allocateUserVo));
+    }
+
+    @PutMapping("/cancelAllocateUser")
+    public R<String> cancel( String roleId,String userId){
+        LambdaQueryWrapper<UserRole> queryWrapper=new LambdaQueryWrapper<UserRole>().eq(UserRole::getRoleId,roleId).eq(UserRole::getUserId,userId);
+        userRoleService.getBaseMapper().delete(queryWrapper);
+        return R.success();
     }
 
 }
