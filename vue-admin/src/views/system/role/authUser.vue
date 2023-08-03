@@ -4,7 +4,7 @@
       <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true">
          <el-form-item label="用户名称" prop="userName">
             <el-input
-               v-model="queryParams.userName"
+               v-model="queryParams.username"
                placeholder="请输入用户名称"
                clearable
                style="width: 240px"
@@ -13,7 +13,7 @@
          </el-form-item>
          <el-form-item label="手机号码" prop="phonenumber">
             <el-input
-               v-model="queryParams.phonenumber"
+               v-model="queryParams.phonen"
                placeholder="请输入手机号码"
                clearable
                style="width: 240px"
@@ -59,13 +59,13 @@
 
       <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
          <el-table-column type="selection" width="55" align="center" />
-         <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-         <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
+         <el-table-column label="用户名称" prop="username" :show-overflow-tooltip="true" />
+         <el-table-column label="用户昵称" prop="nickname" :show-overflow-tooltip="true" />
          <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-         <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+         <el-table-column label="手机" prop="phone" :show-overflow-tooltip="true" />
          <el-table-column label="状态" align="center" prop="status">
             <template #default="scope">
-               <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
+
             </template>
          </el-table-column>
          <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -97,7 +97,7 @@ import { allocatedUserList, authUserCancel, authUserCancelAll } from "@/api/syst
 
 const route = useRoute();
 const { proxy } = getCurrentInstance();
-const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
+
 
 const userList = ref([]);
 const loading = ref(true);
@@ -110,16 +110,17 @@ const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   roleId: route.params.roleId,
-  userName: undefined,
-  phonenumber: undefined,
+  username: undefined,
+  phone: undefined,
 });
 
 /** 查询授权用户列表 */
 function getList() {
   loading.value = true;
   allocatedUserList(queryParams).then(response => {
-    userList.value = response.rows;
-    total.value = response.total;
+    userList.value = response.data.records;
+    console.log(userList.value)
+    total.value = response.data.total;
     loading.value = false;
   });
 }

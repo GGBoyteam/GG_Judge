@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.service.dao.UserInfo;
 import com.zhangsiyao.common.entity.service.dto.RoleDto;
+import com.zhangsiyao.common.entity.service.vo.RoleAllocateUserVo;
 import com.zhangsiyao.common.entity.service.vo.RoleUserQueryVo;
 import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.system.service.IUserRoleService;
@@ -30,9 +31,14 @@ public class UserRoleController {
         return R.success();
     }
 
-    @GetMapping("/listByRoleId")
-    public R<Page<UserInfo>> listByRoleId(RoleUserQueryVo roleUserQueryVo){
-        return R.success(userRoleService.listByRoleId(roleUserQueryVo));
+    @GetMapping("/allocatedUser")
+    public R<Page<UserInfo>> allocatedUserList(RoleAllocateUserVo allocateUserVo){
+        return R.success(userRoleService.allocateUserList(allocateUserVo));
+    }
+
+    @GetMapping("/unallocatedUser")
+    public R<Page<UserInfo>> unallocatedUserList(RoleAllocateUserVo allocateUserVo){
+        return R.success(userRoleService.unallocateUserList(allocateUserVo));
     }
 
 }
