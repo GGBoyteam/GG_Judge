@@ -1,9 +1,12 @@
 package com.zhangsiyao.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.service.dao.Role;
+import com.zhangsiyao.common.entity.service.dao.UserInfo;
 import com.zhangsiyao.common.entity.service.dao.UserRole;
 import com.zhangsiyao.common.entity.service.dto.RoleDto;
+import com.zhangsiyao.common.entity.service.vo.RoleUserQueryVo;
 import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.system.mapper.UserRoleMapper;
 import com.zhangsiyao.system.service.IRoleService;
@@ -61,5 +64,21 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
             userRole.setRoleId(role);
             this.save(userRole);
         }
+    }
+
+    @Override
+    public Page<UserInfo> listByRoleId(RoleUserQueryVo roleUserQueryVo) {
+        Page<UserInfo> page;
+        if(roleUserQueryVo==null||roleUserQueryVo.getPageNum()==null||roleUserQueryVo.getPageSize()==null){
+            page=Page.of(1,Long.MAX_VALUE);
+        }else {
+            page=Page.of(roleUserQueryVo.getPageNum(),roleUserQueryVo.getPageSize());
+        }
+        return null;
+    }
+
+    @Override
+    public Page<Role> listByUserId(RoleUserQueryVo roleUserQueryVo) {
+        return null;
     }
 }
