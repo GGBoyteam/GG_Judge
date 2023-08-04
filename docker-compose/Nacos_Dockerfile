@@ -1,3 +1,0 @@
-FROM nacos/nacos-server:2.0.3
-
-ADD ./nacos/nacos-logback.xml /home/nacos/conf
