@@ -2,12 +2,7 @@ version: "3.8"
 services:
   nacos1:
     restart: always
-    build:
-      context: ./
-      dockerfile: Nacos_Dockerfile
-    image: custom_nacos
-    depends_on:
-      - mysql1
+    image: nacos/nacos-server:2.0.3
     container_name: nacos
     ports:
       - "7848:7848"
@@ -31,7 +26,7 @@ services:
       # nacos数据库类型
       SPRING_DATASOURCE_PLATFORM: mysql
       # nacos数据库地址
-      MYSQL_SERVICE_HOST: mysql1
+      MYSQL_SERVICE_HOST: 172.16.0.11
       # nacos数据库端口
       MYSQL_SERVICE_PORT: 3306
       # nacos数据库账号
@@ -40,32 +35,3 @@ services:
       MYSQL_SERVICE_PASSWORD: zhang147852
     volumes:
       - /app/nacos/logs:/home/nacos/logs
-
-  redis1:
-    restart: always
-    image: redis
-    container_name: redis1
-    ports:
-      - "6379:6379"
-    volumes:
-      - /app/redis/data:/data
-      - /app/redis/conf/redis.conf:/etc/redis/redis.conf
-    environment:
-      REDIS_REQUIREPASS: 1234
-
-  mysql1:
-    restart: always
-    build:
-      context: ./
-      dockerfile: Mysql_Dockerfile
-    image: custom_mysql
-    container_name: mysql1
-    security_opt:
-      - seccomp:unconfined
-    ports:
-      - "3306:3306"
-    volumes:
-      - /app/mysql/data:/var/lib/mysql
-      - /app/mysql/conf:/etc/mysql/conf.d
-    environment:
-      MYSQL_ROOT_PASSWORD: zhang147852
