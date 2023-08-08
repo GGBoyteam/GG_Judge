@@ -47,11 +47,9 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import HeaderSearch from '@/components/HeaderSearch'
-import RuoYiGit from '@/components/RuoYi/Git'
-import RuoYiDoc from '@/components/RuoYi/Doc'
-import useAppStore from '@/store/modules/app'
-import useUserStore from '@/store/modules/user'
-import useSettingsStore from '@/store/modules/settings'
+import useAppStore from '@/store/system/app'
+import useUserStore from '@/store/system/user'
+import useSettingsStore from '@/store/system/settings'
 
 const appStore = useAppStore()
 const userStore = useUserStore()

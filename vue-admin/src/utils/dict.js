@@ -1,4 +1,4 @@
-import useDictStore from '@/store/modules/dict'
+import useDictStore from '@/store/system/dict'
 import { getDicts } from '@/api/system/dict/data'
 
 /**

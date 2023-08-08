@@ -201,7 +201,7 @@ export const m = {
   Help: 'Help',
   Group: 'Group',
 
-  // /views/oj/Home.vue
+  // /views/oj/index.vue
   Welcome_to: 'Welcome to ',
   Recent_7_Days_AC_Rank: 'Rank: Accepted In The Last Week',
   Other_OJ_Contest: 'Other Online Judge Contest',

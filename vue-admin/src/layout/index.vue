@@ -1,5 +1,5 @@
 <template>
-  <div :class="classObj" class="app-wrapper" :style="{ '--current-color': theme }">
+  <div :class="classObj" class="app-wrapper" :style="{ '--current-color': theme }" v-if="settingsStore.enable">
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <sidebar v-if="!sidebar.hide" class="sidebar-container" />
     <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
@@ -11,6 +11,13 @@
       <settings ref="settingRef" />
     </div> 
   </div>
+  <div class="app-wrapper" :style="{ '--current-color': theme }" v-if="!settingsStore.enable">
+    <div class="fixed-header">
+      <TopNav />
+    </div>
+    <oj-app-main/>
+    <settings ref="settingRef" />
+  </div>
 </template>
 
 <script setup>
@@ -19,9 +26,10 @@ import Sidebar from './components/Sidebar/index.vue'
 import { AppMain, Navbar, Settings, TagsView } from './components'
 import defaultSettings from '@/settings'
 
-import useAppStore from '@/store/modules/app'
-import useSettingsStore from '@/store/modules/settings'
+import {TopNav,OjAppMain} from './oj'
 
+import useAppStore from '@/store/system/app'
+import useSettingsStore from '@/store/system/settings'
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme);
 const sideTheme = computed(() => settingsStore.sideTheme);

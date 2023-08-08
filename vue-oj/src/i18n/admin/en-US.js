@@ -10,7 +10,7 @@ export const m = {
   Admin_Login_Success: 'Dear administrator, welcome back~',
   Please_check_your_username_or_password: 'Please check your username or password',
 
-  // /views/admin/Home.vue
+  // /views/admin/index.vue
   Dashboard: 'Dashboard',
   General: 'General',
   User_Admin: 'Admin User',

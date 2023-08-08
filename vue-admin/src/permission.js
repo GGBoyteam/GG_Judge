@@ -5,9 +5,10 @@ import 'nprogress/nprogress.css'
 import { getToken } from '@/utils/auth'
 import { isHttp } from '@/utils/validate'
 import { isRelogin } from '@/utils/request'
-import useUserStore from '@/store/modules/user'
-import useSettingsStore from '@/store/modules/settings'
-import usePermissionStore from '@/store/modules/permission'
+import useUserStore from '@/store/system/user'
+import useSettingsStore from '@/store/system/settings'
+import usePermissionStore from '@/store/system/permission'
+import useOjAppStore from "@/store/oj/ojApp";
 
 NProgress.configure({ showSpinner: false });
 
@@ -15,6 +16,9 @@ const whiteList = ['/login', '/register'];
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
+  if(to.meta.enableOJ){
+    useSettingsStore().enableOJ();
+  }
   if (getToken()) {
     to.meta.title && useSettingsStore().setTitle(to.meta.title)
     /* has token*/
@@ -51,13 +55,21 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       // 在免登录白名单，直接进入
       next()
-    } else {
+    }else if(to.path==="/index"||to.path.startsWith("/oj")){
+      next()
+    }
+    else {
       next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
       NProgress.done()
     }
   }
 })
 
-router.afterEach(() => {
+router.afterEach((to, from, next) => {
+  if(to.path=='/system/home'&&useOjAppStore.toSystemRefresh===false){
+    useOjAppStore.toSystemRefresh=true;
+    router.go(0);
+  }
+  useOjAppStore.toSystemRefresh=false;
   NProgress.done()
 })

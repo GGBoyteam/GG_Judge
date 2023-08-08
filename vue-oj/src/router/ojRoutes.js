@@ -1,4 +1,4 @@
-import Home from '@/views/oj/Home.vue'
+import Home from '@/views/oj/index.vue'
 import SetNewPassword from "@/views/oj/user/SetNewPassword.vue"
 import UserHome from "@/views/oj/user/UserHome.vue"
 import Setting from "@/views/oj/user/Setting.vue"

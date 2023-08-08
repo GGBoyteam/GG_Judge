@@ -201,7 +201,7 @@ export const m = {
   Help: '帮助',
   Group: 'Q群',
 
-  // /views/oj/Home.vue
+  // /views/oj/index.vue
   Welcome_to: '欢迎使用 ',
   Recent_7_Days_AC_Rank: '最近一周过题榜单',
   Other_OJ_Contest: '其它OJ的近期比赛',

@@ -42,6 +42,8 @@ import ImagePreview from "@/components/ImagePreview"
 import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
+import VditorEdit from "@/components/VditorEdit";
+import VditorPreview from "@/components/VditorPreview";
 
 const app = createApp(App)
 
@@ -64,6 +66,8 @@ app.component('ImageUpload', ImageUpload)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('Editor', Editor)
+app.component('VditorEdit',VditorEdit)
+app.component('VditorPreview',VditorPreview)
 
 app.use(router)
 app.use(store)

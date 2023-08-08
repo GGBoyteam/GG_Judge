@@ -9,6 +9,7 @@ const useSettingsStore = defineStore(
   'settings',
   {
     state: () => ({
+      enable: true,
       title: '',
       theme: storageSetting.theme || '#409EFF',
       sideTheme: storageSetting.sideTheme || sideTheme,
@@ -20,6 +21,9 @@ const useSettingsStore = defineStore(
       dynamicTitle: storageSetting.dynamicTitle === undefined ? dynamicTitle : storageSetting.dynamicTitle
     }),
     actions: {
+      enableOJ(){
+        this.enable=false;
+      },
       // 修改布局设置
       changeSetting(data) {
         const { key, value } = data

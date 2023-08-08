@@ -1,6 +1,6 @@
 import store from '@/store'
 import defaultSettings from '@/settings'
-import useSettingsStore from '@/store/modules/settings'
+import useSettingsStore from '@/store/system/settings'
 
 /**
  * 动态修改标题

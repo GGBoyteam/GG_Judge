@@ -26,6 +26,59 @@ import Layout from '@/layout'
 
 // 公共路由
 export const constantRoutes = [
+   //----------------OJ路由----------------------------
+  {
+    path: '/oj',
+    hidden: true,
+    component: Layout,
+    children: [
+      {
+        path: '/index',
+        component: () => import('@/views/oj/index.vue'),
+        meta:{
+          enableOJ: true
+        }
+      },
+      {
+        name: '题目',
+        path: '/oj/problem',
+        component: ()=>import('@/views/oj/problem/index.vue'),
+        children: [
+        ],
+        meta: {
+          enableOJ: true
+        }
+      },
+      {
+        name: '题目详情',
+        path: '/oj/problem/detail',
+        component: ()=>import('@/views/oj/problem/detail.vue'),
+        meta: {
+          enableOJ: true
+        }
+      },
+      {
+        name: '训练',
+        path: '/oj/train',
+        component: ()=>import('@/views/oj/train/index.vue'),
+        meta: {
+          enableOJ: true
+        }
+      },
+      {
+        name: '竞赛',
+        path: '/oj/contest',
+        component: ()=>import('@/views/oj/contest/index.vue'),
+        meta: {
+          enableOJ: true
+        }
+      },
+    ]
+  },
+
+
+
+  //----------------OJ路由----------------------------
   {
     path: '/redirect',
     component: Layout,
@@ -61,13 +114,20 @@ export const constantRoutes = [
     path: '',
     component: Layout,
     redirect: '/index',
+  },
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/system/home',
     children: [
       {
-        path: '/index',
-        component: () => import('@/views/index'),
-        name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
+        path: 'home',
+        name: '后台首页',
+        component: ()=>import('@/views/system/home/index.vue'),
+        meta: {
+          title: '首页'
+        }
+      },
     ]
   },
   {

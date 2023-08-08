@@ -10,7 +10,7 @@ export const m = {
   Admin_Login_Success: '尊敬的管理员，欢迎回来~',
   Please_check_your_username_or_password: '请检查你的用户名或密码',
 
-  // /views/admin/Home.vue
+  // /views/admin/index.vue
   Dashboard: '仪表盘',
   General: '常用设置',
   User_Admin: '用户管理',

@@ -5,7 +5,7 @@ import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from '@/utils/ruoyi'
 import cache from '@/plugins/cache'
 import { saveAs } from 'file-saver'
-import useUserStore from '@/store/modules/user'
+import useUserStore from '@/store/system/user'
 
 let downloadLoadingInstance;
 // 是否显示重新登录

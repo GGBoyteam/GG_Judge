@@ -12,7 +12,7 @@
 
 <script setup>
 import InnerLink from "../InnerLink/index"
-import useTagsViewStore from '@/store/modules/tagsView'
+import useTagsViewStore from '@/store/system/tagsView'
 
 const route = useRoute();
 const tagsViewStore = useTagsViewStore()

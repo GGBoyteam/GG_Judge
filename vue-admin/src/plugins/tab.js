@@ -1,4 +1,4 @@
-import useTagsViewStore from '@/store/modules/tagsView'
+import useTagsViewStore from '@/store/system/tagsView'
 import router from '@/router'
 
 export default {
