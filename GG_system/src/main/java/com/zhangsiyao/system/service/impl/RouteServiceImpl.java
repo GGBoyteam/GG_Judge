@@ -116,8 +116,8 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
         }
         if("M".equals(routeAddOrUpdateVo.getRouteType())){
             routeAddOrUpdateVo.setComponent("Layout");
-            routeAddOrUpdateVo.setAlwaysShow(0);
             routeAddOrUpdateVo.setRedirect("noRedirect");
+            routeAddOrUpdateVo.setAlwaysShow(1);
         }else if("F".equals(routeAddOrUpdateVo.getRouteType())){
             routeAddOrUpdateVo.setComponent(null);
             routeAddOrUpdateVo.setPath(null);
