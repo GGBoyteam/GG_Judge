@@ -18,6 +18,7 @@
         <module>GG_auth</module>
         <module>GG_gateway</module>
         <module>GG_system</module>
+        <module>GG_judgeServer</module>
     </modules>
 
 </project>
