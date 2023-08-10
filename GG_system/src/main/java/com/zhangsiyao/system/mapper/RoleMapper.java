@@ -1,6 +1,6 @@
 package com.zhangsiyao.system.mapper;
 
-import com.zhangsiyao.common.entity.service.dao.Role;
+import com.zhangsiyao.common.entity.system.dao.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

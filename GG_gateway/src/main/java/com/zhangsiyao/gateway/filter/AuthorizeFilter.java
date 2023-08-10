@@ -53,6 +53,7 @@ public class AuthorizeFilter implements GlobalFilter{
         if (key==null){
             return out(response,"验证失败");
         }
+        System.out.println(exchange.getRequest().getPath().value());
         return chain.filter(exchange);
     }
 

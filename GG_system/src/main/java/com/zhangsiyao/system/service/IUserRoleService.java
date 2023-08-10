@@ -1,14 +1,14 @@
 package com.zhangsiyao.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zhangsiyao.common.entity.service.dao.Role;
-import com.zhangsiyao.common.entity.service.dao.UserInfo;
-import com.zhangsiyao.common.entity.service.dao.UserRole;
+import com.zhangsiyao.common.entity.system.dao.Role;
+import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.common.entity.service.dto.RoleDto;
-import com.zhangsiyao.common.entity.service.vo.RoleAllocateUserVo;
-import com.zhangsiyao.common.entity.service.vo.RoleUserQueryVo;
-import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.dto.RoleDto;
+import com.zhangsiyao.common.entity.system.vo.RoleAllocateUserVo;
+import com.zhangsiyao.common.entity.system.vo.RoleUserQueryVo;
+import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
 
 import java.util.List;
 

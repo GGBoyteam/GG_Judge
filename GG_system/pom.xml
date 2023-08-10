@@ -11,8 +11,8 @@
     <groupId>com.zhangsiyao</groupId>
     <artifactId>GG_system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>GG_judge</name>
-    <description>GG_judge</description>
+    <name>GG_system</name>
+    <description>GG_system</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>

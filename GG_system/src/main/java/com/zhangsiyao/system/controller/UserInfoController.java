@@ -3,13 +3,12 @@ package com.zhangsiyao.system.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.service.dao.UserInfo;
-import com.zhangsiyao.common.entity.service.dto.UserInfoDto;
-import com.zhangsiyao.common.entity.service.dto.UserPermissionDto;
-import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
-import com.zhangsiyao.common.entity.service.vo.UserQueryVo;
+import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dto.UserInfoDto;
+import com.zhangsiyao.common.entity.system.dto.UserPermissionDto;
+import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.vo.UserQueryVo;
 import com.zhangsiyao.system.service.IUserInfoService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

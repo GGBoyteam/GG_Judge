@@ -1,11 +1,11 @@
 package com.zhangsiyao.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zhangsiyao.common.entity.service.dao.Role;
+import com.zhangsiyao.common.entity.system.dao.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.common.entity.service.dto.RolePermissionDto;
-import com.zhangsiyao.common.entity.service.vo.RoleQueryVo;
-import com.zhangsiyao.common.entity.service.vo.RoleAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.dto.RolePermissionDto;
+import com.zhangsiyao.common.entity.system.vo.RoleQueryVo;
+import com.zhangsiyao.common.entity.system.vo.RoleAddOrUpdateVo;
 
 /**
  * <p>

@@ -3,19 +3,18 @@ package com.zhangsiyao.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.service.dao.RolePermission;
-import com.zhangsiyao.common.entity.service.dao.UserInfo;
-import com.zhangsiyao.common.entity.service.dao.UserRole;
-import com.zhangsiyao.common.entity.service.dto.UserInfoDto;
-import com.zhangsiyao.common.entity.service.dto.UserPermissionDto;
-import com.zhangsiyao.common.entity.service.vo.UserAddOrUpdateVo;
-import com.zhangsiyao.common.entity.service.vo.UserQueryVo;
+import com.zhangsiyao.common.entity.system.dao.RolePermission;
+import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.UserRole;
+import com.zhangsiyao.common.entity.system.dto.UserInfoDto;
+import com.zhangsiyao.common.entity.system.dto.UserPermissionDto;
+import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.vo.UserQueryVo;
 import com.zhangsiyao.common.exception.RegisterException;
 import com.zhangsiyao.common.service.feign.UserAuthService;
 import com.zhangsiyao.system.mapper.UserInfoMapper;
@@ -31,10 +30,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

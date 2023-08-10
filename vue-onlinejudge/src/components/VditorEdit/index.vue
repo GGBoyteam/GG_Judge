@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div id="vditorEdit"></div>
+    <div :id="$props.name"></div>
   </div>
 </template>
 <script>
-import {ref, onMounted, watch, defineComponent, defineEmits} from "vue";
+import {ref, onMounted, watch, defineComponent, defineEmits, computed} from "vue";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
 const vditorEdit = ref("");
@@ -13,23 +13,38 @@ export default defineComponent({
   props: {
     modelValue:String,
     height: {
-      type: String,
-      default: 'auto'
+      default: 600
+    },
+    name:{
+      type: String
     }
   },
   setup(props,context) {
-    const text=ref('');
+    const valueId = computed({
+      get: () => props.modelValue,
+      set: (val) => {
+        emit('update:modelValue',val)
+      }
+    });
     onMounted(() => {
-      vditorEdit.value = new Vditor('vditorEdit', {
+      vditorEdit.value = new Vditor(props.name, {
         height: props.height,
+        value: props.modelValue,
+        mode: 'ir',
+        cache:{
+          enable: false
+        },
         input(value) {
-          text.value=value;
+          context.emit('update:modelValue',value);
         }
       });
     });
-    watch(() => text.value,(newVal,oldVal)=>{
-      context.emit('update:modelValue',newVal);
-    })
+
+    // 监听props.modelValue的变化
+    watch(valueId, (newValue) => {
+      // do something when modelValue changes
+      console.log('modelValue changed to:', newValue);
+    });
     return {
       vditorEdit
     };

@@ -2,12 +2,12 @@ package com.zhangsiyao.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zhangsiyao.common.entity.service.dao.RolePermission;
-import com.zhangsiyao.common.entity.service.dao.Route;
-import com.zhangsiyao.common.entity.service.dto.DynamicRouteDto;
-import com.zhangsiyao.common.entity.service.dto.RouteTreeNode;
-import com.zhangsiyao.common.entity.service.vo.RouteAddOrUpdateVo;
-import com.zhangsiyao.common.entity.service.vo.RouteQueryVo;
+import com.zhangsiyao.common.entity.system.dao.RolePermission;
+import com.zhangsiyao.common.entity.system.dao.Route;
+import com.zhangsiyao.common.entity.system.dto.DynamicRouteDto;
+import com.zhangsiyao.common.entity.system.dto.RouteTreeNode;
+import com.zhangsiyao.common.entity.system.vo.RouteAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.vo.RouteQueryVo;
 import com.zhangsiyao.system.mapper.RouteMapper;
 import com.zhangsiyao.system.service.IRolePermissionService;
 import com.zhangsiyao.system.service.IRouteService;

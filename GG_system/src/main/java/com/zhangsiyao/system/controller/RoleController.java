@@ -2,16 +2,14 @@ package com.zhangsiyao.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.service.dao.Role;
-import com.zhangsiyao.common.entity.service.dto.RoleDto;
-import com.zhangsiyao.common.entity.service.dto.RolePermissionDto;
-import com.zhangsiyao.common.entity.service.vo.RoleQueryVo;
-import com.zhangsiyao.common.entity.service.vo.RoleAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.dao.Role;
+import com.zhangsiyao.common.entity.system.dto.RolePermissionDto;
+import com.zhangsiyao.common.entity.system.vo.RoleQueryVo;
+import com.zhangsiyao.common.entity.system.vo.RoleAddOrUpdateVo;
 import com.zhangsiyao.system.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

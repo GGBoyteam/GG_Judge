@@ -1,11 +1,11 @@
 package com.zhangsiyao.system.controller;
 
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.service.dao.Route;
-import com.zhangsiyao.common.entity.service.dto.DynamicRouteDto;
-import com.zhangsiyao.common.entity.service.dto.RouteTreeNode;
-import com.zhangsiyao.common.entity.service.vo.RouteAddOrUpdateVo;
-import com.zhangsiyao.common.entity.service.vo.RouteQueryVo;
+import com.zhangsiyao.common.entity.system.dao.Route;
+import com.zhangsiyao.common.entity.system.dto.DynamicRouteDto;
+import com.zhangsiyao.common.entity.system.dto.RouteTreeNode;
+import com.zhangsiyao.common.entity.system.vo.RouteAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.vo.RouteQueryVo;
 import com.zhangsiyao.system.service.IRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

@@ -116,6 +116,19 @@ export const constantRoutes = [
     redirect: '/index',
   },
   {
+    path:'/judge/problem',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'updateBody',
+        component: () => import('@/views/admin/judge/problem/ProblemBody.vue'),
+        name: 'updateBody',
+        meta: { title: '配置题面'}
+      }
+    ]
+  },
+  {
     path: '/system',
     component: Layout,
     redirect: '/system/home',
@@ -148,6 +161,8 @@ export const constantRoutes = [
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [
+
+
   {
     path: '/system/user-auth',
     component: Layout,

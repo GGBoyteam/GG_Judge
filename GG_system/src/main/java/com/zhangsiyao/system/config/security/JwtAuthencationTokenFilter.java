@@ -3,7 +3,7 @@ package com.zhangsiyao.system.config.security;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
-import com.zhangsiyao.common.entity.service.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.UserInfo;
 import com.zhangsiyao.system.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

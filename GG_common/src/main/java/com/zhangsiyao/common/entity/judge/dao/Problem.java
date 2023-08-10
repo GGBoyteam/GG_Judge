@@ -36,9 +36,10 @@ public class Problem implements Serializable {
     private String title;
 
     /**
-     * 题目标签(json格式)
-     */
-    private String tags;
+     * 作者名称
+     * */
+    private String author;
+
 
     /**
      * 题目描述
@@ -63,7 +64,7 @@ public class Problem implements Serializable {
     /**
      * 是否展示(0展示，1不展示)
      */
-    private Boolean status;
+    private Integer status;
 
 
 }

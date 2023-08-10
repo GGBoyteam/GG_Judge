@@ -1,11 +1,11 @@
 package com.zhangsiyao.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.common.entity.service.dao.Route;
-import com.zhangsiyao.common.entity.service.dto.DynamicRouteDto;
-import com.zhangsiyao.common.entity.service.dto.RouteTreeNode;
-import com.zhangsiyao.common.entity.service.vo.RouteAddOrUpdateVo;
-import com.zhangsiyao.common.entity.service.vo.RouteQueryVo;
+import com.zhangsiyao.common.entity.system.dao.Route;
+import com.zhangsiyao.common.entity.system.dto.DynamicRouteDto;
+import com.zhangsiyao.common.entity.system.dto.RouteTreeNode;
+import com.zhangsiyao.common.entity.system.vo.RouteAddOrUpdateVo;
+import com.zhangsiyao.common.entity.system.vo.RouteQueryVo;
 
 import java.util.List;
 
