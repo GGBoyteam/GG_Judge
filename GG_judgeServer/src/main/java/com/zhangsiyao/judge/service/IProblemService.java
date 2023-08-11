@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.vo.ProblemBaseInfoUpdateVo;
+import com.zhangsiyao.common.entity.judge.vo.ProblemBodyUpdateVo;
 import com.zhangsiyao.common.entity.judge.vo.ProblemQueryVo;
 
 import java.util.List;
@@ -27,5 +28,7 @@ public interface IProblemService extends IService<Problem> {
     List<ProblemTag> tags();
 
     void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo);
+
+    void updateProblemBody(ProblemBodyUpdateVo updateVo);
 
 }

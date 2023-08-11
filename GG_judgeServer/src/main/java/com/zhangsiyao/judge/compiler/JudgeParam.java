@@ -1,4 +1,4 @@
-package com.zhangsiyao.common.send;
+package com.zhangsiyao.judge.compiler;
 
 import lombok.*;
 

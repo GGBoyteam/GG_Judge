@@ -1,7 +1,6 @@
-package com.zhangsiyao.common.result;
+package com.zhangsiyao.judge.compiler;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.zhangsiyao.common.send.JudgeParam;
 import lombok.Data;
 import org.springframework.web.bind.annotation.ResponseBody;
 

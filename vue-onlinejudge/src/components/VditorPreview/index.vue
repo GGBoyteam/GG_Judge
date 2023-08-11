@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :id="$props.name"></div>
+    <div :id="$props.name" style="border: 0"></div>
   </div>
 </template>
 <script>
@@ -34,6 +34,9 @@ export default defineComponent({
       vditorPreview.value = new Vditor(props.name, {
         height: '360',
         mode: 'ir',
+        fullscreen:{
+          index: 50
+        },
         cache:{
           enable: false
         },
@@ -45,11 +48,8 @@ export default defineComponent({
       });
     });
 
-    // 监听props.modelValue的变化
     watch(valueId, (newValue) => {
-      // do something when modelValue changes
-      console.log('dawdawdmodelValue changed to:', newValue);
-      VditorSetting.preview(document.getElementById(props.name),props.modelValue, {
+      VditorSetting.preview(document.getElementById(props.name),newValue, {
         hljs: { style: "github" },
       });
     });

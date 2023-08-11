@@ -125,6 +125,14 @@ export const constantRoutes = [
         component: () => import('@/views/admin/judge/problem/ProblemBody.vue'),
         name: 'updateBody',
         meta: { title: '配置题面'}
+      },
+      {
+        path:'trueCode',
+        component: ()=>import('@/views/admin/judge/problem/ProblemTrueCode.vue'),
+        name:'trueCode',
+        meta: {
+          title: '配置代码'
+        }
       }
     ]
   },

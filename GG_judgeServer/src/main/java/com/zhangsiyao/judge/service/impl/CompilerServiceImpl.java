@@ -1,20 +1,25 @@
 package com.zhangsiyao.judge.service.impl;
 
-import com.zhangsiyao.common.entity.judge.dao.Compiler;
-import com.zhangsiyao.judge.mapper.CompilerMapper;
+import com.zhangsiyao.common.entity.judge.vo.CodeCompileVo;
+import com.zhangsiyao.judge.compiler.CppCompiler;
+import com.zhangsiyao.judge.compiler.JudgeResult;
 import com.zhangsiyao.judge.service.ICompilerService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * <p>
- *  服务实现类
- * </p>
- *
- * @author author
- * @since 2023-08-09
- */
 @Service
-public class CompilerServiceImpl extends ServiceImpl<CompilerMapper, Compiler> implements ICompilerService {
+public class CompilerServiceImpl implements ICompilerService {
 
+    @Autowired
+    CppCompiler cppCompiler;
+
+    @Override
+    public JudgeResult compile(CodeCompileVo codeCompileVo) {
+        if("c++".equals(codeCompileVo.getLanguage())){
+            JudgeResult result = cppCompiler.compile(codeCompileVo.getCode(), codeCompileVo.getVersion());
+            cppCompiler.removeFiles();
+            return result;
+        }
+        return null;
+    }
 }

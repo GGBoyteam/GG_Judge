@@ -5,6 +5,7 @@ import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.vo.ProblemBaseInfoUpdateVo;
+import com.zhangsiyao.common.entity.judge.vo.ProblemBodyUpdateVo;
 import com.zhangsiyao.common.entity.judge.vo.ProblemQueryVo;
 import com.zhangsiyao.judge.service.IProblemService;
 import com.zhangsiyao.judge.service.IProblemTagService;
@@ -29,7 +30,7 @@ public class ProblemController {
     }
 
     @GetMapping("/info/{pid}")
-    public R<ProblemDto> info(@PathVariable String pid){
+    public R<ProblemDto> info(@PathVariable String pid,@RequestHeader("Authorization") String token){
         return R.success(problemService.info(pid));
     }
 
@@ -39,8 +40,14 @@ public class ProblemController {
     }
 
     @PostMapping("/updateProblemBaseInfo")
-    public R<String> updateProblemBaseInfo(@RequestBody ProblemBaseInfoUpdateVo updateVo){
+    public R<String> updateProblemBaseInfo(@RequestBody ProblemBaseInfoUpdateVo updateVo,@RequestHeader("Authorization") String token){
         problemService.updateBaseInfo(updateVo);
+        return R.success();
+    }
+
+    @PostMapping("/updateProblemBody")
+    public R<String> updateProblemBody(@RequestBody ProblemBodyUpdateVo updateVo,@RequestHeader("Authorization") String token){
+        problemService.updateProblemBody(updateVo);
         return R.success();
     }
 

@@ -1,23 +1,21 @@
-package com.zhangsiyao.common.compiler;
+package com.zhangsiyao.judge.compiler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangsiyao.common.result.JudgeResult;
-import com.zhangsiyao.common.send.JudgeParam;
+import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
 import java.util.*;
 
 @SuppressWarnings("all")
-public class JavaCompiler {
+@Service
+public class JavaCompiler implements ICompiler{
 
-    private final String judgeServerUrl;
-
-    private int javaVersion=8;
+    private final String judgeServerUrl="http://172.16.0.49:5050";
 
     private String fileId=null;
 
@@ -29,12 +27,11 @@ public class JavaCompiler {
     private final ObjectMapper objectMapper=new ObjectMapper();
 
 
-    public JavaCompiler(String judgeServerUrl,int javaVersion) {
-        this.judgeServerUrl = judgeServerUrl;
-        this.javaVersion=javaVersion;
+    public JavaCompiler() {
     }
 
-    public JudgeResult compile(String content) throws JsonProcessingException {
+    @SneakyThrows
+    public JudgeResult compile(String content, Integer version){
         System.out.println(content);
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
@@ -60,7 +57,8 @@ public class JavaCompiler {
         return judgeResult;
     }
 
-    public JudgeResult run(long timeLimit,long memoryLimit,String input) throws JsonProcessingException {
+    @SneakyThrows
+    public JudgeResult run(String input,Long timeLimit, Long memoryLimit){
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
@@ -80,7 +78,7 @@ public class JavaCompiler {
         return judgeResultList.get(0);
     }
 
-    public void removeAll(){
+    public void removeFiles(){
         String url=judgeServerUrl+"/file/";
         for(String file:fileIds){
             restTemplate.delete(url+file);

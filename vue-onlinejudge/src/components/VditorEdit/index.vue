@@ -4,7 +4,14 @@
   </div>
 </template>
 <script>
-import {ref, onMounted, watch, defineComponent, defineEmits, computed} from "vue";
+import {
+  ref,
+  watch,
+  defineComponent,
+  computed,
+  onUpdated,
+  onBeforeUpdate
+} from "vue";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
 const vditorEdit = ref("");
@@ -20,34 +27,33 @@ export default defineComponent({
     }
   },
   setup(props,context) {
-    const valueId = computed({
-      get: () => props.modelValue,
-      set: (val) => {
-        emit('update:modelValue',val)
-      }
-    });
-    onMounted(() => {
+    onBeforeUpdate(() => {
       vditorEdit.value = new Vditor(props.name, {
         height: props.height,
         value: props.modelValue,
         mode: 'ir',
         cache:{
-          enable: false
+          enable:false
         },
         input(value) {
           context.emit('update:modelValue',value);
         }
       });
     });
-
-    // 监听props.modelValue的变化
-    watch(valueId, (newValue) => {
-      // do something when modelValue changes
-      console.log('modelValue changed to:', newValue);
-    });
+    onUpdated(()=>{
+      const valueId = computed({
+        get: () => props.modelValue,
+        set: (val) => {
+          emit('update:modelValue',val)
+        }
+      });
+      watch(valueId, (newValue) => {
+        vditorEdit.value.setValue(newValue);
+      });
+    })
     return {
       vditorEdit
     };
-  },
+  }
 });
 </script>

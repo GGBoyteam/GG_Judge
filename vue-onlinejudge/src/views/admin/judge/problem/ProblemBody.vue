@@ -5,7 +5,7 @@
       <el-row class="problem-box"
               :id="'problem-box' + '-' + $route.name">
         <el-col :sm="24" :md="11" :lg="12" class="problem-left" :id="'problem-left'+'-'+ $route.name" style="height: 100%">
-          <el-tabs model-value="problemDetail" type="border-card" @tab-click="handleClickTab">
+          <el-tabs model-value="problemDetail" type="border-card">
             <el-tab-pane name="problemDetail" :v-loading="false">
               <template #label>
                   <span class="custom-tabs-label">
@@ -17,7 +17,7 @@
                 <div id="problem-content">
                   <div>
                     <p class="title">描述</p>
-                    <VditorEdit name="description" v-model="description"></VditorEdit>
+                    <VditorEdit name="description" v-model="problemInfo.description"></VditorEdit>
                   </div>
 
                   <div>
@@ -31,20 +31,20 @@
                   </div>
                   <div>
                     <p class="title">样例描述</p>
-                    <VditorEdit name="example_description" v-model="v3"></VditorEdit>
+                    <VditorEdit name="example_description" v-model="problemInfo.exampleDescription"></VditorEdit>
                   </div>
                 </div>
               </div>
             </el-tab-pane>
           </el-tabs>
         </el-col>
-        <el-col :sm="24" :md="11" :lg="12" class="problem-left" :id="'problem-left'+'-'+ $route.name" style="height: 100%">
-          <el-tabs model-value="problemDetail" type="border-card" @tab-click="handleClickTab">
+        <el-col :sm="24" :md="11" :lg="12 " class="problem-left" :id="'problem-left'+'-'+ $route.name" style="height: 100%">
+          <el-tabs model-value="problemDetail" type="border-card">
             <el-tab-pane name="problemDetail" :v-loading="false">
               <template #label>
                   <span class="custom-tabs-label">
                     <el-icon><calendar /></el-icon>
-                    <span>题目描述</span>
+                    <span>题目预览</span>
                    </span>
               </template>
               <div style="padding: 10px 10px 10px 10px" type="shadow" :id="'js-left'+'-'+ $route.name" class="js-left">
@@ -93,8 +93,8 @@
                             v-for="(tag,index) in problemInfo.tags"
                             :key="index"
                             :color="tag.color? tag.color : '#409eff'"
-                            style="margin-right:5px;margin-top:2px"
-                        >{{tag.name}}</el-tag>
+                            style="margin-right:5px;margin-top:2px;border: 0"
+                        >{{tag.title}}</el-tag>
                       </el-popover>
                     </span>
                     <span v-else>
@@ -107,21 +107,18 @@
                       <el-link
                           type="primary"
                           :underline="false"
-                          @click="goProblemDiscussion"
                       ><el-icon><Comment /></el-icon>题目讨论</el-link>
                     </span>
                     <span>
                       <el-link
                           type="primary"
                           :underline="false"
-                          @click="graphVisible = !graphVisible"
                       ><el-icon><Histogram /></el-icon>题目统计</el-link>
                     </span>
                     <span>
                       <el-link
                           type="primary"
                           :underline="false"
-                          @click="goProblemSubmission"
                       ><el-icon><List /></el-icon>全部提交</el-link>
                     </span>
                   </div>
@@ -135,7 +132,7 @@
                 <div id="problem-content">
                   <div>
                     <p class="title">描述</p>
-                    <VditorPreview name="description_preview" v-model="description"></VditorPreview>
+                    <VditorPreview name="description_preview" v-model="problemInfo.description"></VditorPreview>
                   </div>
 
                   <div>
@@ -176,9 +173,9 @@
                     </div>
                   </div>
 
-                  <div>
+                  <div v-show="problemInfo.exampleDescription&&problemInfo.exampleDescription.length>1">
                     <p class="title">样例描述</p>
-                    <VditorPreview name="example_description_preview" v-model="v3"></VditorPreview>
+                    <VditorPreview name="example_description_preview" v-model="problemInfo.exampleDescription"></VditorPreview>
                   </div>
                 </div>
               </div>
@@ -189,8 +186,8 @@
     </div>
     <div class="problem-bottom">
       <div class="button-group">
-        <el-button type="primary">更新题面</el-button>
-        <el-button>取消设置</el-button>
+        <el-button type="primary" @click="Submission">更新题面</el-button>
+        <el-button @click="Cancel">取消设置</el-button>
       </div>
     </div>
   </div>
@@ -200,15 +197,16 @@ import {ref, watch} from "vue";
 import VditorPreview from "@/components/VditorPreview/index.vue";
 import CodeInput from "@/components/CodeInput/index.vue";
 import {getToken} from "@/utils/auth";
-import {getProblem, getSubmissionsByPid} from "@/api/oj/problem";
+import {getProblem, updateProblemBody} from "@/api/oj/problem";
+import {delConfig} from "@/api/system/config";
+import router from "@/router";
+import {useRouter} from "vue-router";
 export default {
   components: {CodeInput, VditorPreview},
   setup(){
     const pid=ref(undefined);
-
-    const description=ref('');
-
-
+    const { proxy } = getCurrentInstance();
+    const router = useRouter();
     const problemInfo=ref({
       pid: undefined,
       title: '测试标题',
@@ -228,104 +226,44 @@ export default {
       exampleDescription: '样例描述',
       examples:[]
     });
-
-
-    const submissionsQuery=ref({
-      pageNum: 1,
-      pageSize:20
-    })
-
-    const submissions=ref({
-      total: 100,
-      data:[
-        {
-          status: 0,
-          language: 'Java',
-          runtime: undefined,
-          memory: undefined,
-          date: undefined,
-          note: undefined,
-        },
-        {
-          status: 1,
-          language: 'Java',
-          runtime: undefined,
-          memory: undefined,
-          date: undefined,
-          note: undefined,
-        },
-        {
-          status: 2,
-          language: 'Java',
-          runtime: undefined,
-          memory: undefined,
-          date: undefined,
-          note: undefined,
-        },
-        {
-          status: 3,
-          language: 'Java',
-          runtime: undefined,
-          memory: undefined,
-          date: undefined,
-          note: undefined,
-        },
-        {
-          status: 4,
-          language: 'Java',
-          runtime: undefined,
-          memory: undefined,
-          date: undefined,
-          note: undefined,
-        }
-      ]
-    });
-
-
-    const codeInfo=ref({
-      language: undefined,
-      code: undefined
-    });
-
-
-
-    function isAuthenticated(){
-      console.log(getToken()&&getToken().length!==0)
-      return getToken()&&getToken().length!==0;
-    }
-    function handleClickTab(data) {
-      var name=data.props.name;
-      if(name=='mySubmission'&&isAuthenticated()){
-        getMySubmission()
-      }
+    function getProblemInfo(pid){
+      getProblem(pid).then((res)=>{
+        this.problemInfo=res.data;
+      })
     }
 
-    watch(description,(n,o)=>{
-      description.value=n
-      console.log(description)
-    })
-
-    function getMySubmission(){
-      console.log("dada")
-      getSubmissionsByPid(pid.value,submissionsQuery.value)
+    function Submission(){
+      problemInfo.value.pid=pid.value
+      updateProblemBody(problemInfo.value).then(res=>{
+        getProblem(pid.value)
+        proxy.$modal.confirm('更新成功,是否离开当前页面？').then(function () {
+          let obj={ path: "/judge/problem" }
+          proxy.$tab.closeOpenPage(obj);
+        }).then(function (){
+          router.push('/admin/judge/problem')
+        }).catch(() => {})
+      })
     }
+    function Cancel(){
+      proxy.$modal.confirm('是否离开当前页面？').then(function () {
+        let obj={ path: "/judge/problem" }
+        proxy.$tab.closeOpenPage(obj);
+      }).then(function (){
+        router.push('/admin/judge/problem')
+      }).catch(() => {})
+    }
+
     return{
-      description,
       pid,
       problemInfo,
-      codeInfo,
-      submissions,
-      submissionsQuery,
-      getMySubmission,
-      handleClickTab,
-      isAuthenticated
+      getProblemInfo,
+      Submission,
+      Cancel
     };
   },
   created() {
     this.pid=this.$route.query.pid;
-    console.log(this.pid)
-    getProblem(this.pid).then((res)=>{
-    })
+    this.getProblemInfo(this.pid)
   }
 }
 

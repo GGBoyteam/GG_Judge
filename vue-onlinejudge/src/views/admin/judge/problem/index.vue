@@ -114,7 +114,7 @@
             <template #default="scope">
                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">配置基础信息</el-button>
                <el-button link type="primary" icon="Edit" @click="handleProblemBodyUpdate(scope.row)">配置题面</el-button>
-              <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">配置正确代码</el-button>
+              <el-button link type="primary" icon="Edit" @click="handleProblemTrueCode(scope.row)">配置正确代码</el-button>
                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">配置样例</el-button>
                <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除题目</el-button>
             </template>
@@ -164,7 +164,7 @@
 </template>
 
 <script setup name="Post">
-import {listProblem, addPost, delPost, getProblem, updateProblemBaseInfo, getTags} from "@/api/system/problem";
+import {listProblem, addPost, delPost, getProblem, updateProblemBaseInfo, getTags} from "@/api/oj/problem";
 import axios from 'axios'
 import {useRouter} from "vue-router";
 const { proxy } = getCurrentInstance();
@@ -233,6 +233,10 @@ function reset() {
 
 function handleProblemBodyUpdate(row){
   router.push({path:'/judge/problem/updateBody',query:{pid:row.pid}});
+}
+
+function handleProblemTrueCode(row){
+  router.push({path:'/judge/problem/trueCode',query:{pid:row.pid}});
 }
 function handleQuery() {
   queryParams.value.pageNum = 1;

@@ -1,16 +1,66 @@
 import request from '@/utils/request'
 
-export function getProblem(id){
-    return request({
-        url: '/oj/problem/info/'+id,
-        method: 'get',
-    })
+// 查询岗位列表
+export function listProblem(query) {
+  return request({
+    url: '/judge-service/problem/list',
+    method: 'get',
+    params: query
+  })
 }
 
-export function getSubmissionsByPid(pid,query){
-    return request({
-        url: '/oj/problem/submissions/'+pid,
-        method: 'get',
-        params: query
-    })
+// 查询岗位详细
+export function getProblem(pid) {
+  return request({
+    url: '/judge-service/problem/info/' + pid,
+    method: 'get'
+  })
+}
+
+export function getTags() {
+  return request({
+    url: '/judge-service/problem/tags',
+    method: 'get'
+  })
+}
+
+// 新增岗位
+export function addPost(data) {
+  return request({
+    url: '/system/post',
+    method: 'post',
+    data: data
+  })
+}
+
+export function updateProblemBaseInfo(data) {
+  return request({
+    url: '/judge-service/problem/updateProblemBaseInfo',
+    method: 'post',
+    data: data
+  })
+}
+
+export function updateProblemBody(data) {
+  return request({
+    url: '/judge-service/problem/updateProblemBody',
+    method: 'post',
+    data: data
+  })
+}
+
+export function test(){
+  return request({
+    url: '/judge-service/compiler/run',
+    method: 'post'
+  })
+}
+
+
+// 删除岗位
+export function delPost(postId) {
+  return request({
+    url: '/system/post/' + postId,
+    method: 'delete'
+  })
 }

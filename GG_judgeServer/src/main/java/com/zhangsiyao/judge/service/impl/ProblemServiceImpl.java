@@ -11,6 +11,7 @@ import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTagRelation;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.vo.ProblemBaseInfoUpdateVo;
+import com.zhangsiyao.common.entity.judge.vo.ProblemBodyUpdateVo;
 import com.zhangsiyao.common.entity.judge.vo.ProblemQueryVo;
 import com.zhangsiyao.judge.mapper.ProblemMapper;
 import com.zhangsiyao.judge.service.IExampleService;
@@ -134,5 +135,12 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
             tagRelations.add(new ProblemTagRelation(null,updateVo.getPid(),tagId));
         });
         tagRelationService.saveBatch(tagRelations);
+    }
+
+    @Override
+    public void updateProblemBody(ProblemBodyUpdateVo updateVo) {
+        Problem problem = this.getById(updateVo.getPid());
+        BeanUtils.copyProperties(updateVo,problem);
+        this.updateById(problem);
     }
 }

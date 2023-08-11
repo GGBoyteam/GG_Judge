@@ -1,25 +1,29 @@
-package com.zhangsiyao.common.compiler;
+package com.zhangsiyao.judge.compiler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangsiyao.common.result.JudgeResult;
-import com.zhangsiyao.common.send.JudgeParam;
+import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.util.*;
 
+/**
+ * @author iii
+ */
 @SuppressWarnings("allap")
-public class CppCompiler {
+@Service
+public class CppCompiler implements Serializable {
 
-    private final String judgeServerUrl;
 
-    private int cppVersion=11;
+    private final String judgeServerUrl="http://172.16.0.49:5050";
 
     private String fileId=null;
 
-    private final Set<String> fileIds=new HashSet<String>();
+    private final Queue<String> fileIds=new LinkedList<>();
 
     private final RestTemplate restTemplate=new RestTemplate();
 
@@ -27,16 +31,14 @@ public class CppCompiler {
     private final ObjectMapper objectMapper=new ObjectMapper();
 
 
-    public CppCompiler(String judgeServerUrl,int cppVersion) {
-        this.judgeServerUrl = judgeServerUrl;
-        this.cppVersion=cppVersion;
-    }
 
-    public JudgeResult compile(String content) throws JsonProcessingException {
+    @SneakyThrows
+    public JudgeResult compile(String content, Integer version) {
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
+        System.out.println(judgeServerUrl);
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
-        cmd.setArgs(Arrays.asList("g++","-O2","-std=c++"+ cppVersion,"origin.cpp","-o","origin"));
+        cmd.setArgs(Arrays.asList("g++","-O2","-std=c++"+ version,"origin.cpp","-o","origin"));
         //设置编译时间限制为600s
         cmd.setCpuLimit(36000000000L);
         //设置编译内存限制为256MB
@@ -51,13 +53,15 @@ public class CppCompiler {
         List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
         });
         JudgeResult judgeResult=judgeResultList.get(0);
-        fileId=judgeResult.getFileIds().get("origin");
-        fileIds.addAll(judgeResult.getFileIds().values());
-        System.out.println(judgeResult);
+        if(judgeResult.getStatus()== JudgeResult.Status.Accepted){
+            fileId=judgeResult.getFileIds().get("origin");
+            fileIds.addAll(judgeResult.getFileIds().values());
+        }
         return judgeResult;
     }
 
-    public JudgeResult run(long timeLimit,long memoryLimit,String input) throws JsonProcessingException {
+    @SneakyThrows
+    public JudgeResult run(long timeLimit, long memoryLimit, String input){
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
@@ -77,10 +81,10 @@ public class CppCompiler {
         return judgeResultList.get(0);
     }
 
-    public void removeAll(){
+    public void removeFiles(){
         String url=judgeServerUrl+"/file/";
-        for(String file:fileIds){
-            restTemplate.delete(url+file);
+        while (!fileIds.isEmpty()){
+            restTemplate.delete(url+fileIds.poll());
         }
     }
 

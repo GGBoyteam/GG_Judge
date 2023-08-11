@@ -1,16 +1,11 @@
 package com.zhangsiyao.judge.service;
 
-import com.zhangsiyao.common.entity.judge.dao.Compiler;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.zhangsiyao.common.entity.judge.vo.CodeCompileVo;
+import com.zhangsiyao.judge.compiler.JudgeResult;
 
-/**
- * <p>
- *  服务类
- * </p>
- *
- * @author author
- * @since 2023-08-09
- */
-public interface ICompilerService extends IService<Compiler> {
+public interface ICompilerService {
+
+    JudgeResult compile(CodeCompileVo codeCompileVo);
+
 
 }
