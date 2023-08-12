@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询岗位列表
 export function listProblem(query) {
   return request({
-    url: '/judge-service/problem/list',
+    url: '/judge-service/problem/listByToken',
     method: 'get',
     params: query
   })
@@ -14,6 +14,29 @@ export function getProblem(pid) {
   return request({
     url: '/judge-service/problem/info/' + pid,
     method: 'get'
+  })
+}
+
+export function getProblemTrueCode(query) {
+  return request({
+    url: '/judge-service/problem/trueCodeListByToken',
+    method: 'get',
+    params: query
+  })
+}
+
+export function compileAndRun(data){
+  return request({
+    url: '/judge-service/compiler/compileRun',
+    method: 'post',
+    data: data
+  })
+}
+
+export function compiler(){
+  return request({
+    url: '/judge-service/compiler/list',
+    method: 'get',
   })
 }
 
@@ -49,6 +72,14 @@ export function updateProblemBody(data) {
   })
 }
 
+
+export function saveOrUpdateProblemTrueCode(data) {
+  return request({
+    url: '/judge-service/problem/saveOrUpdateProblemTrueCode',
+    method: 'post',
+    data: data
+  })
+}
 export function test(){
   return request({
     url: '/judge-service/compiler/run',

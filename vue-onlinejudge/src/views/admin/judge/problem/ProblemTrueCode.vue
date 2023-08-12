@@ -6,7 +6,6 @@
       <el-tabs
           type="border-card"
           class="demo-tabs"
-          @tab-click="handleClick"
       >
         <el-tab-pane>
           <template #label>
@@ -16,14 +15,22 @@
                    </span>
           </template>
           <div class="js-left">
-            <el-table :data="tableData" style="width: 100%;height: 90%">
+            <el-table ref="table" :data="trueCodeData" style="width: 100%;height: 90%" :highlight-current-row="true" @row-click="handleRowClick">
               <el-table-column prop="codeId" label="代码id" width="180" />
-              <el-table-column prop="name" label="语言" width="180" />
-              <el-table-column prop="address" label="Address" />
+              <el-table-column prop="language" label="语言" width="180" />
+              <el-table-column prop="version" label="版本" width="180"/>
+              <el-table-column prop="code" label="代码" :show-overflow-tooltip="true" />
             </el-table>
-            <el-pagination>
-
-            </el-pagination>
+            <div style="display:flex; justify-content:center;margin-top: 20px">
+                <el-pagination
+                        background
+                        v-model:current-page="queryParams.pageNum"
+                        v-model:page-size="queryParams.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="total"
+                        @current-change="handleCurrentChange"
+                />
+            </div>
           </div>
         </el-tab-pane>
 
@@ -33,9 +40,10 @@
       <el-tabs
           type="border-card"
           class="demo-tabs"
-          @tab-click="handleClick"
+          v-model="select"
+          @tab-click="handleTabsClick"
       >
-        <el-tab-pane>
+        <el-tab-pane name="add">
           <template #label>
                   <span class="custom-tabs-label">
                     <el-icon><calendar /></el-icon>
@@ -43,52 +51,112 @@
                    </span>
           </template>
           <div class="js-left">
-            <CodeInput>
-
+            <CodeInput
+                v-model:language="language"
+              v-model="code"
+              :drawer-visible="drawerVisible"
+            >
             </CodeInput>
+              <div style="float: right">
+                  <el-button type="success"  @click="OpenDrawer">自测运行</el-button>
+                  <el-button type="primary" @click="Submission">新增代码</el-button>
+              </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane>
-          <template #label>
+        <el-tab-pane name="update" :disabled="true">
+              <template #label>
                   <span class="custom-tabs-label">
                     <el-icon><calendar /></el-icon>
                     <span>修改代码</span>
                    </span>
-          </template>
-          <div class="js-left">
-            <CodeInput>
-
-            </CodeInput>
-          </div>
-        </el-tab-pane>
+              </template>
+              <div class="js-left">
+                  <CodeInput
+                          v-model:language="language"
+                          v-model="code"
+                          v-model:version="version"
+                          :drawer-visible="drawerVisible"
+                  >
+                  </CodeInput>
+                  <div style="float: right">
+                      <el-button type="success"  @click="OpenDrawer">自测运行</el-button>
+                      <el-button type="primary" @click="Submission">修改代码</el-button>
+                  </div>
+              </div>
+          </el-tab-pane>
       </el-tabs>
     </el-col>
   </el-row>
 </div>
 </template>
-<script>
+<script setup>
 
-import {test} from "@/api/oj/problem";
+import {getProblemTrueCode, saveOrUpdateProblemTrueCode, test} from "@/api/oj/problem";
+import {ref} from "vue";
+import {useRoute} from "vue-router";
+const route=useRoute()
+const table=ref('')
+const pid=ref('')
+const language=ref('C++')
+const code=ref(undefined)
+const version=ref('11')
+const codeId=ref('')
+const select=ref('add')
+const drawerVisible=ref(false)
+const queryParams=ref({
+    pid: route.query.pid,
+    pageNum: 1,
+    pageSize: 20
+})
+const total=ref('');
 
-export default {
-  setup(){
-    const form=ref({
-      language: undefined,
-      version: 11,
-      code: undefined
-    });
+const trueCodeData=ref([])
 
-
-
-
-
-    return {
-      form
-    }
-  }
+function OpenDrawer(){
+    drawerVisible.value=!drawerVisible.value
 }
 
+function Submission(){
+    let form={
+        language: language.value,
+        code: code.value,
+        version: version.value,
+        pid: pid.value,
+        codeId: codeId.value
+    }
+    saveOrUpdateProblemTrueCode(form).then(res=>{
+        getTrueCodeList()
+    })
+}
 
+function addOrUpdate(){
+
+}
+
+function handleRowClick(row){
+    select.value='update'
+    code.value=row.code
+}
+
+function handleTabsClick(){
+    if(select.value='add'){
+        table.value.setCurrentRow()
+        code.value='';
+    }
+}
+
+function handleCurrentChange(){
+    getTrueCodeList()
+}
+
+function getTrueCodeList(){
+    getProblemTrueCode(queryParams.value).then((res)=>{
+        trueCodeData.value=res.data.records;
+        total.value=res.data.total
+    })
+}
+pid.value=route.query.pid
+getTrueCodeList()
 </script>
 
 <style scoped lang="scss">
@@ -113,6 +181,3 @@ export default {
   }
 }
 </style>
-<script setup>
-import CodeInput from "@/components/CodeInput/index.vue";
-</script>

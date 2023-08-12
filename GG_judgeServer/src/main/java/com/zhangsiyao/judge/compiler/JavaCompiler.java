@@ -3,6 +3,7 @@ package com.zhangsiyao.judge.compiler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhangsiyao.judge.exception.CodeCompileException;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,9 @@ public class JavaCompiler implements ICompiler{
     public JavaCompiler() {
     }
 
+    @Override
     @SneakyThrows
-    public JudgeResult compile(String content, Integer version){
+    public JudgeResult.Status compile(String content, Integer version) throws CodeCompileException {
         System.out.println(content);
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
@@ -54,10 +56,11 @@ public class JavaCompiler implements ICompiler{
         fileId=judgeResult.getFileIds().get("Main.jar");
         fileIds.addAll(judgeResult.getFileIds().values());
         System.out.println(judgeResult);
-        return judgeResult;
+        return judgeResult.getStatus();
     }
 
     @SneakyThrows
+    @Override
     public JudgeResult run(String input,Long timeLimit, Long memoryLimit){
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
@@ -78,6 +81,7 @@ public class JavaCompiler implements ICompiler{
         return judgeResultList.get(0);
     }
 
+    @Override
     public void removeFiles(){
         String url=judgeServerUrl+"/file/";
         for(String file:fileIds){

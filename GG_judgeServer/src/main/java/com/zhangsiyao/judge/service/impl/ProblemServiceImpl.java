@@ -1,23 +1,20 @@
 package com.zhangsiyao.judge.service.impl;
 
+import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
-import com.zhangsiyao.common.entity.judge.dao.Example;
-import com.zhangsiyao.common.entity.judge.dao.Problem;
-import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
-import com.zhangsiyao.common.entity.judge.dao.ProblemTagRelation;
+import com.zhangsiyao.common.entity.judge.dao.*;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
-import com.zhangsiyao.common.entity.judge.vo.ProblemBaseInfoUpdateVo;
-import com.zhangsiyao.common.entity.judge.vo.ProblemBodyUpdateVo;
-import com.zhangsiyao.common.entity.judge.vo.ProblemQueryVo;
+import com.zhangsiyao.common.entity.judge.vo.*;
+import com.zhangsiyao.common.utils.UserUtil;
+import com.zhangsiyao.judge.compiler.JudgeResult;
+import com.zhangsiyao.judge.exception.CodeCompileException;
+import com.zhangsiyao.judge.exception.NotProblemAuthorException;
 import com.zhangsiyao.judge.mapper.ProblemMapper;
-import com.zhangsiyao.judge.service.IExampleService;
-import com.zhangsiyao.judge.service.IProblemService;
-import com.zhangsiyao.judge.service.IProblemTagRelationService;
-import com.zhangsiyao.judge.service.IProblemTagService;
+import com.zhangsiyao.judge.service.*;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,15 +52,24 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     IProblemTagService tagService;
 
     @Autowired
+    IProblemTrueCodeService trueCodeService;
+
+    @Autowired
     IProblemTagRelationService tagRelationService;
+
+    @Autowired
+    IProblemTrueCodeService problemTrueCodeService;
+
+    @Autowired
+    ICompilerService compilerService;
 
     @SneakyThrows
     @Override
-    public Page<ProblemDto> list(ProblemQueryVo queryVo,String token) {
-        UserLogin userLogin=objectMapper.readValue(redisTemplate.opsForValue().get(token),UserLogin.class);
+    public Page<ProblemDto> listByToken(ProblemQueryVo queryVo,String token) {
+        String username= UserUtil.getUsernameByToken(redisTemplate,token);
         Page<Problem> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<Problem> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper=queryWrapper.eq(Problem::getAuthor,userLogin.getUsername());
+        queryWrapper=queryWrapper.eq(Problem::getAuthor,username);
         if(StringUtils.hasText(queryVo.getTitle())){
             queryWrapper=queryWrapper.like(Problem::getTitle,queryVo.getTitle());
         }
@@ -98,6 +104,16 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     }
 
     @Override
+    public Page<ProblemDto> listAll(ProblemQueryVo queryVo) {
+        return null;
+    }
+
+    @Override
+    public Page<ProblemDto> listByAuthor(ProblemQueryVo queryVo) {
+        return null;
+    }
+
+    @Override
     public ProblemDto info(String pid) {
         Problem problem = this.getById(pid);
         ProblemDto problemDto=new ProblemDto();
@@ -117,14 +133,37 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     }
 
     @Override
+    public ProblemDto infoIncludeAllExamples(String pid, String token) {
+        return null;
+    }
+
+    @Override
     public List<ProblemTag> tags() {
         return tagService.list();
     }
 
+    @SneakyThrows
+    @Override
+    public Page<ProblemTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, String token) {
+        String username=UserUtil.getUsernameByToken(redisTemplate,token);
+        Problem problem=this.getById(queryVo.getPid());
+        if(!username.equals(problem.getAuthor())){
+            throw new NotProblemAuthorException("您不是此题作者，无权查看此题目正确代码");
+        }
+        Page<ProblemTrueCode> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
+        LambdaQueryWrapper<ProblemTrueCode> queryWrapper = new LambdaQueryWrapper<ProblemTrueCode>().eq(ProblemTrueCode::getPid,queryVo.getPid());
+        return trueCodeService.getBaseMapper().selectPage(page,queryWrapper);
+    }
+
+    @SneakyThrows
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo) {
+    public void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo,String token) {
         Problem problem = this.getById(updateVo.getPid());
+        String username = UserUtil.getUsernameByToken(redisTemplate, token);
+        if(!username.equals(problem.getAuthor())){
+            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
+        }
         problem.setTitle(updateVo.getTitle());
         problem.setStatus(updateVo.getStatus());
         this.updateById(problem);
@@ -137,10 +176,36 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
         tagRelationService.saveBatch(tagRelations);
     }
 
+    @SneakyThrows
     @Override
-    public void updateProblemBody(ProblemBodyUpdateVo updateVo) {
+    public void updateProblemBody(ProblemBodyUpdateVo updateVo,String token) {
         Problem problem = this.getById(updateVo.getPid());
+        String username = UserUtil.getUsernameByToken(redisTemplate, token);
+        if(!username.equals(problem.getAuthor())){
+            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
+        }
         BeanUtils.copyProperties(updateVo,problem);
         this.updateById(problem);
+    }
+
+    @SneakyThrows
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOrUpdateProblemTrueCode(ProblemTrueCodeUpdateVo updateVo, String token) {
+        Problem problem = this.getById(updateVo.getPid());
+        String username = UserUtil.getUsernameByToken(redisTemplate, token);
+        if(!username.equals(problem.getAuthor())){
+            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
+        }
+        if(compilerService.compile(updateVo.getCode(), updateVo.getLanguage(),updateVo.getVersion())!= JudgeResult.Status.Accepted){
+            throw  new CodeCompileException("编译未成功，操作失败",null,null);
+        }
+        ProblemTrueCode problemTrueCode=new ProblemTrueCode();
+        problemTrueCode.setPid(updateVo.getPid());
+        problemTrueCode.setCode(updateVo.getCode());
+        problemTrueCode.setLanguage(updateVo.getLanguage().getName());
+        problemTrueCode.setVersion(updateVo.getVersion());
+        problemTrueCode.setCodeId(updateVo.getCodeId());
+        problemTrueCodeService.saveOrUpdate(problemTrueCode);
     }
 }

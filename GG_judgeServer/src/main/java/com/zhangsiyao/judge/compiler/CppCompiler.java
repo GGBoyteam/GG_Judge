@@ -3,6 +3,11 @@ package com.zhangsiyao.judge.compiler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhangsiyao.common.constant.Language;
+import com.zhangsiyao.judge.compiler.annotation.Compiler;
+import com.zhangsiyao.judge.exception.CodeCompileException;
+import com.zhangsiyao.judge.exception.CodeRunException;
+import javassist.tools.reflect.Reflection;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,7 +21,8 @@ import java.util.*;
  */
 @SuppressWarnings("allap")
 @Service
-public class CppCompiler implements Serializable {
+@Compiler(language = Language.CPP,version = {"11"})
+public class CppCompiler implements ICompiler {
 
 
     private final String judgeServerUrl="http://172.16.0.49:5050";
@@ -32,8 +38,8 @@ public class CppCompiler implements Serializable {
 
 
 
-    @SneakyThrows
-    public JudgeResult compile(String content, Integer version) {
+    @Override
+    public JudgeResult.Status compile(String content, Integer version) throws CodeCompileException{
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         System.out.println(judgeServerUrl);
@@ -49,24 +55,29 @@ public class CppCompiler implements Serializable {
         cmd.setCopyOut(Arrays.asList("stdout", "stderr"));
         cmd.setCopyOutCached(Collections.singletonList("origin"));
         judgeParam.getCmd().add(cmd);
-        ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(judgeParam), String.class);
-        List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
-        });
-        JudgeResult judgeResult=judgeResultList.get(0);
+        JudgeResult judgeResult;
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(judgeParam), String.class);
+            List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {});
+            judgeResult=judgeResultList.get(0);
+        } catch (Exception e) {
+            throw new CodeCompileException("后台请求编译发生异常，请联系管理员", null,this);
+        }
         if(judgeResult.getStatus()== JudgeResult.Status.Accepted){
             fileId=judgeResult.getFileIds().get("origin");
             fileIds.addAll(judgeResult.getFileIds().values());
         }
-        return judgeResult;
+        return judgeResult.getStatus();
     }
 
     @SneakyThrows
-    public JudgeResult run(long timeLimit, long memoryLimit, String input){
+    @Override
+    public JudgeResult run(String input,Long timeLimit, Long memoryLimit) throws CodeRunException{
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Collections.singletonList("origin"));
-        cmd.getFiles().add(new JudgeParam.MemoryFile(input));
+        cmd.getFiles().addFirst(new JudgeParam.MemoryFile(input));
         //设置编译时间限制为10s
         cmd.setCpuLimit(timeLimit);
         cmd.setClockLimit(2*timeLimit);
@@ -75,12 +86,18 @@ public class CppCompiler implements Serializable {
         cmd.setStrictMemoryLimit(false);
         cmd.getCopyIn().put("origin",new JudgeParam.PreparedFile(fileId));
         judgeParam.getCmd().add(cmd);
-        ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(judgeParam), String.class);
-        List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {
-        });
-        return judgeResultList.get(0);
+        JudgeResult judgeResult;
+        try{
+            ResponseEntity<String> response = restTemplate.postForEntity(url, objectMapper.writeValueAsString(judgeParam), String.class);
+            List<JudgeResult> judgeResultList = objectMapper.readValue(response.getBody(), new TypeReference<List<JudgeResult>>() {});
+            judgeResult=judgeResultList.get(0);
+        }catch (Exception e){
+            throw new CodeRunException("后台运行发生异常，请联系管理员",null,this);
+        }
+        return judgeResult;
     }
 
+    @Override
     public void removeFiles(){
         String url=judgeServerUrl+"/file/";
         while (!fileIds.isEmpty()){

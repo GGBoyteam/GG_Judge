@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.judge.dao.Problem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
+import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
-import com.zhangsiyao.common.entity.judge.vo.ProblemBaseInfoUpdateVo;
-import com.zhangsiyao.common.entity.judge.vo.ProblemBodyUpdateVo;
-import com.zhangsiyao.common.entity.judge.vo.ProblemQueryVo;
+import com.zhangsiyao.common.entity.judge.vo.*;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * <p>
@@ -21,14 +24,34 @@ import java.util.List;
  */
 public interface IProblemService extends IService<Problem> {
 
-    Page<ProblemDto> list(ProblemQueryVo queryVo,String token);
 
+    /**
+     * 通过token查询作者出的题目列表
+     * */
+    Page<ProblemDto> listByToken(ProblemQueryVo queryVo,String token);
+
+    /**
+     * 分页查询所有启用的题目
+     * */
+    Page<ProblemDto> listAll(ProblemQueryVo queryVo);
+
+    Page<ProblemDto> listByAuthor(ProblemQueryVo queryVo);
+
+    /**
+     * 查看问题信息(不包括判题样例)
+     * */
     ProblemDto info(String pid);
+
+    ProblemDto infoIncludeAllExamples(String pid,String token);
 
     List<ProblemTag> tags();
 
-    void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo);
+    Page<ProblemTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo,String token);
 
-    void updateProblemBody(ProblemBodyUpdateVo updateVo);
+    void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo, String token);
 
+    void updateProblemBody(ProblemBodyUpdateVo updateVo,String token);
+
+
+    void saveOrUpdateProblemTrueCode(@RequestBody ProblemTrueCodeUpdateVo updateVo, @RequestHeader("Authorization") String token);
 }

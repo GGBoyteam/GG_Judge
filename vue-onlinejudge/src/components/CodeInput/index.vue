@@ -5,10 +5,16 @@
         <div class="select-row">
           <span>语言:</span>
           <span>
-            <el-select v-model="options.language" @change="onLangChange" class="left-adjust" size="small">
-              <el-option v-for="item in this.$props.languages" :key="item" :value="item">
-                {{ item }}
+            <el-select v-model="form.language" @change="onLangChange" class="left-adjust" size="small">
+              <el-option v-for="item in languages" :key="item.language" :value="item.language" :label="item.language">
               </el-option>
+            </el-select>
+          </span>
+            <span>版本:</span>
+            <span>
+            <el-select v-model="form.version" class="left-adjust" size="small">
+                <el-option v-for="item in version.get(form.language)" :key="item" :value="item" :label="item">
+                </el-option>
             </el-select>
           </span>
           <span>
@@ -75,44 +81,12 @@
                 </div>
                 <div class="setting-item">
                   <span class="setting-item-name">
-                    <svg
-                        focusable="false"
-                        viewBox="0 0 1024 1024"
-                        fill="currentColor"
-                        width="1.2em"
-                        height="1.2em"
-                        style="vertical-align: text-bottom;"
-                        aria-hidden="true"
-                    >
+                    <svg focusable="false" viewBox="0 0 1024 1024" fill="currentColor" width="1.2em" height="1.2em" style="vertical-align: text-bottom;" aria-hidden="true">
                       <g transform="translate(101.57 355.48)">
-                        <rect
-                            width="812.53"
-                            height="152.35"
-                            x="0"
-                            y="0"
-                            rx="50.78"
-                        ></rect>
-                        <rect
-                            width="812.53"
-                            height="50.78"
-                            x="0"
-                            y="253.92"
-                            rx="25.39"
-                        ></rect>
-                        <rect
-                            width="50.78"
-                            height="203.13"
-                            x="0"
-                            y="177.74"
-                            rx="25.39"
-                        ></rect>
-                        <rect
-                            width="50.78"
-                            height="203.13"
-                            x="761.75"
-                            y="177.74"
-                            rx="25.39"
-                        ></rect>
+                        <rect width="812.53" height="152.35" x="0" y="0" rx="50.78"></rect>
+                        <rect width="812.53" height="50.78" x="0" y="253.92" rx="25.39"></rect>
+                        <rect width="50.78" height="203.13" x="0" y="177.74" rx="25.39"></rect>
+                        <rect width="50.78" height="203.13" x="761.75" y="177.74" rx="25.39"></rect>
                       </g>
                     </svg> m.TabSize
                   </span>
@@ -192,42 +166,65 @@
       </el-col>
     </el-row>
     <div class="input-body">
-      <codemirror
-          class="js-right"
-          v-model="options.code"
-          :extensions="options.extensions"
-          :autofocus="true"
-          :style="{ height: '648px' }"
-          ref="myEditor"
-      >
-      </codemirror>
-      <div class="my-drawer">
-        <el-drawer
-            class="my-drawer"
-            custom-class="my-drawer"
-            :close-on-click-modal="false"
-            v-model="drawerVisible"
-            style="position: absolute"
-            :with-header="false"
-            :append-to-body="true"
-            modal-class="my-drawer"
-            on-opened="OnDrawerOpen"
+        <codemirror
+                class="js-right"
+                v-model="form.code"
+                :extensions="extensions"
+                :autofocus="true"
+                style="height: 640px;z-index: 1"
+                ref="myEditor"
         >
-        </el-drawer>
+        </codemirror>
+      <div class="my-drawer" v-if="$props.drawerVisible">
+          <el-tabs v-model="activeName" class="demo-tabs" style="width: 100%;height: 100%" type="border-card">
+              <el-tab-pane label="测试用例" name="test">
+                  <div style="height: 50px;width: 100%" v-if="examples&&examples.length>0">
+
+                  </div>
+                  <div>
+                      <el-input
+                         style="font-size: 20px"
+                         v-model="form.input"
+                         :rows="(examples&&examples.length>0)?6:7"
+                         resize="none"
+                         type="textarea"
+                      >
+                      </el-input>
+                  </div>
+              </el-tab-pane>
+              <el-tab-pane label="运行结果" name="result">
+                  <el-input
+                          style="font-size: 20px"
+                          :disabled="true"
+                          v-model="result"
+                          :readonly="true"
+                          :rows="7"
+                          resize="none"
+                          type="textarea"
+                  >
+                  </el-input>
+              </el-tab-pane>
+              <el-tab-pane :disabled="true">
+                  <template #label>
+                    <div style="display: flex">
+                        <el-button @click="judgeTest" type="info">运行自测</el-button>
+                    </div>
+                  </template>
+              </el-tab-pane>
+          </el-tabs>
       </div>
     </div>
-    <el-button @click="openDrawer"></el-button>
   </div>
 </template>
 
 <script>
 import {defineComponent, ref, watch} from "vue";
 import { Codemirror } from 'vue-codemirror'
-import { javascript } from '@codemirror/lang-javascript'
 import {java} from '@codemirror/lang-java'
 import {cpp} from '@codemirror/lang-cpp'
 import {python} from '@codemirror/lang-python'
 import { oneDark } from '@codemirror/theme-one-dark'
+import {compileAndRun, compiler} from "@/api/oj/problem";
 
 export default defineComponent({
   name: "CodeInput",
@@ -243,61 +240,107 @@ export default defineComponent({
       type:String,
       default: 'C'
     },
-    languages: {
-      type: Array,
-      default: () => {
-        return ["C", "C++", "Java", "Python3", "Python2"];
+      version:{
+        type: String,Number,
+        default: '11'
       },
-    }
+    examples:{
+      type:Array,
+      default: undefined
+    },
+    drawerVisible:{
+      type: Boolean,
+      default: false
+    },
   },
   setup(props,context){
     // 编辑器选项
-    const options=ref({
-        language: 'C',
-        code: '测试',
-        extensions: [cpp(),oneDark]
-    });
+    const extensions= ref([cpp(),oneDark])
+    const activeName=ref('test')
+    const result=ref('');
+      const form=ref({
+          language: props.language,
+          version: props.version,
+          code: props.modelValue,
+          input: undefined
+      })
+      const languages=ref([])
+      const version=ref(new Map())
 
-    const drawerVisible=ref(false)
-
-    function openDrawer(){
-      drawerVisible.value=!drawerVisible.value
-    }
-
-    function OnDrawerOpen() {
-      console.log('dawdawdaw')
-    }
+      getCompilers();
+      function judgeTest(){
+        compileAndRun(form.value).then(res=>{
+            result.value=res.data.output;
+        }).catch(reason => {
+            result.value='编译错误,请在本地编译器查看代码是否正确，或者编译器选项是否选择正确'
+        }).finally(()=>{
+            activeName.value='result'
+        })
+      }
 
     function onLangChange(newVal) {
 
     }
     function onResetClick(){
-      options.value.code=undefined;
+      form.value.code=undefined;
     }
     function getUserLastAccepetedCode(){
 
     }
-    watch(()=>options.value.language,(newVal,oldVal)=>{
-      if(newVal=='Java'){
-        options.value.extensions=[java(),oneDark]
-      }else if(newVal=='C'||newVal=='C++'){
-        options.value.extensions=[cpp(),oneDark]
-      }else if(newVal=='Python3'||newVal=='Python2'){
-        options.value.extensions=[python(),oneDark]
-      }
-      context.emit('update:language',newVal);
+
+    function getCompilers() {
+        compiler().then(res=>{
+            languages.value=res.data
+            res.data.forEach((language)=>{
+                version.value.set(language.language,language.version)
+            });
+            console.log(version.value)
+        })
+    }
+
+    //监听props分配给变量
+    watch(()=>props.modelValue,(newVal,oldValue)=>{
+       form.value.code=newVal
     })
-    watch(()=>options.value.code,(newVal,oldVal)=>{
+    watch(()=>props.language,(newVal,oldVal)=>{
+        form.value.language=newVal
+    })
+      watch(()=>props.version,(newVal,oldVal)=>{
+          form.value.version=newVal
+      })
+
+
+
+    //监听变量，提交给父组件
+    watch(()=>form.value.language,(newVal,oldVal)=>{
+      context.emit('update:language',newVal);
+      console.log(form.value.language)
+      if(newVal=='Java'){
+        extensions.value=[java(),oneDark]
+      }else if(newVal=='C'||newVal=='C++'){
+          extensions.value.extensions=[cpp(),oneDark]
+      }else if(newVal=='Python3'||newVal=='Python2'){
+          extensions.value.extensions=[python(),oneDark]
+      }
+    })
+
+    watch(()=>form.value.code,(newVal,oldVal)=>{
       context.emit('update:modelValue',newVal);
     })
+      watch(()=>form.value.version,(newVal,oldVal)=>{
+          context.emit('update:version',newVal);
+      })
     return{
-      options,
-      drawerVisible,
-      openDrawer,
+      result,
+      form,
+      extensions,
+      activeName,
+      languages,
+      version,
+      judgeTest,
       onLangChange,
       onResetClick,
       getUserLastAccepetedCode,
-      OnDrawerOpen
     }
   },
 
@@ -308,11 +351,13 @@ export default defineComponent({
 
 <style scoped>
 .my-drawer {
-  position: relative !important;
-  :deep .el-overlay{
-     background-color: red !important;
-    font-size: 32px;
-  }
+    position: relative;
+    margin-top: -300px;
+    z-index: 10;
+    width: 100%;
+    height: 300px;
+    background-color: #FFFFFF;
+    border: 1px solid #FEFEFE;
 }
 
 .input-body{
@@ -329,7 +374,7 @@ export default defineComponent({
   margin-left: 5px;
 }
 .header .left-adjust {
-  width: 170px;
+  width: 100px;
   margin-left: 5px;
 }
 .setting-title {

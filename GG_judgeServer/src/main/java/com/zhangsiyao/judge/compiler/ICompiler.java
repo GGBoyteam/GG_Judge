@@ -1,10 +1,12 @@
 package com.zhangsiyao.judge.compiler;
 
-public interface ICompiler {
-    JudgeResult compile
-            (String code,Integer version);
+import com.zhangsiyao.judge.exception.CodeCompileException;
+import com.zhangsiyao.judge.exception.CodeRunException;
 
-    JudgeResult run(String input,Long timeLimit,Long memoryLimit);
+public interface ICompiler {
+    JudgeResult.Status compile(String code,Integer version) throws CodeCompileException;
+
+    JudgeResult run(String input,Long timeLimit,Long memoryLimit) throws CodeRunException;
 
     void removeFiles();
 }

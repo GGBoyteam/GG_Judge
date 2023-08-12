@@ -19,7 +19,7 @@ public class JudgeParam implements Serializable {
         @Getter
         @Setter(AccessLevel.NONE)
         // 指定标准输入、标准输出和标准错误的文件
-        private List<Object> files=new ArrayList<Object>(Arrays.<Object>asList(
+        private LinkedList<Object> files=new LinkedList(Arrays.<Object>asList(
                 new JudgeParam.Collector("stdout",10240,false),
                 new JudgeParam.Collector("stderr",10240,false)
         )); // LocalFile | MemoryFile | PreparedFile | Collector
