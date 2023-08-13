@@ -80,10 +80,10 @@ export function saveOrUpdateProblemTrueCode(data) {
     data: data
   })
 }
-export function test(){
+export function deleteTrueCode(id){
   return request({
-    url: '/judge-service/compiler/run',
-    method: 'post'
+    url: '/judge-service/problem/deleteTrueCode/'+id,
+    method: 'delete'
   })
 }
 

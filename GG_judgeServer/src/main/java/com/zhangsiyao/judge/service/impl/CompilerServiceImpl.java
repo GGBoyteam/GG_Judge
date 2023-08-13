@@ -1,6 +1,7 @@
 package com.zhangsiyao.judge.service.impl;
 
 import com.zhangsiyao.common.constant.Language;
+import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
 import com.zhangsiyao.common.entity.judge.dto.CompilerDto;
 import com.zhangsiyao.common.entity.judge.vo.CodeCompileRunVo;
 import com.zhangsiyao.judge.compiler.CppCompiler;
@@ -16,7 +17,6 @@ import org.reflections.util.ConfigurationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,12 +39,24 @@ public class CompilerServiceImpl implements ICompilerService {
 
     @SneakyThrows
     @Override
-    public JudgeResult compileAndRun(CodeCompileRunVo codeCompileRunVo) {
+    public CodeCompileAndRunResultDto compileAndRun(CodeCompileRunVo codeCompileRunVo) {
         ICompiler compiler=compiler(codeCompileRunVo.getLanguage());
         compiler.compile(codeCompileRunVo.getCode(), codeCompileRunVo.getVersion());
         JudgeResult result = compiler.run(codeCompileRunVo.getInput(), 10000000L, 268435456L);
+        CodeCompileAndRunResultDto codeResult=new CodeCompileAndRunResultDto();
+        if(result.getStatus()== JudgeResult.Status.Accepted&&result.getFiles().get("stderr").length()!=0){
+            codeResult.setStatus(JudgeResult.Status.NonzeroExitStatus.getName());
+        }else {
+            codeResult.setStatus(result.getStatus().getName());
+        }
+        codeResult.setCode(codeResult.getCode());
+        codeResult.setOutput(result.getOutput());
+        codeResult.setLanguage(codeCompileRunVo.getLanguage());
+        codeResult.setVersion(codeCompileRunVo.getVersion());
+        codeResult.setTime(result.getRunTime());
+        codeResult.setMemory(result.getMemory());
         compiler.removeFiles();
-        return result;
+        return codeResult;
     }
 
     @SneakyThrows

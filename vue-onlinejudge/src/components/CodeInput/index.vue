@@ -36,132 +36,6 @@
               <el-button icon="Upload" @click="onUploadFile" size="small"></el-button>
             </el-tooltip>
           </span>
-          <span>
-            <input type="file" id="file-uploader" style="display: none" @change="onUploadFileDone"/>
-          </span>
-          <span>
-            <el-tooltip content="代码框主题" placement="top">
-              <el-popover placement="bottom" width="300" trigger="click">
-                <el-button slot="reference" icon="el-icon-s-tools" size="small"></el-button>
-                <div class="setting-title">m.Setting</div>
-                <div class="setting-item">
-                  <span class="setting-item-name">
-                    <i class="fa fa-tachometer"></i>
-                    m.Theme
-                  </span>
-                  <el-select
-                      :value="this.theme"
-                      @change="onThemeChange"
-                      class="setting-item-value"
-                      size="small"
-                  >
-                    <el-option
-                        v-for="item in themes"
-                        :key="item.label"
-                        :label="'m.' + item.label"
-                        :value="item.value"
-                    >'m.' + item.label
-                    </el-option>
-                  </el-select>
-                </div>
-                <div class="setting-item">
-                  <span class="setting-item-name">
-                    <i class="fa fa-font"></i>
-                    m.FontSize'
-                  </span>
-                  <el-select :value="fontSize" @change="onFontSizeChange" class="setting-item-value" size="small">
-                    <el-option
-                        v-for="item in fontSizes"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                    >{{ item }}
-                    </el-option>
-                  </el-select>
-                </div>
-                <div class="setting-item">
-                  <span class="setting-item-name">
-                    <svg focusable="false" viewBox="0 0 1024 1024" fill="currentColor" width="1.2em" height="1.2em" style="vertical-align: text-bottom;" aria-hidden="true">
-                      <g transform="translate(101.57 355.48)">
-                        <rect width="812.53" height="152.35" x="0" y="0" rx="50.78"></rect>
-                        <rect width="812.53" height="50.78" x="0" y="253.92" rx="25.39"></rect>
-                        <rect width="50.78" height="203.13" x="0" y="177.74" rx="25.39"></rect>
-                        <rect width="50.78" height="203.13" x="761.75" y="177.74" rx="25.39"></rect>
-                      </g>
-                    </svg> m.TabSize
-                  </span>
-                  <el-select
-                      :value="tabSize"
-                      @change="onTabSizeChange"
-                      class="setting-item-value"
-                      size="small"
-                  >
-                    <el-option
-                        :label="'m.Two_Spaces' "
-                        :value="2"
-                    >
-                      m.Two_Spaces
-                    </el-option>
-                    <el-option
-                        :label="'m.Four_Spaces'"
-                        :value="4"
-                    >
-                      m.Four_Spaces
-                    </el-option>
-                    <el-option
-                        :label="'m.Eight_Spaces'"
-                        :value="8"
-                    >
-                     m.Eight_Spaces
-                    </el-option>
-                  </el-select>
-                </div>
-              </el-popover>
-            </el-tooltip>
-          </span>
-          <div v-if="supportFocusMode">
-            <span
-                v-if="!openFocusMode"
-                class="hidden-sm-and-down"
-            >
-              <el-tooltip
-                  :content="'m.Enter_Focus_Mode'"
-                  placement="bottom"
-              >
-                <el-button
-                    icon="el-icon-full-screen"
-                    @click="switchFocusMode(true)"
-                    size="small"
-                ></el-button>
-              </el-tooltip>
-            </span>
-            <span
-                v-else
-                class="hidden-sm-and-down"
-            >
-              <el-tooltip
-                  :content="'m.Exit_Focus_Mode'"
-                  placement="bottom"
-              >
-                <el-button
-                    @click="switchFocusMode(false)"
-                    size="small"
-                >
-                  <svg
-                      focusable="false"
-                      viewBox="0 0 1024 1024"
-                      fill="currentColor"
-                      width="0.95em"
-                      height="0.95em"
-                      aria-hidden="true"
-                  >
-                    <path d="M463.04 863.32h-88.51V641.14H152.35v-88.87H463.4l-.36 311.05zM863.32 463.4H552.27l.31-311.05h88.56v222.18h222.18v88.87z">
-                    </path>
-                  </svg>
-                </el-button>
-              </el-tooltip>
-            </span>
-          </div>
         </div>
       </el-col>
     </el-row>
@@ -207,7 +81,7 @@
               <el-tab-pane :disabled="true">
                   <template #label>
                     <div style="display: flex">
-                        <el-button @click="judgeTest" type="info">运行自测</el-button>
+                        <el-button @click="judgeTest" type="info" :loading="running">{{running?'运行中':'运行自测'}}</el-button>
                     </div>
                   </template>
               </el-tab-pane>
@@ -266,15 +140,33 @@ export default defineComponent({
       })
       const languages=ref([])
       const version=ref(new Map())
+      const running=ref(false)
 
       getCompilers();
       function judgeTest(){
+          running.value=true;
+          if(!form.value.code||form.value.code.length==0){
+              result.value='代码不能为空'
+              activeName.value='result'
+              running.value=false;
+              return;
+          }
+          if(!form.value.code||form.value.code.length==0){
+              result.value='代码不能为空'
+              activeName.value='result'
+              return;
+          }
         compileAndRun(form.value).then(res=>{
-            result.value=res.data.output;
+            if(res.data.status=='Accepted'){
+                result.value=res.data.output;
+            }else {
+                result.value=res.data.status
+            }
         }).catch(reason => {
             result.value='编译错误,请在本地编译器查看代码是否正确，或者编译器选项是否选择正确'
         }).finally(()=>{
             activeName.value='result'
+            running.value=false;
         })
       }
 
@@ -294,10 +186,8 @@ export default defineComponent({
             res.data.forEach((language)=>{
                 version.value.set(language.language,language.version)
             });
-            console.log(version.value)
         })
     }
-
     //监听props分配给变量
     watch(()=>props.modelValue,(newVal,oldValue)=>{
        form.value.code=newVal
@@ -337,6 +227,7 @@ export default defineComponent({
       activeName,
       languages,
       version,
+      running,
       judgeTest,
       onLangChange,
       onResetClick,

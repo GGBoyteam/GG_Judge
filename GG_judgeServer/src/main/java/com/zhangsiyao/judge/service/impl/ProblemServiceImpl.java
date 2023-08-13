@@ -208,4 +208,9 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
         problemTrueCode.setCodeId(updateVo.getCodeId());
         problemTrueCodeService.saveOrUpdate(problemTrueCode);
     }
+
+    @Override
+    public void deleteTrueCode(String codeId) {
+        problemTrueCodeService.removeById(codeId);
+    }
 }

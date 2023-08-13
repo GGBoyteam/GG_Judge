@@ -54,4 +54,6 @@ public interface IProblemService extends IService<Problem> {
 
 
     void saveOrUpdateProblemTrueCode(@RequestBody ProblemTrueCodeUpdateVo updateVo, @RequestHeader("Authorization") String token);
+
+    void deleteTrueCode(String codeId);
 }

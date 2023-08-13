@@ -115,7 +115,7 @@
                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">配置基础信息</el-button>
                <el-button link type="primary" icon="Edit" @click="handleProblemBodyUpdate(scope.row)">配置题面</el-button>
               <el-button link type="primary" icon="Edit" @click="handleProblemTrueCode(scope.row)">配置正确代码</el-button>
-               <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">配置样例</el-button>
+               <el-button link type="primary" icon="Edit" @click="handleProblemExample(scope.row)">配置样例</el-button>
                <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除题目</el-button>
             </template>
          </el-table-column>
@@ -154,8 +154,8 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm()">修改</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="submitForm">修改</el-button>
+            <el-button @click="cancel">取消</el-button>
           </el-form-item>
         </el-form>
      </el-dialog>
@@ -238,6 +238,11 @@ function handleProblemBodyUpdate(row){
 function handleProblemTrueCode(row){
   router.push({path:'/judge/problem/trueCode',query:{pid:row.pid}});
 }
+
+function handleProblemExample(row) {
+    router.push({path:'/judge/problem/example',query:{pid:row.pid}});
+}
+
 function handleQuery() {
   queryParams.value.pageNum = 1;
   getList();

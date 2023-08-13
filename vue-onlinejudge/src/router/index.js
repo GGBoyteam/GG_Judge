@@ -133,6 +133,14 @@ export const constantRoutes = [
         meta: {
           title: '配置代码'
         }
+      },
+      {
+        path:'example',
+        component: ()=>import('@/views/admin/judge/problem/ProblemExample.vue'),
+        name:'example',
+        meta: {
+          title: '配置样例'
+        }
       }
     ]
   },

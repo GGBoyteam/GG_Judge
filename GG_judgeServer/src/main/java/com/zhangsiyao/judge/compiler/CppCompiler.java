@@ -42,7 +42,6 @@ public class CppCompiler implements ICompiler {
     public JudgeResult.Status compile(String content, Integer version) throws CodeCompileException{
         JudgeParam judgeParam=new JudgeParam();
         String url=judgeServerUrl+"/run";
-        System.out.println(judgeServerUrl);
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Arrays.asList("g++","-O2","-std=c++"+ version,"origin.cpp","-o","origin"));
         //设置编译时间限制为600s
@@ -77,7 +76,9 @@ public class CppCompiler implements ICompiler {
         String url=judgeServerUrl+"/run";
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Collections.singletonList("origin"));
-        cmd.getFiles().addFirst(new JudgeParam.MemoryFile(input));
+        if(input!=null&&input.length()>0){
+            cmd.getFiles().addFirst(new JudgeParam.MemoryFile(input));
+        }
         //设置编译时间限制为10s
         cmd.setCpuLimit(timeLimit);
         cmd.setClockLimit(2*timeLimit);

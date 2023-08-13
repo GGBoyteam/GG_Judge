@@ -11,15 +11,20 @@
           <template #label>
                   <span class="custom-tabs-label">
                     <el-icon><calendar /></el-icon>
-                    <span>代码列表</span>
+                    <span>正确代码列表</span>
                    </span>
           </template>
           <div class="js-left">
             <el-table ref="table" :data="trueCodeData" style="width: 100%;height: 90%" :highlight-current-row="true" @row-click="handleRowClick">
-              <el-table-column prop="codeId" label="代码id" width="180" />
-              <el-table-column prop="language" label="语言" width="180" />
-              <el-table-column prop="version" label="版本" width="180"/>
-              <el-table-column prop="code" label="代码" :show-overflow-tooltip="true" />
+              <el-table-column prop="codeId" label="代码id" width="100" />
+              <el-table-column prop="language" label="语言" width="100" />
+              <el-table-column prop="version" label="版本" width="100"/>
+              <el-table-column prop="code" label="代码" :show-overflow-tooltip="true" width="300" />
+              <el-table-column  align="center" label="操作">
+                  <template #default="scope">
+                      <el-button link type="primary" size="small" @click="handleDelete(scope.row)">删除</el-button>
+                  </template>
+              </el-table-column>
             </el-table>
             <div style="display:flex; justify-content:center;margin-top: 20px">
                 <el-pagination
@@ -91,9 +96,10 @@
 </template>
 <script setup>
 
-import {getProblemTrueCode, saveOrUpdateProblemTrueCode, test} from "@/api/oj/problem";
+import {deleteTrueCode, getProblemTrueCode, saveOrUpdateProblemTrueCode} from "@/api/oj/problem";
 import {ref} from "vue";
 import {useRoute} from "vue-router";
+const { proxy } = getCurrentInstance();
 const route=useRoute()
 const table=ref('')
 const pid=ref('')
@@ -124,8 +130,11 @@ function Submission(){
         pid: pid.value,
         codeId: codeId.value
     }
-    saveOrUpdateProblemTrueCode(form).then(res=>{
-        getTrueCodeList()
+    proxy.$modal.confirm(`确认${select.value=='add'?'新增':'修改'}代码吗？`).then(()=>{
+        saveOrUpdateProblemTrueCode(form).then(res=>{
+            getTrueCodeList()
+            proxy.$modal.msgSuccess(`${select.value=='add'?'新增':'修改'}代码成功！`)
+        })
     })
 }
 
@@ -136,6 +145,19 @@ function addOrUpdate(){
 function handleRowClick(row){
     select.value='update'
     code.value=row.code
+    codeId.value=row.codeId;
+}
+
+function handleDelete(row) {
+    proxy.$modal.confirm(`确定删除编号为${row.codeId}的代码吗？`).then(()=>{
+        deleteTrueCode(row.codeId).then(()=>{
+            proxy.$modal.msgSuccess("删除成功！")
+        }).catch(()=>{
+            proxy.$modal.msgError("删除失败！")
+        }).finally(()=>{
+            getTrueCodeList()
+        })
+    }).catch(()=>{})
 }
 
 function handleTabsClick(){
