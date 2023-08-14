@@ -76,11 +76,11 @@ CREATE TABLE `route` (
   `sort` bigint(255) DEFAULT '0',
   `link` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `route` */
 
-insert  into `route`(`id`,`name`,`path`,`component`,`parent`,`permission`,`route_type`,`hidden`,`always_show`,`no_cache`,`title`,`icon`,`redirect`,`breadcrumb`,`active_menu`,`create_time`,`status`,`sort`,`link`) values (1,'system','/system','Layout',0,'system','M',0,1,0,'系统管理','system','noRedirect',1,NULL,'2023-07-31 08:26:20',0,0,NULL),(6,'role','role','system/role/index',1,'#','C',0,0,0,'角色管理','peoples',NULL,NULL,NULL,'2023-07-31 08:26:15',0,0,NULL),(7,'route','route','system/route/index',1,'#','C',0,0,0,'路由管理','tree-table',NULL,NULL,NULL,'2023-07-31 08:26:17',0,0,NULL),(11,'user','user','system/user/index',1,'#','C',0,0,0,'用户管理','user',NULL,NULL,NULL,'2023-07-31 08:26:13',0,0,NULL),(13,'judge','/judge','Layout',0,'judge','M',0,1,0,'题库管理','code','noRedirect',NULL,NULL,'2023-07-31 08:26:10',0,0,NULL),(14,'content','/content','Layout',0,'content','M',0,0,0,'竞赛管理','redis-list','noRedirect',NULL,NULL,'2023-07-31 08:26:08',0,0,NULL);
+insert  into `route`(`id`,`name`,`path`,`component`,`parent`,`permission`,`route_type`,`hidden`,`always_show`,`no_cache`,`title`,`icon`,`redirect`,`breadcrumb`,`active_menu`,`create_time`,`status`,`sort`,`link`) values (1,'system','/admin/system','Layout',0,'system','M',0,1,0,'系统管理','system','noRedirect',1,NULL,'2023-07-31 08:26:20',0,0,NULL),(6,'role','role','admin/system/role/index',1,'system:role','C',0,0,0,'角色管理','peoples',NULL,NULL,NULL,'2023-07-31 08:26:15',0,0,NULL),(7,'route','route','admin/system/route/index',1,'system:route','C',0,0,0,'路由管理','tree-table',NULL,NULL,NULL,'2023-07-31 08:26:17',0,0,NULL),(11,'user','user','admin/system/user/index',1,'system:user','C',0,0,0,'用户管理','user',NULL,NULL,NULL,'2023-07-31 08:26:13',0,0,NULL),(24,'dawd','#','#',6,'#','F',0,1,0,'dawd',NULL,NULL,NULL,NULL,'2023-08-09 09:26:29',0,0,NULL),(25,'judge','/admin/judge','Layout',0,'#','M',0,1,0,'题库管理','form','noRedirect',NULL,NULL,'2023-08-09 09:47:31',0,0,NULL),(27,'user-problme','problem','admin/judge/problem/index',25,'#','C',0,0,0,'题目管理','form',NULL,NULL,NULL,'2023-08-10 01:55:00',0,0,NULL);
 
 /*Table structure for table `user_info` */
 

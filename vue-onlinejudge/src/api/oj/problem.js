@@ -87,6 +87,15 @@ export function deleteTrueCode(id){
   })
 }
 
+export function examples(data){
+  return request({
+    url: '/judge-service/problem/examples',
+    method: 'get',
+    params: data
+  })
+}
+
+
 
 // 删除岗位
 export function delPost(postId) {

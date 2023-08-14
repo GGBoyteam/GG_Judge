@@ -2,12 +2,14 @@ package com.zhangsiyao.judge.service.impl;
 
 import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.common.entity.judge.dao.*;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
+import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.common.utils.UserUtil;
 import com.zhangsiyao.judge.compiler.JudgeResult;
@@ -153,6 +155,25 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
         Page<ProblemTrueCode> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<ProblemTrueCode> queryWrapper = new LambdaQueryWrapper<ProblemTrueCode>().eq(ProblemTrueCode::getPid,queryVo.getPid());
         return trueCodeService.getBaseMapper().selectPage(page,queryWrapper);
+    }
+
+    @SneakyThrows
+    @Override
+    public Page<ProblemExampleDto> examples(ProblemExampleQueryVo queryVo, String token) {
+        String username=UserUtil.getUsernameByToken(redisTemplate,token);
+        Problem problem=this.getById(queryVo.getPid());
+        if(!username.equals(problem.getAuthor())){
+            throw new NotProblemAuthorException("您不是此题作者，无权查看此题目正确代码");
+        }
+        Page<Example> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
+        LambdaQueryWrapper<Example> queryWrapper=new LambdaQueryWrapper<Example>().eq(Example::getPid,queryVo.getPid());
+        queryWrapper=queryWrapper.orderByDesc(Example::getStatus);
+        Page<Example> examplePage = exampleService.getBaseMapper().selectPage(page, queryWrapper);
+        return (Page<ProblemExampleDto>) examplePage.convert(example ->{
+            ProblemExampleDto cur=new ProblemExampleDto();
+            BeanUtils.copyProperties(example,cur);
+            return cur;
+        });
     }
 
     @SneakyThrows

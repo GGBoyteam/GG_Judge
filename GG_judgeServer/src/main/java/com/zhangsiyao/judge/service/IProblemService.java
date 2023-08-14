@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
+import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +48,8 @@ public interface IProblemService extends IService<Problem> {
     List<ProblemTag> tags();
 
     Page<ProblemTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo,String token);
+
+    Page<ProblemExampleDto> examples(ProblemExampleQueryVo queryVo,String token);
 
     void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo, String token);
 

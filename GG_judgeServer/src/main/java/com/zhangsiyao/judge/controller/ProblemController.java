@@ -5,9 +5,9 @@ import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
+import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.judge.service.IProblemService;
-import com.zhangsiyao.judge.service.IProblemTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +38,10 @@ public class ProblemController {
         return R.success(problemService.trueCodeListByToken(queryVo,token));
     }
 
+    @GetMapping("/examples")
+    public R<Page<ProblemExampleDto>> examples(ProblemExampleQueryVo queryVo, @RequestHeader("Authorization") String token){
+        return R.success(problemService.examples(queryVo,token));
+    }
 
     @GetMapping("/tags")
     public R<List<ProblemTag>> tags(){
