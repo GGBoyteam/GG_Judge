@@ -66,6 +66,32 @@
         />
         <!-- 添加或修改角色配置对话框 -->
         <el-dialog :title="title" v-model="open" width="60%" append-to-body>
+          <el-form :model="form" label-width="120px">
+              <el-form-item label="样例输入">
+                  <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 20}" >
+
+                  </el-input>
+              </el-form-item>
+            <el-form-item label="样例输出">
+              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 20}" >
+
+              </el-input>
+            </el-form-item>
+            <el-form-item label="测试结果">
+              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 20}"  disabled>
+
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <div>
+                <span>运行的代码：</span>
+                <el-select style="margin-right: 5px"></el-select>
+              </div>
+              <el-button type="primary" @click="onSubmit">测试</el-button>
+              <el-button type="primary" @click="onSubmit">确定</el-button>
+              <el-button>取消</el-button>
+            </el-form-item>
+          </el-form>
         </el-dialog>
 
     </div>
