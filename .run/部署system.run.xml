@@ -3,7 +3,7 @@
     <option name="accountModel" />
     <option name="accountModels" />
     <option name="address" />
-    <option name="afterCommand" value="sh /root/docker-compose/system/start.sh" />
+    <option name="afterCommand" value="sh /root/deploy/judge/start.sh" />
     <option name="alreadyReset" value="true" />
     <option name="autoOpen" value="false" />
     <option name="beforeCommand" value="" />
@@ -23,11 +23,11 @@
     <option name="ecsInstances" />
     <option name="hostIds">
       <list>
-        <option value="3" />
+        <option value="8" />
       </list>
     </option>
     <option name="hostTagId" value="0" />
-    <option name="location" value="/root/docker-compose/system" />
+    <option name="location" value="/root/deploy/system" />
     <option name="pathOrUrl" value="C:\Users\iii\Desktop\GG_Judge\GG_system\target\GG_system-0.0.1-SNAPSHOT.jar" />
     <option name="tagId" value="0" />
     <option name="terminalCommand" />
