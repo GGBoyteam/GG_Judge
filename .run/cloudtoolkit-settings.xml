@@ -26,6 +26,14 @@
         <id>6</id>
         <name>判题服务</name>
       </tag>
+      <tag>
+        <id>7</id>
+        <name>system服务</name>
+      </tag>
+      <tag>
+        <id>8</id>
+        <name>judge服务</name>
+      </tag>
     </tag>
     <profile>
       <profile>
@@ -40,23 +48,23 @@
     <command>
       <command>
         <id>1</id>
-        <content><![CDATA[sh /root/docker-compose/gateway/start.sh]]></content>
-        <digest>4E71181419708D2080B997F49B5BCCAD</digest>
+        <content><![CDATA[sh /root/deploy/gateway/start.sh]]></content>
+        <digest>723722C7670FEA7220829AC428A1BDD5</digest>
       </command>
       <command>
         <id>2</id>
-        <content><![CDATA[sh /root/docker-compose/auth/start.sh]]></content>
-        <digest>E26E7D33A241E5B3E943AF17FF87BEDA</digest>
+        <content><![CDATA[sh /root/deploy/auth/start.sh]]></content>
+        <digest>A349F10EED0BFA933EF49AEF11044DFE</digest>
       </command>
       <command>
         <id>3</id>
-        <content><![CDATA[sh /root/docker-compose/system/start.sh]]></content>
-        <digest>C46173670FC37A953A8FA9C9D95E888D</digest>
+        <content><![CDATA[sh /root/deploy/system/start.sh]]></content>
+        <digest>EC8759F0B008C1B3474C3503190F3B02</digest>
       </command>
       <command>
         <id>4</id>
-        <content><![CDATA[sh /root/docker-compose/judge/start.sh]]></content>
-        <digest>2D49D936EC833E9061479F1B0980FEB3</digest>
+        <content><![CDATA[sh /root/deploy/judge/start.sh]]></content>
+        <digest>F437BE3E0703A1EC3CBEB551DC4F8BFD</digest>
       </command>
     </command>
     <host>
@@ -71,16 +79,6 @@
         <remark />
       </host>
       <host>
-        <id>3</id>
-        <address>222.187.223.125</address>
-        <port>47206</port>
-        <hostType>0</hostType>
-        <profileId>1</profileId>
-        <tagId>3</tagId>
-        <proxyId>0</proxyId>
-        <remark />
-      </host>
-      <host>
         <id>4</id>
         <address>222.187.223.125</address>
         <port>47206</port>
@@ -91,32 +89,22 @@
         <remark />
       </host>
       <host>
-        <id>5</id>
-        <address>153.36.240.47</address>
-        <port>10039</port>
+        <id>8</id>
+        <address>222.187.223.125</address>
+        <port>47034</port>
         <hostType>0</hostType>
         <profileId>1</profileId>
-        <tagId>4</tagId>
+        <tagId>7</tagId>
         <proxyId>0</proxyId>
         <remark />
       </host>
       <host>
-        <id>6</id>
-        <address>153.36.240.47</address>
-        <port>10028</port>
+        <id>9</id>
+        <address>222.187.223.125</address>
+        <port>57843</port>
         <hostType>0</hostType>
         <profileId>1</profileId>
-        <tagId>5</tagId>
-        <proxyId>0</proxyId>
-        <remark />
-      </host>
-      <host>
-        <id>7</id>
-        <address>153.36.240.47</address>
-        <port>10100</port>
-        <hostType>0</hostType>
-        <profileId>1</profileId>
-        <tagId>6</tagId>
+        <tagId>8</tagId>
         <proxyId>0</proxyId>
         <remark />
       </host>

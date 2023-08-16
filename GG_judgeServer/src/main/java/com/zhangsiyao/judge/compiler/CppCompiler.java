@@ -25,7 +25,7 @@ import java.util.*;
 public class CppCompiler implements ICompiler {
 
 
-    private final String judgeServerUrl="http://172.16.0.49:5050";
+    private final String judgeServerUrl="http://172.16.0.38:5050";
 
     private String fileId=null;
 

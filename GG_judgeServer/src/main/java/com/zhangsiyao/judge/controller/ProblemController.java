@@ -66,6 +66,12 @@ public class ProblemController {
         return R.success();
     }
 
+    @PostMapping("/saveOrUpdateProblemExample")
+    public R<String> saveOrUpdateProblemExample(@RequestBody ProblemExampleUpdateVo updateVo,@RequestHeader("Authorization") String token){
+
+        return R.success();
+    }
+
     @DeleteMapping("/deleteTrueCode/{codeId}")
     public R<String> deleteTrueCode(@PathVariable String codeId){
         problemService.deleteTrueCode(codeId);
