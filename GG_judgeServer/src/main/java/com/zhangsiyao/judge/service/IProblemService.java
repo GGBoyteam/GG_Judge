@@ -5,6 +5,7 @@ import com.zhangsiyao.common.entity.judge.dao.Problem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
+import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
@@ -51,12 +52,15 @@ public interface IProblemService extends IService<Problem> {
 
     Page<ProblemExampleDto> examples(ProblemExampleQueryVo queryVo,String token);
 
+    CodeCompileAndRunResultDto testExample(ProblemExampleTestVo testVo);
+
     void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo, String token);
 
     void updateProblemBody(ProblemBodyUpdateVo updateVo,String token);
 
 
-    void saveOrUpdateProblemTrueCode(@RequestBody ProblemTrueCodeUpdateVo updateVo, @RequestHeader("Authorization") String token);
+    void saveOrUpdateProblemTrueCode(ProblemTrueCodeUpdateVo updateVo, String token);
 
+    void saveOrUpdateProblemExample(ProblemExampleUpdateVo updateVo,String token);
     void deleteTrueCode(String codeId);
 }

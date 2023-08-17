@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 public class CodeCompileRunVo implements Serializable {
     private Language language;
-    private Integer version;
+    private String version;
     private String input;
     private String code;
 }

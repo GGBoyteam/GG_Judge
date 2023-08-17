@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.zhangsiyao.common.constant.Language;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -43,7 +45,7 @@ public class ProblemTrueCode implements Serializable {
     /**
      * 编译器版本
      * */
-    private Integer version;
+    private String version;
 
     /**
      * 正确代码

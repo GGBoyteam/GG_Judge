@@ -12,7 +12,9 @@ public interface ICompilerService {
 
     CodeCompileAndRunResultDto compileAndRun(CodeCompileRunVo codeCompileRunVo);
 
-    JudgeResult.Status compile(String code, Language language,Integer version);
+    JudgeResult compileAndRun(Language language,String version,String code,String input);
+
+    JudgeResult.Status compile(String code, Language language,String version);
 
     List<CompilerDto> compilerList();
 

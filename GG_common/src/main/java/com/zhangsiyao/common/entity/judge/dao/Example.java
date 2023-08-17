@@ -48,7 +48,7 @@ public class Example implements Serializable {
     /**
      * 是否作为题目展示的样例(1展示,0作为判题样例)
      */
-    private Boolean status;
+    private Integer status;
 
 
 }

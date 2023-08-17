@@ -40,9 +40,7 @@ public class CompilerServiceImpl implements ICompilerService {
     @SneakyThrows
     @Override
     public CodeCompileAndRunResultDto compileAndRun(CodeCompileRunVo codeCompileRunVo) {
-        ICompiler compiler=compiler(codeCompileRunVo.getLanguage());
-        compiler.compile(codeCompileRunVo.getCode(), codeCompileRunVo.getVersion());
-        JudgeResult result = compiler.run(codeCompileRunVo.getInput(), 10000000L, 268435456L);
+        JudgeResult result=compileAndRun(codeCompileRunVo.getLanguage(),codeCompileRunVo.getVersion(),codeCompileRunVo.getCode(),codeCompileRunVo.getInput());
         CodeCompileAndRunResultDto codeResult=new CodeCompileAndRunResultDto();
         if(result.getStatus()== JudgeResult.Status.Accepted&&result.getFiles().get("stderr").length()!=0){
             codeResult.setStatus(JudgeResult.Status.NonzeroExitStatus.getName());
@@ -55,13 +53,22 @@ public class CompilerServiceImpl implements ICompilerService {
         codeResult.setVersion(codeCompileRunVo.getVersion());
         codeResult.setTime(result.getRunTime());
         codeResult.setMemory(result.getMemory());
-        compiler.removeFiles();
         return codeResult;
     }
 
     @SneakyThrows
     @Override
-    public JudgeResult.Status compile(String code,Language language,Integer version) {
+    public JudgeResult compileAndRun(Language language, String version, String code, String input) {
+        ICompiler compiler=compiler(language);
+        compiler.compile(code, version);
+        JudgeResult result = compiler.run(input, 10000000L, 268435456L);
+        compiler.removeFiles();
+        return result;
+    }
+
+    @SneakyThrows
+    @Override
+    public JudgeResult.Status compile(String code,Language language,String version) {
         ICompiler compiler=compiler(language);
         JudgeResult.Status status = compiler.compile(code, version);
         compiler.removeFiles();

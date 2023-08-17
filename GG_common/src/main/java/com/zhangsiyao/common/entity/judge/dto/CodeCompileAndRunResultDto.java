@@ -12,7 +12,7 @@ public class CodeCompileAndRunResultDto implements Serializable {
     String code;
 
     Language language;
-    Integer version;
+    String version;
 
     String input;
 

@@ -33,6 +33,22 @@ export function compileAndRun(data){
   })
 }
 
+export function testExample(data){
+  return request({
+    url: '/judge-service/problem/testExample',
+    method: 'post',
+    data: data
+  })
+}
+
+export function saveOrUpdateExample(data){
+  return request({
+    url: '/judge-service/problem/saveOrUpdateExample',
+    method: 'post',
+    data: data
+  })
+}
+
 export function compiler(){
   return request({
     url: '/judge-service/compiler/list',

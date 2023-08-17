@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
+import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
@@ -41,6 +42,17 @@ public class ProblemController {
     @GetMapping("/examples")
     public R<Page<ProblemExampleDto>> examples(ProblemExampleQueryVo queryVo, @RequestHeader("Authorization") String token){
         return R.success(problemService.examples(queryVo,token));
+    }
+
+    @PostMapping("/testExample")
+    public R<CodeCompileAndRunResultDto> testExample(@RequestBody ProblemExampleTestVo testVo){
+        return R.success(problemService.testExample(testVo));
+    }
+
+    @PostMapping("/saveOrUpdateExample")
+    public R<String> saveOrUpdateExample(@RequestBody ProblemExampleUpdateVo updateVo,@RequestHeader("Authorization") String token){
+        problemService.saveOrUpdateProblemExample(updateVo,token);
+        return R.success();
     }
 
     @GetMapping("/tags")

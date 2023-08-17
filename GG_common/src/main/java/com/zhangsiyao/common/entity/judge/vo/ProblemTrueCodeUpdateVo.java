@@ -15,5 +15,5 @@ public class ProblemTrueCodeUpdateVo implements Serializable {
 
     private Language language;
 
-    private Integer version;
+    private String version;
 }

@@ -20,6 +20,7 @@ public class CompilerController {
 
     @PostMapping("/compileRun")
     public R<CodeCompileAndRunResultDto> compileRun(@RequestBody CodeCompileRunVo codeCompileRun){
+        System.out.println(codeCompileRun);
         return R.success(compilerService.compileAndRun(codeCompileRun));
     }
 

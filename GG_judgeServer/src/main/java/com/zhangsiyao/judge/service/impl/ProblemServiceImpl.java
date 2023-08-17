@@ -2,18 +2,23 @@ package com.zhangsiyao.judge.service.impl;
 
 import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhangsiyao.common.constant.Language;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.common.entity.judge.dao.*;
+import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.common.utils.UserUtil;
 import com.zhangsiyao.judge.compiler.JudgeResult;
+import com.zhangsiyao.judge.exception.AnswerException;
 import com.zhangsiyao.judge.exception.CodeCompileException;
+import com.zhangsiyao.judge.exception.CodeRunException;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
 import com.zhangsiyao.judge.mapper.ProblemMapper;
 import com.zhangsiyao.judge.service.*;
@@ -176,6 +181,18 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
         });
     }
 
+    @Override
+    public CodeCompileAndRunResultDto testExample(ProblemExampleTestVo testVo) {
+        ProblemTrueCode code = problemTrueCodeService.getById(testVo.getCodeId());
+        CodeCompileRunVo codeCompileRunVo=new CodeCompileRunVo();
+        codeCompileRunVo.setCode(code.getCode());
+        codeCompileRunVo.setLanguage(Language.get(code.getLanguage()));
+        codeCompileRunVo.setVersion(code.getVersion());
+        codeCompileRunVo.setInput(testVo.getInput());
+        return compilerService.compileAndRun(codeCompileRunVo);
+
+    }
+
     @SneakyThrows
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -228,6 +245,31 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
         problemTrueCode.setVersion(updateVo.getVersion());
         problemTrueCode.setCodeId(updateVo.getCodeId());
         problemTrueCodeService.saveOrUpdate(problemTrueCode);
+    }
+
+    @SneakyThrows
+    @Override
+    public void saveOrUpdateProblemExample(ProblemExampleUpdateVo updateVo,String token) {
+        Problem problem = this.getById(updateVo.getPid());
+        String username = UserUtil.getUsernameByToken(redisTemplate, token);
+        if(!username.equals(problem.getAuthor())){
+            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
+        }
+        LambdaQueryWrapper<ProblemTrueCode> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper=queryWrapper.eq(ProblemTrueCode::getPid,updateVo.getPid());
+        List<ProblemTrueCode> codes = problemTrueCodeService.getBaseMapper().selectList(queryWrapper);
+        if(!updateVo.getOutput().endsWith("\n")){
+            updateVo.setOutput(updateVo.getOutput()+"\n");
+        }
+        for(ProblemTrueCode code:codes){
+            JudgeResult result = compilerService.compileAndRun(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), updateVo.getInput());
+            if(!result.getOutput().equals(updateVo.getOutput())){
+                throw new AnswerException(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), updateVo.getInput(),updateVo.getOutput(),result.getOutput());
+            }
+        }
+        Example example=new Example();
+        BeanUtils.copyProperties(updateVo,example);
+        exampleService.saveOrUpdate(example);
     }
 
     @Override

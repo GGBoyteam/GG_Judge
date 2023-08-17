@@ -24,17 +24,12 @@
         <!-- 表格数据 -->
         <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column label="样例编号"  prop="id" width="120" />
-            <el-table-column label="样例输入" align="center" prop="name" :show-overflow-tooltip="true" width="300" />
-            <el-table-column label="样例输出" align="center" prop="roleKey" :show-overflow-tooltip="true" width="300" />
+            <el-table-column label="样例编号"  prop="eid" width="120" />
+            <el-table-column label="样例输入" align="center" prop="input" :show-overflow-tooltip="true" width="300" />
+            <el-table-column label="样例输出" align="center" prop="output" :show-overflow-tooltip="true" width="300" />
             <el-table-column label="是否为展示样例" align="center" width="150">
                 <template #default="scope">
-                    <el-switch
-                        v-model="scope.row.status"
-                        :active-value="0"
-                        :inactive-value="1"
-                        @change="handleStatusChange(scope.row)"
-                    ></el-switch>
+                    <el-tag>{{scope.row==0?'隐藏':'展示'}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" align="center" prop="createTime">
@@ -68,27 +63,28 @@
         <el-dialog :title="title" v-model="open" width="60%" append-to-body>
           <el-form :model="form" label-width="120px">
               <el-form-item label="样例输入">
-                  <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 20}" >
+                  <el-input style="font-size: 20px" type="textarea" :autosize="{ minRows: 3, maxRows: 20}" v-model="form.input">
 
                   </el-input>
               </el-form-item>
             <el-form-item label="样例输出">
-              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 20}" >
+              <el-input style="font-size: 20px" type="textarea" :autosize="{ minRows: 3, maxRows: 20}" v-model="form.output">
 
               </el-input>
             </el-form-item>
             <el-form-item label="测试结果">
-              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 20}"  disabled>
-
+              <el-input style="font-size: 20px" type="textarea" :autosize="{ minRows: 3, maxRows: 20}"  disabled :value="data.result">
               </el-input>
             </el-form-item>
             <el-form-item>
               <div>
                 <span>运行的代码：</span>
-                <el-select style="margin-right: 5px"></el-select>
+                <el-select style="margin-right: 5px" v-model="form.codeId">
+                    <el-option v-for="(code,index) in codes" :key="index" :label="code.language" :value="code.codeId"></el-option>
+                </el-select>
               </div>
-              <el-button type="primary" @click="onSubmit">测试</el-button>
-              <el-button type="primary" @click="onSubmit">确定</el-button>
+              <el-button type="primary" v-model:loading="testLoading" :disabled="!form.codeId||form.codeId==''" @click="handleTest">测试</el-button>
+              <el-button type="primary" @click="handleSaveOrUpdate">确定</el-button>
               <el-button>取消</el-button>
             </el-form-item>
           </el-form>
@@ -100,7 +96,7 @@
 <script setup name="Role">
 import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role";
 import { roleRouteTreeSelect, treeSelect as menuTreeselect } from "@/api/system/route";
-import {examples} from "@/api/oj/problem";
+import {examples, getProblemTrueCode, saveOrUpdateExample, testExample} from "@/api/oj/problem";
 import {useRoute, useRouter} from "vue-router";
 import {nextTick} from "vue";
 
@@ -125,8 +121,16 @@ const deptNodeAll = ref(false);
 const menuRef = ref(null);
 
 
+const pid=ref(route.query.pid);
+const codes=ref([]);
+const testLoading = ref(false)
+
+
 const data = reactive({
-    form: {},
+    form: {
+        pid: pid.value
+    },
+    result: undefined,
     queryParams: {
         pid: route.query.pid,
         pageNum: 1,
@@ -144,6 +148,14 @@ const { queryParams, form, rules } = toRefs(data);
 
 /** 查询角色列表 */
 function getList() {
+    getProblemTrueCode({
+        pid: pid.value,
+        pageNum: 1,
+        pageSize: 10000
+    }).then(res=>{
+        codes.value=res.data.records;
+        console.log(codes.value)
+    })
     loading.value = true;
     examples(queryParams.value).then(response => {
         roleList.value = response.data.records;
@@ -162,6 +174,25 @@ function resetQuery() {
     proxy.resetForm("queryRef");
     handleQuery();
 }
+
+function handleTest() {
+    testLoading.value=true;
+    testExample(form.value).then(res=>{
+        proxy.$modal.msgSuccess("测试运行成功!")
+        if(res.data.status=='Accepted'){
+            data.result=res.data.output
+        }
+    }).finally(()=>{
+        testLoading.value=false;
+    })
+}
+
+function handleSaveOrUpdate(){
+  saveOrUpdateExample(form.value).then(res=>{
+      console.log(res)
+  })
+}
+
 /** 删除按钮操作 */
 function handleDelete(row) {
     const roleIds = row.id || ids.value;
@@ -186,14 +217,14 @@ function handleSelectionChange(selection) {
 }
 /** 角色状态修改 */
 function handleStatusChange(row) {
-    let text = row.status == 0 ? "启用" : "停用";
-    proxy.$modal.confirm('确认要"' + text + '""' + row.name + '"角色吗?').then(function () {
-        return changeRoleStatus(row.id, row.status);
-    }).then(() => {
-        proxy.$modal.msgSuccess(text + "成功");
-    }).catch(function () {
-        row.status = row.status == 0 ? 1 : 0;
-    });
+    // let text = row.status == 0 ? "启用" : "停用";
+    // proxy.$modal.confirm('确认要"' + text + '""' + row.name + '"角色吗?').then(function () {
+    //     return changeRoleStatus(row.id, row.status);
+    // }).then(() => {
+    //     proxy.$modal.msgSuccess(text + "成功");
+    // }).catch(function () {
+    //     row.status = row.status == 0 ? 1 : 0;
+    // });
 }
 
 /** 分配用户 */
@@ -217,16 +248,16 @@ function reset() {
     menuNodeAll.value = false;
     deptExpand.value = true;
     deptNodeAll.value = false;
-    form.value = {
-        id: undefined,
-        name: undefined,
-        roleKey: undefined,
-        sort: 0,
-        status: 0,
-        routeIds: [],
-        deptIds: [],
-        menuCheckStrictly: true,
-    };
+    // form.value = {
+    //     id: undefined,
+    //     name: undefined,
+    //     roleKey: undefined,
+    //     sort: 0,
+    //     status: 0,
+    //     routeIds: [],
+    //     deptIds: [],
+    //     menuCheckStrictly: true,
+    // };
     proxy.resetForm("roleRef");
 }
 /** 添加角色 */

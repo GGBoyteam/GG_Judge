@@ -21,4 +21,14 @@ public enum Language {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static Language get(String name){
+        if (name.equals(CPP.name)){
+            return CPP;
+        }else if(name.equals(JAVA.name)){
+            return JAVA;
+        }else {
+            return PYTHON;
+        }
+    }
 }
