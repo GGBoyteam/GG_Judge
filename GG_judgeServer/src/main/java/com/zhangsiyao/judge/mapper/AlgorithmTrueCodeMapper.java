@@ -1,7 +1,7 @@
 package com.zhangsiyao.judge.mapper;
 
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmTrueCode;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zhangsiyao.common.entity.judge.dao.AlgorithmTag;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,10 +9,10 @@ import org.apache.ibatis.annotations.Mapper;
  *  Mapper 接口
  * </p>
  *
- * @author author
- * @since 2023-08-10
+ * @author zhangsiyao
+ * @since 2023-08-12
  */
 @Mapper
-public interface ProblemTagMapper extends BaseMapper<AlgorithmTag> {
+public interface AlgorithmTrueCodeMapper extends BaseMapper<AlgorithmTrueCode> {
 
 }

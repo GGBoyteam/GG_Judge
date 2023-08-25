@@ -1,7 +1,7 @@
 package com.zhangsiyao.judge.mapper;
 
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmExample;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zhangsiyao.common.entity.judge.dao.AlgorithmTagRelation;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,9 +10,9 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author author
- * @since 2023-08-10
+ * @since 2023-08-09
  */
 @Mapper
-public interface ProblemTagRelationMapper extends BaseMapper<AlgorithmTagRelation> {
+public interface AlgorithmExampleMapper extends BaseMapper<AlgorithmExample> {
 
 }

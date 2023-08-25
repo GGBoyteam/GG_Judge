@@ -17,7 +17,7 @@ import com.zhangsiyao.judge.compiler.JudgeResult;
 import com.zhangsiyao.judge.exception.AnswerException;
 import com.zhangsiyao.judge.exception.CodeCompileException;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
-import com.zhangsiyao.judge.mapper.ProblemMapper;
+import com.zhangsiyao.judge.mapper.AlgorithmMapper;
 import com.zhangsiyao.judge.service.*;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
@@ -41,7 +41,7 @@ import java.util.Set;
  * @since 2023-08-09
  */
 @Service
-public class AlgorithmServiceImpl extends ServiceImpl<ProblemMapper, Algorithm> implements IAlgorithmService {
+public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm> implements IAlgorithmService {
 
     @Autowired
     StringRedisTemplate redisTemplate;

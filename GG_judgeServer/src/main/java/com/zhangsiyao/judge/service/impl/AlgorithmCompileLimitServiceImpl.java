@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmCompileLimit;
 import com.zhangsiyao.common.entity.judge.dto.AlgorithmCompileLimitDto;
-import com.zhangsiyao.judge.mapper.ProblemCompileLimitMapper;
+import com.zhangsiyao.judge.mapper.AlgorithmCompileLimitMapper;
 import com.zhangsiyao.judge.service.IAlgorithmCompileLimitService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +22,7 @@ import java.util.Arrays;
  * @since 2023-08-22
  */
 @Service
-public class AlgorithmCompileLimitServiceImpl extends ServiceImpl<ProblemCompileLimitMapper, AlgorithmCompileLimit> implements IAlgorithmCompileLimitService {
+public class AlgorithmCompileLimitServiceImpl extends ServiceImpl<AlgorithmCompileLimitMapper, AlgorithmCompileLimit> implements IAlgorithmCompileLimitService {
 
     @Override
     public IPage<AlgorithmCompileLimitDto> compilers(Long pid, Long pageNum, Long pageSize) {

@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-08-22
  */
 @Mapper
-public interface ProblemCompileLimitMapper extends BaseMapper<AlgorithmCompileLimit> {
+public interface AlgorithmCompileLimitMapper extends BaseMapper<AlgorithmCompileLimit> {
 
 }

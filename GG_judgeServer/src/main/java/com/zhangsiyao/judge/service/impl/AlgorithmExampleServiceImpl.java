@@ -9,7 +9,7 @@ import com.zhangsiyao.common.utils.UserUtil;
 import com.zhangsiyao.judge.compiler.JudgeResult;
 import com.zhangsiyao.judge.exception.AnswerException;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
-import com.zhangsiyao.judge.mapper.ExampleMapper;
+import com.zhangsiyao.judge.mapper.AlgorithmExampleMapper;
 import com.zhangsiyao.judge.service.ICompilerService;
 import com.zhangsiyao.judge.service.IAlgorithmExampleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Service
 @SuppressWarnings("all")
-public class AlgorithmExampleServiceImpl extends ServiceImpl<ExampleMapper, AlgorithmExample> implements IAlgorithmExampleService {
+public class AlgorithmExampleServiceImpl extends ServiceImpl<AlgorithmExampleMapper, AlgorithmExample> implements IAlgorithmExampleService {
 
     @Autowired
     StringRedisTemplate redisTemplate;
