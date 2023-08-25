@@ -57,7 +57,8 @@
           </template>
           <div class="js-left">
             <CodeInput
-                v-model:language="language"
+              v-model:language="language"
+              v-model:version="version"
               v-model="code"
               :drawer-visible="drawerVisible"
             >

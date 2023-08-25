@@ -50,16 +50,16 @@
         >
         </codemirror>
       <div class="my-drawer" v-if="$props.drawerVisible">
-          <el-tabs v-model="activeName" class="demo-tabs" style="width: 100%;height: 100%" type="border-card">
+          <el-tabs v-model="activeName" style="width: 100%;height: 100%;" type="card" >
               <el-tab-pane label="测试用例" name="test">
-                  <div style="height: 50px;width: 100%" v-if="examples&&examples.length>0">
-
+                  <div style="height: 50px;width: 100%;margin-top: 20px" v-if="examples&&examples.length>0">
+                      <el-button>达娃大</el-button>
                   </div>
                   <div>
                       <el-input
                          style="font-size: 20px"
                          v-model="form.input"
-                         :rows="(examples&&examples.length>0)?6:7"
+                         :rows="(examples&&examples.length>0)?5:8"
                          resize="none"
                          type="textarea"
                       >
@@ -72,7 +72,7 @@
                           :disabled="true"
                           v-model="result"
                           :readonly="true"
-                          :rows="7"
+                          :rows="8"
                           resize="none"
                           type="textarea"
                   >

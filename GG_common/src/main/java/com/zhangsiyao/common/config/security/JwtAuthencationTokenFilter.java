@@ -1,10 +1,8 @@
-package com.zhangsiyao.system.config.security;
+package com.zhangsiyao.common.config.security;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
-import com.zhangsiyao.system.service.IUserInfoService;
+import com.zhangsiyao.common.service.feign.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +28,8 @@ public class JwtAuthencationTokenFilter extends OncePerRequestFilter {
     StringRedisTemplate redisTemplate;
 
     @Autowired
-    IUserInfoService userInfoService;
+    SystemService systemService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
@@ -46,16 +45,11 @@ public class JwtAuthencationTokenFilter extends OncePerRequestFilter {
         }
         ObjectMapper objectMapper=new ObjectMapper();
         UserLogin user=objectMapper.readValue(userinfo, UserLogin.class);
-        LambdaQueryWrapper<UserInfo> queryWrapper=new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUsername,user.getUsername());
-        UserInfo userInfo = userInfoService.getBaseMapper().selectOne(queryWrapper);
-        if(userInfo==null){
-            userInfo=new UserInfo();
-            userInfo.setUsername(user.getUsername());
-            this.userInfoService.save(userInfo);
-            userInfo = userInfoService.getBaseMapper().selectOne(queryWrapper);
-        }
         List<GrantedAuthority> permissions=new ArrayList<>();
-        permissions.add(new SimpleGrantedAuthority("dawd"));
+        List<String> userPermissions = systemService.permissions(user.getUsername());
+        for(String p:userPermissions){
+            permissions.add(new SimpleGrantedAuthority(p));
+        }
         UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userinfo,null,permissions);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(httpServletRequest,httpServletResponse);

@@ -1,9 +1,25 @@
 import request from '@/utils/request'
 
+export function list(query){
+  return request({
+    url: '/judge-service/algorithm/list',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询岗位列表
 export function listProblem(query) {
   return request({
-    url: '/judge-service/problem/listByToken',
+    url: '/judge-service/algorithm/listByToken',
+    method: 'get',
+    params: query
+  })
+}
+
+export function listLimit(query){
+  return request({
+    url: 'judge-service/algorithm/compilerLimits',
     method: 'get',
     params: query
   })
@@ -12,14 +28,14 @@ export function listProblem(query) {
 // 查询岗位详细
 export function getProblem(pid) {
   return request({
-    url: '/judge-service/problem/info/' + pid,
+    url: '/judge-service/algorithm/info/' + pid,
     method: 'get'
   })
 }
 
 export function getProblemTrueCode(query) {
   return request({
-    url: '/judge-service/problem/trueCodeListByToken',
+    url: '/judge-service/algorithm/trueCodeListByToken',
     method: 'get',
     params: query
   })
@@ -35,7 +51,23 @@ export function compileAndRun(data){
 
 export function testExample(data){
   return request({
-    url: '/judge-service/problem/testExample',
+    url: '/judge-service/algorithm/testExample',
+    method: 'post',
+    data: data
+  })
+}
+
+export function saveAlgorithmExample(data){
+  return request({
+    url: '/judge-service/algorithmEdit/saveExample',
+    method: 'post',
+    data: data
+  })
+}
+
+export function updateAlgorithmExample(data){
+  return request({
+    url: '/judge-service/algorithmEdit/updateExample',
     method: 'post',
     data: data
   })
@@ -43,8 +75,32 @@ export function testExample(data){
 
 export function saveOrUpdateExample(data){
   return request({
-    url: '/judge-service/problem/saveOrUpdateExample',
+    url: '/judge-service/algorithm/saveOrUpdateExample',
     method: 'post',
+    data: data
+  })
+}
+
+export function addCompileLimit(data){
+  return request({
+    url: '/judge-service/algorithmEdit/addCompileLimit',
+    method: 'post',
+    params: data
+  })
+}
+
+export function updateCompileLimit(data){
+  return request({
+    url: '/judge-service/algorithmEdit/updateCompileLimit',
+    method: 'post',
+    params: data
+  })
+}
+
+export function deleteCompileLimit(data){
+  return request({
+    url: '/judge-service/algorithmEdit/deleteCompileLimit',
+    method: 'delete',
     data: data
   })
 }
@@ -58,7 +114,7 @@ export function compiler(){
 
 export function getTags() {
   return request({
-    url: '/judge-service/problem/tags',
+    url: '/judge-service/algorithm/tags',
     method: 'get'
   })
 }
@@ -74,7 +130,7 @@ export function addPost(data) {
 
 export function updateProblemBaseInfo(data) {
   return request({
-    url: '/judge-service/problem/updateProblemBaseInfo',
+    url: '/judge-service/algorithm/updateProblemBaseInfo',
     method: 'post',
     data: data
   })
@@ -82,7 +138,7 @@ export function updateProblemBaseInfo(data) {
 
 export function updateProblemBody(data) {
   return request({
-    url: '/judge-service/problem/updateProblemBody',
+    url: '/judge-service/algorithm/updateProblemBody',
     method: 'post',
     data: data
   })
@@ -91,21 +147,21 @@ export function updateProblemBody(data) {
 
 export function saveOrUpdateProblemTrueCode(data) {
   return request({
-    url: '/judge-service/problem/saveOrUpdateProblemTrueCode',
+    url: '/judge-service/algorithm/saveOrUpdateProblemTrueCode',
     method: 'post',
     data: data
   })
 }
 export function deleteTrueCode(id){
   return request({
-    url: '/judge-service/problem/deleteTrueCode/'+id,
+    url: '/judge-service/algorithm/deleteTrueCode/'+id,
     method: 'delete'
   })
 }
 
 export function examples(data){
   return request({
-    url: '/judge-service/problem/examples',
+    url: '/judge-service/algorithm/examples',
     method: 'get',
     params: data
   })

@@ -3,6 +3,7 @@ package com.zhangsiyao.judge.compiler;
 import com.zhangsiyao.common.constant.Language;
 import com.zhangsiyao.judge.compiler.annotation.Compiler;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -19,9 +20,7 @@ public class CppCompiler extends AbstractCompiler {
         JudgeParam judgeParam=new JudgeParam();
         JudgeParam.Cmd cmd=new JudgeParam.Cmd();
         cmd.setArgs(Collections.singletonList("origin"));
-        if(input!=null&&input.length()>0){
-            cmd.getFiles().addFirst(new JudgeParam.MemoryFile(input));
-        }
+        cmd.getFiles().addFirst(new JudgeParam.MemoryFile(input));
         //设置编译时间限制为10s
         cmd.setCpuLimit(timeLimit);
         cmd.setClockLimit(2*timeLimit);

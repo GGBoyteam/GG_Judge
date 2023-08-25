@@ -9,6 +9,13 @@ export function listRoute(query) {
   })
 }
 
+export function listPermissions(){
+  return request({
+    url: '/system-service/permission/list',
+    method: 'get',
+  })
+}
+
 // 查询菜单详细
 export function getRoute(id) {
   return request({

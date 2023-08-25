@@ -8,6 +8,7 @@ import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
 import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
+import com.zhangsiyao.common.entity.judge.dto.ProblemSubmissionResultDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ import java.util.Stack;
  * @since 2023-08-09
  */
 public interface IProblemService extends IService<Problem> {
+
 
 
     /**
@@ -62,5 +64,7 @@ public interface IProblemService extends IService<Problem> {
     void saveOrUpdateProblemTrueCode(ProblemTrueCodeUpdateVo updateVo, String token);
 
     void saveOrUpdateProblemExample(ProblemExampleUpdateVo updateVo,String token);
+
+    ProblemSubmissionResultDto submission(ProblemSubmissionVo submissionVo);
     void deleteTrueCode(String codeId);
 }

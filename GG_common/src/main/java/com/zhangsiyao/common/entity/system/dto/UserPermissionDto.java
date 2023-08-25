@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class UserPermissionDto implements Serializable {
     private UserInfo info;
-    private List<RolePermission> permissions;
+    private List<String> permissions;
 }

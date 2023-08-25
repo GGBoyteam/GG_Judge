@@ -110,9 +110,11 @@
               </el-popover>
             </template>
          </el-table-column>
+          <el-table-column label="异常" align="center" prop="title" />
          <el-table-column label="操作" width="800" align="center" class-name="small-padding fixed-width">
             <template #default="scope">
                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">配置基础信息</el-button>
+               <el-button link type="primary" icon="Edit" @click="handleProblemCompilerLimit(scope.row)">配置编译器信息</el-button>
                <el-button link type="primary" icon="Edit" @click="handleProblemBodyUpdate(scope.row)">配置题面</el-button>
               <el-button link type="primary" icon="Edit" @click="handleProblemTrueCode(scope.row)">配置正确代码</el-button>
                <el-button link type="primary" icon="Edit" @click="handleProblemExample(scope.row)">配置样例</el-button>
@@ -127,7 +129,7 @@
          v-model:limit="queryParams.pageSize"
          @pagination="getList"
       />
-     <el-dialog v-model="open" width="500" :title="title">
+     <el-dialog v-model="open" width="500" :title="title" >
         <el-form :model="form" label-width="120px" ref="problemRef" :rules="rules">
           <el-form-item label="标题">
             <el-input style="width: 240px" v-model="form.title" ></el-input>
@@ -159,18 +161,109 @@
           </el-form-item>
         </el-form>
      </el-dialog>
+       <el-dialog v-model="openLimit" title="编译器配置" @open="getLimitList" style="width: 40%;">
+           <el-dialog
+                   v-model="limitEditVisible"
+                   width="30%"
+                   :title="limitTitle"
+                   append-to-body
+           >
+               <el-form :model="data.limitForm" label-width="160px">
+                  <el-form-item label="语言">
+                      <el-select v-model="data.limitForm.language">
+                          <el-option
+                            v-for="(item,index) in selectCompilers"
+                            :label="item.language"
+                            :key="index"
+                            :value="item.language"
+                          >
+
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                   <el-form-item  label="时间限制(单位:ms)：">
+                       <el-input v-model.number="data.limitForm.time" placeholder="请输入时间限制">
+
+                       </el-input>
+                   </el-form-item>
+                   <el-form-item  label="内存限制(单位:byte)：">
+                       <el-input v-model.number="data.limitForm.memory"  placeholder="请输入内存限制">
+
+                       </el-input>
+                   </el-form-item>
+                   <el-form-item>
+                       <el-button type="primary" @click="submissionLimit">确定</el-button>
+                       <el-button @click="cancelEditLimit">取消</el-button>
+                   </el-form-item>
+               </el-form>
+           </el-dialog>
+          <div>
+             <span style="margin-right: 4px" v-if="!(selectCompilers&&selectCompilers.length>0)">
+                 <el-tooltip content="所有编译器限制已经设置完毕，无法再新增了" placement="top">
+                     <el-icon><question-filled /></el-icon>
+                 </el-tooltip>
+             </span>
+              <el-button type="primary"
+                         plain icon="Plus"
+                         @click="openAddLimit"
+                         :disabled="!(selectCompilers&&selectCompilers.length>0)"
+              >新增</el-button>
+              <el-button type="danger"
+                         plain icon="Delete"
+                         :disabled="!(limitSelect&&limitSelect.length>0)"
+                         @click="deleteCompilerLimit"
+              >删除</el-button>
+          </div>
+           <el-table :data="limitList" style="width: 100%" @selection-change="limitSelectionChange">
+               <el-table-column type="selection" width="40" />
+               <el-table-column prop="id" align="center" label="编号" width="60" />
+               <el-table-column prop="language" align="center" label="语言" />
+               <el-table-column prop="time" align="center" label="时间限制(单位:ms)" />
+               <el-table-column prop="memory" align="center" label="内存限制(单位:byte)"/>
+               <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                   <template #default="scope">
+                       <el-tooltip content="修改" placement="top">
+                           <el-button link type="primary" icon="Edit" @click="openUpdateLimit(scope.row)" hasPermi="['system:role:edit']"></el-button>
+                       </el-tooltip>
+                       <el-tooltip content="删除" placement="top">
+                           <el-button link type="primary" icon="Delete" @click="handleDeleteLimit(scope.row)" hasPermi="['system:role:remove']"></el-button>
+                       </el-tooltip>
+                   </template>
+               </el-table-column>
+
+           </el-table>
+           <el-pagination
+                   style="display: flex;justify-content: right;align-items: center;margin-top: 20px"
+                   background
+                   layout="prev, pager, next"
+                   class="mt-4"
+                    v-model:current-page="data.limitQueryParams.pageNum"
+                   v-model:page-size="data.limitQueryParams.pageSize"
+                   :total="limitTotal"
+           />
+       </el-dialog>
 
    </div>
 </template>
 
 <script setup name="Post">
-import {listProblem, addPost, delPost, getProblem, updateProblemBaseInfo, getTags} from "@/api/oj/problem";
-import axios from 'axios'
-import {useRouter} from "vue-router";
+import {
+    listProblem,
+    addPost,
+    delPost,
+    getProblem,
+    updateProblemBaseInfo,
+    getTags,
+    listLimit,
+    compiler, addCompileLimit, updateCompileLimit, deleteCompileLimit
+} from "@/api/oj/problem";
+import {useRoute, useRouter} from "vue-router";
+import {getCurrentInstance, reactive, ref, toRefs} from "vue";
 const { proxy } = getCurrentInstance();
 
 
 const router = useRouter();
+const route=useRoute();
 const problems = ref([]);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -181,12 +274,28 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 
+const openLimit=ref(false)
+const limitEditVisible=ref(false)
+const limitTitle=ref('')
+const limitList=ref([])
+const limitTotal=ref(0)
+const limitSet=ref(new Set)
+const limitSelect=ref([])
+const compilers=ref([])
+const selectCompilers=ref([])
 
 const tags=ref([])
 
 
 const data = reactive({
   form: {},
+    pid: undefined,
+    limitForm: {},
+    limitQueryParams:{
+      pid: undefined,
+      pageNum: 1,
+      pageSize: 5
+    },
   queryParams: {
     pageNum: 1,
     pageSize: 10,
@@ -211,11 +320,103 @@ function getList() {
     loading.value=false
   })
 }
+
+function submissionLimit() {
+    data.limitForm.pid=data.pid
+  if(data.limitForm.id!=undefined){
+      proxy.$modal.confirm(`是否确认更新语言为${data.limitForm.language}的编译器限制？`).then(()=>{
+          updateCompileLimit(data.limitForm).then(res=>{
+              getLimitList()
+              limitEditVisible.value=false
+          })
+      }).catch(()=>{})
+  }else {
+      proxy.$modal.confirm(`是否确认新增语言为${data.limitForm.language}的编译器限制？`).then(()=>{
+          addCompileLimit(data.limitForm).then(res=>{
+              getLimitList()
+              limitEditVisible.value=false
+          })
+      }).catch(()=>{})
+  }
+}
+function limitSelectionChange(selection){
+  limitSelect.value=selection.map(item=>{return item.id})
+}
+
+function getCompiler(){
+    compiler().then(res=>{
+      compilers.value=res.data
+    })
+}
+
+function getLimitList(){
+    listLimit(data.limitQueryParams).then(res=>{
+        limitList.value=res.data.records
+        limitTotal.value=res.data.total
+        limitList.value.forEach((item)=>{
+            limitSet.value.add(item.language)
+        })
+        compilers.value.forEach((item)=>{
+            if(!limitSet.value.has(item.language)){
+                selectCompilers.value.push(item)
+            }
+        })
+    })
+}
+
+function openUpdateLimit(row){
+    limitEditVisible.value=true
+    data.limitForm.id=row.id
+    data.limitForm.pid=row.pid
+    data.limitForm.language=row.language
+    data.limitForm.time=row.time
+    data.limitForm.memory=row.memory
+    limitTitle.value='修改编译器限制';
+}
+
+function openAddLimit(row){
+    data.limitForm.pid=row.pid
+    limitEditVisible.value=true
+    limitTitle.value='新增编译器限制';
+}
+
+function deleteCompilerLimit(){
+    let str=limitSelect.value.join(",");
+    proxy.$modal.confirm(`确认删除id为[`+str+`]的编译器限制信息吗`).then(()=>{
+        deleteCompileLimit(limitSelect.value).then(res=>{
+            getLimitList()
+            proxy.$modal.msgSuccess(`id为[`+str+`]的编译器限制信息删除成功`);
+        })
+    }).catch(()=>{})
+}
+
+function handleDeleteLimit(row) {
+    limitSelect.value=[]
+    limitSelect.value.push(row.id)
+    deleteCompilerLimit()
+}
+
+function handleProblemCompilerLimit(row){
+    data.pid=row.pid
+    data.limitQueryParams.pid=row.pid
+    openLimit.value=true;
+}
+
+
+
+
 /** 取消按钮 */
 function cancel() {
   open.value = false;
   reset();
 }
+function cancelEditLimit(){
+    limitEditVisible.value=false
+    data.limitForm={}
+}
+
+
+
 /** 表单重置 */
 function reset() {
   form.value = {
@@ -228,7 +429,7 @@ function reset() {
   };
   proxy.resetForm("postRef");
 }
-/** 搜索按钮操作 */
+
 
 
 function handleProblemBodyUpdate(row){
@@ -324,4 +525,5 @@ function handleExport() {
 }
 
 getList();
+getCompiler();
 </script>

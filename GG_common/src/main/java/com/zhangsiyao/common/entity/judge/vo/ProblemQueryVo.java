@@ -3,6 +3,7 @@ package com.zhangsiyao.common.entity.judge.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author iii
@@ -14,4 +15,6 @@ public class ProblemQueryVo implements Serializable {
     private Integer status;
     private Long pageSize;
     private Long pageNum;
+
+    private List<Long> tags;
 }

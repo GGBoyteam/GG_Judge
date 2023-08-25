@@ -15,7 +15,7 @@
                   @keyup.enter.native="filterByKeyword"
                   class="filter-mt">
                 <template #append>
-                  <el-button :icon="Search()" />
+                  <el-button :icon="Search" />
                 </template>
               </el-input>
             </el-col >
@@ -38,7 +38,7 @@
             >
               <el-button
                   type="primary"
-                  :icon="Refresh()"
+                  :icon="Refresh"
                   round
                   @click="onReset"
               >重置</el-button>
@@ -103,12 +103,12 @@
 <!--              >-->
             </div>
           </section>
-          <template v-if="filterTagList&&filterTagList.length > 0 && buildFilterTagList">
+          <div v-if="filterTags&&filterTags.length > 0">
             <el-row>
               <b class="problem-filter">标签</b>
               <el-tag
                   :key="index"
-                  v-for="(tag, index) in filterTagList"
+                  v-for="(tag, index) in filterTags"
                   closable
                   :color="tag.color ? tag.color : '#409eff'"
                   effect="dark"
@@ -117,17 +117,43 @@
                   size="medium"
                   class="filter-item"
               >
-                {{ tag.name }}
+                {{ tag.title }}
               </el-tag>
             </el-row>
-          </template>
+          </div>
         </div>
-        <el-table stripe style="width: 100%">
-          <el-table-column fixed prop="id" label="题目id" width="180" />
-          <el-table-column prop="name" label="题目" width="600" />
-          <el-table-column prop="level" label="难度" width="180" />
-          <el-table-column prop="count" label="总数" width="180" />
-          <el-table-column fixed="right" prop="ac" label="AC率"/>
+        <el-table stripe :data="problems" style="width: 100%" @row-click="problemDetail">
+          <el-table-column fixed prop="pid"  align="left" label="题目id" width="180" />
+          <el-table-column prop="title" align="center" label="题目" />
+          <el-table-column prop="level" align="center" label="难度" width="180" />
+          <el-table-column prop="tag" align="center" label="标签" width="180">
+            <template #default="scope">
+                <el-popover
+                        placement="bottom-start"
+                        :width="200"
+                        trigger="hover"
+                >
+                    <template #reference>
+                        <el-button size="small" class="m-2">查看标签</el-button>
+                    </template>
+                    <template #default>
+                        <span v-if="!scope.row.tags||scope.row.tags.length==0">没有标签</span>
+                        <div v-else>
+                            <el-tag
+                                    v-for="(tag,index) in scope.row.tags"
+                                    :key="index"
+                                    :color="tag.color"
+                                    class="mx-1"
+                                    style="margin-right: 3px;margin-top: 3px;border: 0"
+                                    effect="dark"
+                            >{{tag.title}}</el-tag>
+                        </div>
+                    </template>
+                </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column prop="count" align="center" label="总数" width="180" />
+          <el-table-column align="center" prop="ac" label="AC率"/>
         </el-table>
       </el-card>
 <!--      <Pagination-->
@@ -178,65 +204,87 @@
             </el-input>
           </div>
         </div>
-        <template v-if="searchTagClassificationList&&searchTagClassificationList.length > 0" v-loading="loadings.tag">
-          <el-row :gutter="10" v-for="(item,index) in secondClassificationTemp"
-                  :key="index">
-            <el-col  v-for="(tagsAndClassification,i) in item" :key="i"
-                     :span="query.oj == 'All' || (secondClassificationTemp.length==index+1 && item.length == i+1 && i%2 ==0)
-              ?24:12">
-              <el-collapse v-model="activeTagClassificationIdList" style="margin-top:10px">
-                <el-collapse-item :title="getTagClassificationName(tagsAndClassification.classification)"
-                                  v-if="tagsAndClassification.classification != null
-                        || tagsAndClassification.tagList.length > 0 "
-                                  :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id">
-                  <el-button
-                      v-for="tag in tagsAndClassification.tagList"
-                      :key="tag.id"
-                      @click="addTag(tag)"
-                      type="ghost"
-                      size="mini"
-                      class="tag-btn"
-                      :style="
+        <div v-if="tags&&tags.length>0">
+            <el-button
+                    v-for="(tag,index) in tags"
+                    :key="tag.id"
+                    @click="addTag(tag,index)"
+                    size="mini"
+                    class="tag-btn"
+                    :style="
                         'color:#FFF;background-color:' +
                           (tag.color ? tag.color : '#409eff')
                       "
-                  >{{ tag.name }}
-                  </el-button>
-                </el-collapse-item>
-              </el-collapse>
-            </el-col>
-          </el-row>
+            >{{ tag.title }}
+            </el-button>
           <el-button long id="pick-one" @click="pickone">
             <i class="fa fa-random"></i>
             随机一题
           </el-button>
-        </template>
-        <template v-else>
+        </div>
+        <div v-else>
           <el-empty description="没有数据"></el-empty>
-        </template>
+        </div>
       </el-card>
     </el-col>
   </el-row>
 </template>
 
-<script>
-
-
+<script setup>
+import {ref} from "vue";
+import {getTags, list} from "@/api/oj/problem";
 import {Refresh, Search} from "@element-plus/icons-vue";
-
-export default {
-  methods: {
-    Refresh() {
-      return Refresh
-    },
-    Search() {
-      return Search
+import {useRouter} from "vue-router";
+const router=useRouter()
+const tags=ref([])
+const filterTags=ref([])
+const problems=ref([])
+const form=ref({
+    pageNum: 1,
+    pageSize: 20,
+    tags: [],
+    pid: undefined,
+    title: undefined,
+    status: undefined
+})
+function tagList(){
+    getTags().then(res=>{
+        tags.value=res.data
+        console.log(tags.value)
+    })
+}
+function problemDetail(row) {
+  router.push({path:"/oj/problem/detail",query:{pid:row.pid}})
+}
+function problemList(){
+    let tagFilters=[];
+    if(filterTags.value&&filterTags.value.length>0){
+        filterTags.value.forEach(t=>{
+            tagFilters.push(t.tid)
+        })
     }
-  },
-  setup(){
-  }
+    console.log(tagFilters)
+    form.value.tags=tagFilters
+    list(form.value).then(res=>{
+        problems.value=res.data.records;
+    })
+}
+function pickone(){
+    console.log("")
+}
+function addTag(tag,index){
+    tags.value.splice(index,1)
+    filterTags.value.push(tag)
+    problemList()
+}
+function removeTag(tag,index){
+    filterTags.value.splice(index,1)
+    tags.value.push(tag)
+    problemList()
 }
 
+tagList()
+problemList()
 </script>
 
 <style scoped>

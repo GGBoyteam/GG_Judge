@@ -10,6 +10,8 @@ import com.zhangsiyao.common.entity.system.dto.UserPermissionDto;
 import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.common.entity.system.vo.UserQueryVo;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -32,4 +34,6 @@ public interface IUserInfoService extends IService<UserInfo> {
     void resetPwd(UserPasswordVo userPasswordVo);
 
     UserInfoDto info(String id);
+
+    List<String> permissions(String username);
 }

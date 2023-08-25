@@ -42,8 +42,6 @@ public class RouteController {
         return R.success(route);
     }
 
-
-
     @PostMapping("/addOrUpdate")
     public R<String> add(@RequestBody RouteAddOrUpdateVo updateVo) {
         routeService.addOrUpdateRoute(updateVo);

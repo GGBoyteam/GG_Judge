@@ -14,10 +14,48 @@
             @click="changeWebLanguage"
         ></el-image>
       </div>
-      <el-menu-item :class="getSelect()==0?'item_active':'el-menu-item'" index="/index" @click="changeSelect(0)"><el-icon><HomeFilled /></el-icon>首页</el-menu-item>
-      <el-menu-item :class="getSelect()==1?'item_active':'el-menu-item'" index="/oj/problem" @click="changeSelect(1)"><el-icon><Grid /></el-icon>题目</el-menu-item>
-      <el-menu-item :class="getSelect()==2?'item_active':'el-menu-item'" index="/oj/train" @click="changeSelect(2)"><el-icon><List /></el-icon>训练</el-menu-item>
-      <el-menu-item :class="getSelect()==3?'item_active':'el-menu-item'" index="/oj/contest" @click="changeSelect(3)"><el-icon><TrendCharts /></el-icon>比赛</el-menu-item>
+      <el-menu-item
+              :class="getSelect()==0?'item_active':'el-menu-item'"
+              index="/index"
+              @click="changeSelect(0)">
+          <el-icon><HomeFilled /></el-icon>
+          首页
+      </el-menu-item>
+      <el-menu-item
+              :class="getSelect()==1?'item_active':'el-menu-item'"
+              index="/oj/problem"
+              @click="changeSelect(1)">
+          <el-icon><Grid /></el-icon>
+          题目
+      </el-menu-item>
+      <el-menu-item
+              :class="getSelect()==2?'item_active':'el-menu-item'"
+              index="/oj/train"
+              @click="changeSelect(2)">
+          <el-icon><List /></el-icon>
+          训练
+      </el-menu-item>
+      <el-menu-item
+              :class="getSelect()==3?'item_active':'el-menu-item'"
+              index="/oj/contest"
+              @click="changeSelect(3)">
+          <el-icon><TrendCharts /></el-icon>
+          比赛
+      </el-menu-item>
+        <el-menu-item
+                :class="getSelect()==4?'item_active':'el-menu-item'"
+                index="/oj/contest"
+                @click="changeSelect(4)">
+            <el-icon><TrendCharts /></el-icon>
+            面试
+        </el-menu-item>
+        <el-menu-item
+                :class="getSelect()==5?'item_active':'el-menu-item'"
+                index="/oj/contest"
+                @click="changeSelect(5)">
+            <el-icon><TrendCharts /></el-icon>
+            博客
+        </el-menu-item>
       <div class="flex-grow" />
       <div class="btn-menu" v-if="!isLogin()">
         <el-button
@@ -76,11 +114,11 @@ export default {
     const curRoute=proxy.$route;
     if(curRoute.path=='/home'){
       ojAppStore.changeSelect(0);
-    }else if(curRoute.path=='/oj/problem'){
+    }else if(curRoute.path.startsWith('/oj/problem')){
       ojAppStore.changeSelect(1);
-    }else if(curRoute.path=='/oj/train'){
+    }else if(curRoute.path.startsWith('/oj/train')){
       ojAppStore.changeSelect(2);
-    }else if(curRoute.path=='/oj/contest'){
+    }else if(curRoute.path.startsWith('/oj/contest')){
       ojAppStore.changeSelect(3);
     }
   }

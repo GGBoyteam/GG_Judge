@@ -1,13 +1,13 @@
 package com.zhangsiyao.judge.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
 import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
-import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
-import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
-import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
+import com.zhangsiyao.common.entity.judge.dto.*;
 import com.zhangsiyao.common.entity.judge.vo.*;
+import com.zhangsiyao.judge.service.IProblemCompileLimitService;
 import com.zhangsiyao.judge.service.IProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +18,22 @@ import java.util.List;
  * @author iii
  */
 @RestController
-@RequestMapping("/problem")
-public class ProblemController {
+@RequestMapping("/algorithm")
+public class AlgorithmController {
 
     @Autowired
     IProblemService problemService;
 
+    @Autowired
+    IProblemCompileLimitService problemCompileLimitService;
+
+    @GetMapping("/list")
+    public R<Page<ProblemDto>> list(ProblemQueryVo queryVo){
+        return R.success(problemService.listAll(queryVo));
+    }
+
     @GetMapping("/listByToken")
-    public R<Page<ProblemDto>> list(ProblemQueryVo queryVo, @RequestHeader("Authorization") String token){
+    public R<Page<ProblemDto>> listByToken(ProblemQueryVo queryVo, @RequestHeader("Authorization") String token){
         return R.success(problemService.listByToken(queryVo,token));
     }
 
@@ -42,6 +50,13 @@ public class ProblemController {
     @GetMapping("/examples")
     public R<Page<ProblemExampleDto>> examples(ProblemExampleQueryVo queryVo, @RequestHeader("Authorization") String token){
         return R.success(problemService.examples(queryVo,token));
+    }
+
+    @GetMapping("/compilerLimits")
+    public R<IPage<ProblemCompileLimitDto>> compilerLimits(@RequestParam("pid") Long pid,
+                                                           @RequestParam("pageNum") Long pageNum,
+                                                           @RequestParam("pageSize") Long pageSize){
+        return R.success(problemCompileLimitService.compilers(pid,pageNum,pageSize));
     }
 
     @PostMapping("/testExample")
@@ -80,8 +95,13 @@ public class ProblemController {
 
     @PostMapping("/saveOrUpdateProblemExample")
     public R<String> saveOrUpdateProblemExample(@RequestBody ProblemExampleUpdateVo updateVo,@RequestHeader("Authorization") String token){
-
+        problemService.saveOrUpdateProblemExample(updateVo,token);
         return R.success();
+    }
+
+    @PostMapping("/submission")
+    public R<ProblemSubmissionResultDto> submission(@RequestBody ProblemSubmissionVo problemSubmissionVo){
+        return R.success(problemService.submission(problemSubmissionVo));
     }
 
     @DeleteMapping("/deleteTrueCode/{codeId}")

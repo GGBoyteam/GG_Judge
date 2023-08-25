@@ -23,12 +23,12 @@
     <option name="ecsInstances" />
     <option name="hostIds">
       <list>
-        <option value="8" />
+        <option value="10" />
       </list>
     </option>
     <option name="hostTagId" value="0" />
     <option name="location" value="/root/deploy/system" />
-    <option name="pathOrUrl" value="C:\Users\iii\Desktop\GG_Judge\GG_system\target\GG_system-0.0.1-SNAPSHOT.jar" />
+    <option name="pathOrUrl" value="C:\Users\admin\Desktop\GG_Judge\GG_system\target\GG_system-0.0.1-SNAPSHOT.jar" />
     <option name="tagId" value="0" />
     <option name="terminalCommand" />
     <option name="type" value="HOST" />

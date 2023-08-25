@@ -15,6 +15,7 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,13 +26,10 @@ import java.util.Set;
 @Service
 public class CompilerServiceImpl implements ICompilerService {
 
-    @Autowired
-    CppCompiler cppCompiler;
 
-
-    private ICompiler compiler(Language language){
+    public ICompiler compiler(Language language){
         if(language==Language.CPP){
-            return cppCompiler;
+            return new CppCompiler();
         }else {
             return null;
         }
@@ -75,7 +73,11 @@ public class CompilerServiceImpl implements ICompilerService {
         return status;
     }
 
+
+
+
     @Override
+    @Cacheable(value = "compiler",key = "#root.methodName")
     public List<CompilerDto> compilerList() {
         Reflections reflections=new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage("com.zhangsiyao.judge"))

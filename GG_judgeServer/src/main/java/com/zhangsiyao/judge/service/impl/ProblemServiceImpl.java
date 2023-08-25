@@ -13,8 +13,10 @@ import com.zhangsiyao.common.entity.judge.dao.*;
 import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
+import com.zhangsiyao.common.entity.judge.dto.ProblemSubmissionResultDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.common.utils.UserUtil;
+import com.zhangsiyao.judge.compiler.ICompiler;
 import com.zhangsiyao.judge.compiler.JudgeResult;
 import com.zhangsiyao.judge.exception.AnswerException;
 import com.zhangsiyao.judge.exception.CodeCompileException;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * <p>
@@ -100,7 +103,6 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
             }
             list.add(problemDto);
         }));
-        System.out.println(problemPage.getTotal());
         pages.setRecords(list);
         pages.setCountId(problemPage.getCountId());
         pages.setCurrent(problemPage.getCurrent());
@@ -112,7 +114,52 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
 
     @Override
     public Page<ProblemDto> listAll(ProblemQueryVo queryVo) {
-        return null;
+        Page<Problem> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
+        LambdaQueryWrapper<Problem> queryWrapper=new LambdaQueryWrapper<>();
+        if(StringUtils.hasText(queryVo.getTitle())){
+            queryWrapper=queryWrapper.like(Problem::getTitle,queryVo.getTitle());
+        }
+        if(queryVo.getStatus()!=null){
+            queryWrapper=queryWrapper.eq(Problem::getStatus,queryVo.getStatus());
+        }
+        if(queryVo.getTags()!=null&&queryVo.getTags().size()>0){
+            LambdaQueryWrapper<ProblemTagRelation> tagQueryWrapper=new LambdaQueryWrapper<>();
+            tagQueryWrapper=tagQueryWrapper.in(ProblemTagRelation::getTid,queryVo.getTags());
+            Set<Long> pids=new HashSet<>();
+            tagRelationService.getBaseMapper().selectList(tagQueryWrapper).forEach(relaction->{
+                pids.add(relaction.getPid());
+            });
+            if(pids.size()>0){
+                queryWrapper=queryWrapper.in(Problem::getPid,pids);
+            }else {
+                return new Page<>(queryVo.getPageNum(), queryVo.getPageSize());
+            }
+        }
+
+        Page<Problem> problemPage = this.getBaseMapper().selectPage(page, queryWrapper);
+        Page<ProblemDto> pages=new Page<>();
+        List<ProblemDto> list=new ArrayList<>();
+        problemPage.getRecords().forEach((problem -> {
+            ProblemDto problemDto=new ProblemDto();
+            BeanUtils.copyProperties(problem,problemDto);
+            LambdaQueryWrapper<ProblemTagRelation> tagRelationQueryWrapper= new LambdaQueryWrapper<ProblemTagRelation>().eq(ProblemTagRelation::getPid,problemDto.getPid());
+            Set<Long> tagIds=new HashSet<>();
+            tagRelationService.getBaseMapper().selectList(tagRelationQueryWrapper).forEach(relation->{
+                tagIds.add(relation.getTid());
+            });
+            if(tagIds.size()>0){
+                LambdaQueryWrapper<ProblemTag> tagQueryWrapper=new LambdaQueryWrapper<ProblemTag>().in(ProblemTag::getTid,tagIds);
+                problemDto.setTags(tagService.list(tagQueryWrapper));
+            }
+            list.add(problemDto);
+        }));
+        pages.setRecords(list);
+        pages.setCountId(problemPage.getCountId());
+        pages.setCurrent(problemPage.getCurrent());
+        pages.setMaxLimit(problemPage.getMaxLimit());
+        pages.setSize(problemPage.getSize());
+        pages.setTotal(problemPage.getTotal());
+        return pages;
     }
 
     @Override
@@ -270,6 +317,20 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
         Example example=new Example();
         BeanUtils.copyProperties(updateVo,example);
         exampleService.saveOrUpdate(example);
+    }
+
+    @SneakyThrows
+    @Override
+    public ProblemSubmissionResultDto submission(ProblemSubmissionVo submissionVo) {
+        ICompiler compiler=compilerService.compiler(submissionVo.getLanguage());
+        LambdaQueryWrapper<Example> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper=queryWrapper.eq(Example::getPid,submissionVo.getPid());
+        List<Example> examples=this.exampleService.getBaseMapper().selectList(queryWrapper);
+        compiler.compile(submissionVo.getCode(),submissionVo.getVersion());
+//        for(Example example:examples){
+//            compiler.run(example.getInput(),);
+//        }
+        return null;
     }
 
     @Override

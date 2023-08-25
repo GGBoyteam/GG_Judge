@@ -31,7 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -69,10 +71,14 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
             userPermissionDto.setInfo(one);
             LambdaQueryWrapper<UserRole> queryWrapper=new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId,one.getId());
             List<UserRole> userRoles=userRoleService.list(queryWrapper);
-            List<RolePermission> permissions =new ArrayList<>();
+            List<String> permissions =new ArrayList<>();
             for (UserRole userRole:userRoles){
                 LambdaQueryWrapper<RolePermission> permissionQueryWrapper=new LambdaQueryWrapper<RolePermission>().eq(RolePermission::getRoleId,userRole.getRoleId());
-                permissions.addAll(permissionService.list(permissionQueryWrapper));
+                permissionService.list(permissionQueryWrapper).forEach(
+                        entity->{
+                            permissions.add(entity.getPermission());
+                        }
+                );
             }
             userPermissionDto.setPermissions(permissions);
         } catch (JsonProcessingException e) {
@@ -163,6 +169,25 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userRoleService.getBaseMapper().selectList(queryWrapper).forEach(userRole -> roleIds.add(userRole.getRoleId()));
         userInfoDto.setRoleIds(roleIds);
         return userInfoDto;
+    }
+
+    @Override
+    public List<String> permissions(String username) {
+        LambdaQueryWrapper<UserInfo> userInfoLambdaQueryWrapper=new LambdaQueryWrapper<>();
+        userInfoLambdaQueryWrapper=userInfoLambdaQueryWrapper.eq(UserInfo::getUsername,username);
+        UserInfo userInfo = this.baseMapper.selectOne(userInfoLambdaQueryWrapper);
+        LambdaQueryWrapper<UserRole> queryWrapper=new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId,userInfo.getId());
+        List<UserRole> userRoles=userRoleService.list(queryWrapper);
+        Set<String> permissions =new HashSet<>();
+        for (UserRole userRole:userRoles){
+            LambdaQueryWrapper<RolePermission> permissionQueryWrapper=new LambdaQueryWrapper<RolePermission>().eq(RolePermission::getRoleId,userRole.getRoleId());
+            permissionService.list(permissionQueryWrapper).forEach(
+                    entity->{
+                        permissions.add(entity.getPermission());
+                    }
+            );
+        }
+        return new ArrayList<>(permissions);
     }
 
 }

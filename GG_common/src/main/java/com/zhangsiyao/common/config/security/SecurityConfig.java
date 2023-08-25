@@ -1,4 +1,4 @@
-package com.zhangsiyao.system.config.security;
+package com.zhangsiyao.common.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

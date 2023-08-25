@@ -37,7 +37,7 @@
                plain
                icon="Plus"
                @click="handleAdd"
-               v-hasPermi="['system:menu:add']"
+               hasPermi="['system:menu:add']"
             >新增</el-button>
          </el-col>
          <el-col :span="1.5">
@@ -86,9 +86,9 @@
          </el-table-column>
          <el-table-column label="操作" align="center" width="400  " class-name="small-padding fixed-width">
             <template #default="scope">
-               <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']">修改</el-button>
-               <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']">新增</el-button>
-               <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:menu:remove']">删除</el-button>
+               <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" hasPermi="['system:menu:edit']">修改</el-button>
+               <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)" hasPermi="['system:menu:add']">新增</el-button>
+               <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" hasPermi="['system:menu:remove']">删除</el-button>
             </template>
          </el-table-column>
       </el-table>
@@ -110,7 +110,15 @@
                   </el-form-item>
                </el-col>
                <el-col :span="24">
-                  <el-form-item label="路由类型" prop="routeType">
+                  <el-form-item  prop="routeType">
+                     <template #label>
+                        <span>
+                           <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`' placement="top">
+                              <el-icon><question-filled /></el-icon>
+                           </el-tooltip>
+                           路由类型
+                        </span>
+                     </template>
                      <el-radio-group v-model="form.routeType">
                         <el-radio label="M">目录</el-radio>
                         <el-radio label="C">菜单</el-radio>
@@ -209,7 +217,7 @@
                   </el-form-item>
                </el-col>
                <el-col :span="12">
-                  <el-form-item>
+                  <el-form-item v-if="form.routeType!='F'">
                      <el-input v-model="form.permission" placeholder="请输入权限标识" maxlength="100" />
                      <template #label>
                         <span>
@@ -219,6 +227,23 @@
                            权限字符
                         </span>
                      </template>
+                  </el-form-item>
+                  <el-form-item v-else>
+                     <template #label>
+                        <span>
+                           <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`)" placement="top">
+                              <el-icon><question-filled /></el-icon>
+                           </el-tooltip>
+                           权限字符
+                        </span>
+                     </template>
+                     <el-select v-model="form.permission">
+
+                        <el-option>
+
+                        </el-option>
+
+                     </el-select>
                   </el-form-item>
                </el-col>
                <el-col :span="12" v-if="form.routeType == 'C'">
@@ -307,7 +332,7 @@
 </template>
 
 <script setup name="Menu">
-import { addRoute, delRoute, getRoute, listRoute, updateRoute ,changeStatus} from "@/api/system/route";
+import {addRoute, delRoute, getRoute, listRoute, updateRoute, changeStatus, listPermissions} from "@/api/system/route";
 import SvgIcon from "@/components/SvgIcon";
 import IconSelect from "@/components/IconSelect";
 import { ClickOutside as vClickOutside } from 'element-plus'
@@ -324,6 +349,8 @@ const refreshTable = ref(true);
 const showChooseIcon = ref(false);
 const iconSelectRef = ref(null);
 
+const permissions=ref([])
+
 const data = reactive({
   form: {},
   queryParams: {
@@ -331,6 +358,7 @@ const data = reactive({
     hidden: undefined
   },
   rules: {
+    name: [{ required: true, message: "路由名称不能为空", trigger: "blur" }],
     title: [{ required: true, message: "路由标题不能为空", trigger: "blur" }],
     sort: [{ required: true, message: "路由顺序不能为空", trigger: "blur" }],
     path: [{ required: true, message: "路由地址不能为空", trigger: "blur" }]
@@ -344,9 +372,11 @@ function getList() {
   loading.value = true;
   listRoute(queryParams.value).then(response => {
     menuList.value = generateTree(0,response.data)
-     console.log(menuList.value)
     loading.value = false;
   });
+   listPermissions().then(res=>{
+      permissions.value=res.data
+   })
 }
 function handleStatusChange(row){
   const id=row.id;

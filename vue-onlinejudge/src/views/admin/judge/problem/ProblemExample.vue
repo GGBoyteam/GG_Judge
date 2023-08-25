@@ -5,10 +5,10 @@
         </div>
         <el-row :gutter="10" class="mb8">
             <el-col :span="1.5">
-                <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['system:role:add']">新增</el-button>
+                <el-button type="primary" plain icon="Plus" @click="handleAdd" hasPermi="['system:role:add']">新增</el-button>
             </el-col>
             <el-col :span="1.5">
-                <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:role:remove']">删除</el-button>
+                <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" hasPermi="['system:role:remove']">删除</el-button>
             </el-col>
             <el-col :span="1.5">
                 <el-button
@@ -16,13 +16,13 @@
                     plain
                     icon="Download"
                     @click="handleExport"
-                    v-hasPermi="['system:role:export']"
+                    hasPermi="['system:role:export']"
                 >导出</el-button>
             </el-col>
         </el-row>
 
         <!-- 表格数据 -->
-        <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="exampleList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="样例编号"  prop="eid" width="120" />
             <el-table-column label="样例输入" align="center" prop="input" :show-overflow-tooltip="true" width="300" />
@@ -40,13 +40,10 @@
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                 <template #default="scope">
                     <el-tooltip content="修改" placement="top">
-                        <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']"></el-button>
+                        <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" hasPermi="['system:role:edit']"></el-button>
                     </el-tooltip>
                     <el-tooltip content="删除" placement="top">
-                        <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:role:remove']"></el-button>
-                    </el-tooltip>
-                    <el-tooltip content="分配用户" placement="top">
-                        <el-button link type="primary" icon="User" @click="handleAuthUser(scope.row)" v-hasPermi="['system:role:edit']"></el-button>
+                        <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" hasPermi="['system:role:remove']"></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -84,8 +81,8 @@
                 </el-select>
               </div>
               <el-button type="primary" v-model:loading="testLoading" :disabled="!form.codeId||form.codeId==''" @click="handleTest">测试</el-button>
-              <el-button type="primary" @click="handleSaveOrUpdate">确定</el-button>
-              <el-button>取消</el-button>
+              <el-button type="primary" v-model:loading="confirmLoading" @click="handleSaveOrUpdate">确定</el-button>
+              <el-button @click="cancel">取消</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -96,24 +93,28 @@
 <script setup name="Role">
 import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role";
 import { roleRouteTreeSelect, treeSelect as menuTreeselect } from "@/api/system/route";
-import {examples, getProblemTrueCode, saveOrUpdateExample, testExample} from "@/api/oj/problem";
+import {
+    examples,
+    getProblemTrueCode,
+    saveAlgorithmExample,
+    saveOrUpdateExample,
+    testExample,
+    updateAlgorithmExample
+} from "@/api/oj/problem";
 import {useRoute, useRouter} from "vue-router";
-import {nextTick} from "vue";
+import {nextTick, ref} from "vue";
 
 const router = useRouter();
 const route=useRoute();
 const { proxy } = getCurrentInstance();
-const roleList = ref([]);
+const exampleList = ref([]);
 const open = ref(false);
 const loading = ref(true);
-const showSearch = ref(true);
 const ids = ref([]);
 const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-const dateRange = ref([]);
-const menuOptions = ref([]);
 const menuExpand = ref(false);
 const menuNodeAll = ref(false);
 const deptExpand = ref(true);
@@ -124,6 +125,7 @@ const menuRef = ref(null);
 const pid=ref(route.query.pid);
 const codes=ref([]);
 const testLoading = ref(false)
+const confirmLoading=ref(false)
 
 
 const data = reactive({
@@ -158,21 +160,10 @@ function getList() {
     })
     loading.value = true;
     examples(queryParams.value).then(response => {
-        roleList.value = response.data.records;
+        exampleList.value = response.data.records;
         total.value = response.data.total;
         loading.value = false;
     });
-}
-/** 搜索按钮操作 */
-function handleQuery() {
-    queryParams.value.pageNum = 1;
-    getList();
-}
-/** 重置按钮操作 */
-function resetQuery() {
-    dateRange.value = [];
-    proxy.resetForm("queryRef");
-    handleQuery();
 }
 
 function handleTest() {
@@ -188,9 +179,28 @@ function handleTest() {
 }
 
 function handleSaveOrUpdate(){
-  saveOrUpdateExample(form.value).then(res=>{
-      console.log(res)
-  })
+
+    if(form.eid!=undefined){
+        proxy.$modal.confirm(`确定更新样例点吗？`).then(res=>{
+            confirmLoading.value=true;
+            updateAlgorithmExample(form.value).then(res=>{
+                getList()
+                open.value=false
+            }).finally(()=>{
+                confirmLoading.value=false;
+            })
+        })
+    }else {
+        proxy.$modal.confirm(`确定新增样例点吗?`).then(res=>{
+            confirmLoading.value=true;
+            saveAlgorithmExample(form.value).then(res=>{
+                getList()
+                open.value=false
+            }).finally(()=>{
+                confirmLoading.value=false;
+            })
+        }).catch(()=>{})
+    }
 }
 
 /** 删除按钮操作 */
@@ -215,29 +225,7 @@ function handleSelectionChange(selection) {
     single.value = selection.length != 1;
     multiple.value = !selection.length;
 }
-/** 角色状态修改 */
-function handleStatusChange(row) {
-    // let text = row.status == 0 ? "启用" : "停用";
-    // proxy.$modal.confirm('确认要"' + text + '""' + row.name + '"角色吗?').then(function () {
-    //     return changeRoleStatus(row.id, row.status);
-    // }).then(() => {
-    //     proxy.$modal.msgSuccess(text + "成功");
-    // }).catch(function () {
-    //     row.status = row.status == 0 ? 1 : 0;
-    // });
-}
 
-/** 分配用户 */
-function handleAuthUser(row) {
-    router.push("/system/role-auth/user/" + row.id);
-}
-/** 查询菜单树结构 */
-function getMenuTreeselect() {
-    menuTreeselect().then(response => {
-        console.log(response.data)
-        menuOptions.value = response.data;
-    });
-}
 
 /** 重置新增的表单以及其他数据  */
 function reset() {
@@ -263,7 +251,6 @@ function reset() {
 /** 添加角色 */
 function handleAdd() {
     reset();
-    getMenuTreeselect();
     open.value = true;
     title.value = "添加样例";
 }
@@ -272,7 +259,6 @@ function handleUpdate(row) {
     reset();
     console.log(row.id)
     const roleId = row.id || ids.value;
-    const roleMenu = getRoleMenuTreeselect(roleId);
     getRole(roleId).then(response => {
         form.value = response.data;
         form.value.sort = Number(form.value.sort);
@@ -290,67 +276,7 @@ function handleUpdate(row) {
         title.value = "修改角色";
     });
 }
-/** 根据角色ID查询菜单树结构 */
-function getRoleMenuTreeselect(roleId) {
-    return roleRouteTreeSelect(roleId).then(response => {
-        menuOptions.value = response.data.menus;
-        console.log("菜单",response.data.menus)
-        menuRef.value.setCheckedKeys(response.data.checkedKeys);
-        return response.data.menus;
-    });
-}
-/** 树权限（展开/折叠）*/
-function handleCheckedTreeExpand(value, type) {
-    if (type == "menu") {
-        let treeList = menuOptions.value;
-        for (let i = 0; i < treeList.length; i++) {
-            menuRef.value.store.nodesMap[treeList[i].id].expanded = value;
-        }
-    }
-}
-/** 树权限（全选/全不选） */
-function handleCheckedTreeNodeAll(value, type) {
-    if (type == "menu") {
-        menuRef.value.setCheckedNodes(value ? menuOptions.value : []);
-    }
-}
-/** 树权限（父子联动） */
-function handleCheckedTreeConnect(value, type) {
-    if (type == "menu") {
-        form.value.menuCheckStrictly = value ? true : false;
-    }
-}
-/** 所有菜单节点数据 */
-function getMenuAllCheckedKeys() {
-    // 目前被选中的菜单节点
-    let checkedKeys = menuRef.value.getCheckedKeys();
-    // 半选中的菜单节点
-    let halfCheckedKeys = menuRef.value.getHalfCheckedKeys();
-    checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
-    return checkedKeys;
-}
-/** 提交按钮 */
-function submitForm() {
-    proxy.$refs["roleRef"].validate(valid => {
-        if (valid) {
-            if (form.value.id != undefined) {
-                form.value.routeIds = getMenuAllCheckedKeys();
-                updateRole(form.value).then(response => {
-                    proxy.$modal.msgSuccess("修改成功");
-                    open.value = false;
-                    getList();
-                });
-            } else {
-                form.value.routeIds = getMenuAllCheckedKeys();
-                addRole(form.value).then(response => {
-                    proxy.$modal.msgSuccess("新增成功");
-                    open.value = false;
-                    getList();
-                });
-            }
-        }
-    });
-}
+
 /** 取消按钮 */
 function cancel() {
     open.value = false;

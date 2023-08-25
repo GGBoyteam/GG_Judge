@@ -203,7 +203,7 @@
 
 <script setup name="Role">
 import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role";
-import { roleRouteTreeSelect, treeSelect as menuTreeselect } from "@/api/system/route";
+import {listPermissions, roleRouteTreeSelect, treeSelect as menuTreeselect} from "@/api/system/route";
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -251,6 +251,7 @@ function getList() {
     total.value = response.data.total;
     loading.value = false;
   });
+
 }
 /** 搜索按钮操作 */
 function handleQuery() {

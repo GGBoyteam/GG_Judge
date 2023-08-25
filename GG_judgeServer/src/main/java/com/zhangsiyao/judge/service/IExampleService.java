@@ -12,5 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-08-09
  */
 public interface IExampleService extends IService<Example> {
+    void saveExample(Example example,String token);
 
+    void updateExample(Example example,String token);
 }
