@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class ProblemExampleTestVo implements Serializable {
+public class AlgorithmExampleTestVo implements Serializable {
     private Long codeId;
     private String input;
     private String output;

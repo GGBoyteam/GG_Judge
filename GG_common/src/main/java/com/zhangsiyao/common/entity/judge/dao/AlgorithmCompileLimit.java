@@ -13,42 +13,29 @@ import lombok.experimental.Accessors;
  * 
  * </p>
  *
- * @author author
- * @since 2023-08-09
+ * @author zhangsiyao
+ * @since 2023-08-22
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("example")
-public class Example implements Serializable {
+@TableName("algorithm_compile_limit")
+public class AlgorithmCompileLimit implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 样例id
-     */
-    @TableId(value = "eid", type = IdType.AUTO)
-    private Long eid;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
-    /**
-     * 题目id
-     */
     private Long pid;
 
-    /**
-     * 输入
-     */
-    private String input;
+    private String language;
 
-    /**
-     * 输出
-     */
-    private String output;
+    private String version;
 
-    /**
-     * 是否作为题目展示的样例(1展示,0作为判题样例)
-     */
-    private Integer status;
+    private Long time;
+
+    private Long memory;
 
 
 }

@@ -1,6 +1,6 @@
 package com.zhangsiyao.judge.mapper;
 
-import com.zhangsiyao.common.entity.judge.dao.ProblemCompileLimit;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmCompileLimit;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-08-22
  */
 @Mapper
-public interface ProblemCompileLimitMapper extends BaseMapper<ProblemCompileLimit> {
+public interface ProblemCompileLimitMapper extends BaseMapper<AlgorithmCompileLimit> {
 
 }

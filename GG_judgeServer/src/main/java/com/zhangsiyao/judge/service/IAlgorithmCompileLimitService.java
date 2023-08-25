@@ -1,10 +1,9 @@
 package com.zhangsiyao.judge.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zhangsiyao.common.entity.judge.dao.ProblemCompileLimit;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmCompileLimit;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.common.entity.judge.dto.ProblemCompileLimitDto;
+import com.zhangsiyao.common.entity.judge.dto.AlgorithmCompileLimitDto;
 
 /**
  * <p>
@@ -14,8 +13,8 @@ import com.zhangsiyao.common.entity.judge.dto.ProblemCompileLimitDto;
  * @author zhangsiyao
  * @since 2023-08-22
  */
-public interface IProblemCompileLimitService extends IService<ProblemCompileLimit> {
-    IPage<ProblemCompileLimitDto> compilers(Long pid, Long pageNum, Long pageSize);
+public interface IAlgorithmCompileLimitService extends IService<AlgorithmCompileLimit> {
+    IPage<AlgorithmCompileLimitDto> compilers(Long pid, Long pageNum, Long pageSize);
 
     void saveCompilerLimit(Long pid,String language,Long time,Long memory);
 

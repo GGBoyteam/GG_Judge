@@ -256,7 +256,7 @@ import {
     getTags,
     listLimit,
     compiler, addCompileLimit, updateCompileLimit, deleteCompileLimit
-} from "@/api/oj/problem";
+} from "@/api/oj/algorithm";
 import {useRoute, useRouter} from "vue-router";
 import {getCurrentInstance, reactive, ref, toRefs} from "vue";
 const { proxy } = getCurrentInstance();

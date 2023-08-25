@@ -2,7 +2,7 @@ package com.zhangsiyao.judge.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmTagRelation;
 
 /**
  * <p>
@@ -12,6 +12,6 @@ import com.zhangsiyao.common.entity.judge.dao.ProblemTag;
  * @author author
  * @since 2023-08-10
  */
-public interface IProblemTagService extends IService<ProblemTag> {
+public interface IAlgorithmTagRelationService extends IService<AlgorithmTagRelation> {
 
 }

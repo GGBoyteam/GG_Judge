@@ -3,10 +3,12 @@ package com.zhangsiyao.common.entity.judge.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
-public class ProblemExampleQueryVo implements Serializable {
+public class AlgorithmExampleDeleteVo implements Serializable {
+
     Long pid;
-    Long pageNum;
-    Long pageSize;
+
+    List<Long> ids;
 }

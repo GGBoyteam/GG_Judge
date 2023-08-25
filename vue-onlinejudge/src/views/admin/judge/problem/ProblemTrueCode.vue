@@ -97,7 +97,7 @@
 </template>
 <script setup>
 
-import {deleteTrueCode, getProblemTrueCode, saveOrUpdateProblemTrueCode} from "@/api/oj/problem";
+import {deleteTrueCode, getProblemTrueCode, saveOrUpdateProblemTrueCode} from "@/api/oj/algorithm";
 import {ref} from "vue";
 import {useRoute} from "vue-router";
 const { proxy } = getCurrentInstance();

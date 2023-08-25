@@ -1,6 +1,6 @@
 package com.zhangsiyao.common.entity.judge.dto;
 
-import com.zhangsiyao.common.entity.judge.dao.ProblemCompileLimit;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmCompileLimit;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,5 +8,5 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ProblemCompileLimitDto extends ProblemCompileLimit implements Serializable {
+public class AlgorithmCompileLimitDto extends AlgorithmCompileLimit implements Serializable {
 }

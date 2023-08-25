@@ -1,8 +1,8 @@
 package com.zhangsiyao.judge.service.impl;
 
-import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmTrueCode;
 import com.zhangsiyao.judge.mapper.ProblemTrueCodeMapper;
-import com.zhangsiyao.judge.service.IProblemTrueCodeService;
+import com.zhangsiyao.judge.service.IAlgorithmTrueCodeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-08-12
  */
 @Service
-public class ProblemTrueCodeServiceImpl extends ServiceImpl<ProblemTrueCodeMapper, ProblemTrueCode> implements IProblemTrueCodeService {
+public class AlgorithmTrueCodeServiceImpl extends ServiceImpl<ProblemTrueCodeMapper, AlgorithmTrueCode> implements IAlgorithmTrueCodeService {
 
 }

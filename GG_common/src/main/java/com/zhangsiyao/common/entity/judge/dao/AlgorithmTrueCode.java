@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
-import com.zhangsiyao.common.constant.Language;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,8 +20,8 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("problem_true_code")
-public class ProblemTrueCode implements Serializable {
+@TableName("algorithm_true_code")
+public class AlgorithmTrueCode implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

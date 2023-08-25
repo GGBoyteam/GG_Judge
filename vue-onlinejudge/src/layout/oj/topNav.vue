@@ -23,7 +23,7 @@
       </el-menu-item>
       <el-menu-item
               :class="getSelect()==1?'item_active':'el-menu-item'"
-              index="/oj/problem"
+              index="/oj/algorithm"
               @click="changeSelect(1)">
           <el-icon><Grid /></el-icon>
           题目
@@ -114,7 +114,7 @@ export default {
     const curRoute=proxy.$route;
     if(curRoute.path=='/home'){
       ojAppStore.changeSelect(0);
-    }else if(curRoute.path.startsWith('/oj/problem')){
+    }else if(curRoute.path.startsWith('/oj/algorithm')){
       ojAppStore.changeSelect(1);
     }else if(curRoute.path.startsWith('/oj/train')){
       ojAppStore.changeSelect(2);

@@ -98,7 +98,7 @@ import {java} from '@codemirror/lang-java'
 import {cpp} from '@codemirror/lang-cpp'
 import {python} from '@codemirror/lang-python'
 import { oneDark } from '@codemirror/theme-one-dark'
-import {compileAndRun, compiler} from "@/api/oj/problem";
+import {compileAndRun, compiler} from "@/api/oj/algorithm";
 
 export default defineComponent({
   name: "CodeInput",

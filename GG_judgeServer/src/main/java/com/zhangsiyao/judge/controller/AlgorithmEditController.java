@@ -1,12 +1,12 @@
 package com.zhangsiyao.judge.controller;
 
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.judge.vo.ProblemExampleSaveVo;
-import com.zhangsiyao.common.entity.judge.vo.ProblemExampleUpdateVo;
-import com.zhangsiyao.judge.service.IExampleService;
-import com.zhangsiyao.judge.service.IProblemCompileLimitService;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmExampleDeleteVo;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmAlgorithmExampleSaveVo;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmAlgorithmExampleUpdateVo;
+import com.zhangsiyao.judge.service.IAlgorithmExampleService;
+import com.zhangsiyao.judge.service.IAlgorithmCompileLimitService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class AlgorithmEditController {
 
     @Autowired
-    IProblemCompileLimitService compileLimitService;
+    IAlgorithmCompileLimitService compileLimitService;
 
     @Autowired
-    IExampleService exampleService;
+    IAlgorithmExampleService exampleService;
 
     /**
      * 添加编译器限制信息
@@ -57,7 +57,7 @@ public class AlgorithmEditController {
      * 新增题目样例
      * */
     @PostMapping("/saveExample")
-    public R<String> saveExample(@RequestBody ProblemExampleSaveVo saveVo,
+    public R<String> saveExample(@RequestBody AlgorithmAlgorithmExampleSaveVo saveVo,
                                  @RequestHeader("Authorization") String token){
         exampleService.saveExample(saveVo,token);
         return R.success();
@@ -67,9 +67,19 @@ public class AlgorithmEditController {
      * 更新题目样例
      * */
     @PostMapping("/updateExample")
-    public R<String> updateExample(@RequestBody ProblemExampleUpdateVo updateVo,
+    public R<String> updateExample(@RequestBody AlgorithmAlgorithmExampleUpdateVo updateVo,
                                    @RequestHeader("Authorization") String token){
         exampleService.updateExample(updateVo,token);
+        return R.success();
+    }
+
+    /**
+     * 删除题目样例
+     * */
+    @DeleteMapping("/deleteExample")
+    public R<String> deleteExample(@RequestBody AlgorithmExampleDeleteVo deleteVo,
+                                   @RequestHeader("Authorization") String token){
+        exampleService.deleteExample(deleteVo.getPid(),deleteVo.getIds(),token);
         return R.success();
     }
 

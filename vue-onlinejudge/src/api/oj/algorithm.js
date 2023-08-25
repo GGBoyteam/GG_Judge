@@ -73,10 +73,10 @@ export function updateAlgorithmExample(data){
   })
 }
 
-export function saveOrUpdateExample(data){
+export function deleteAlgorithmExample(data) {
   return request({
-    url: '/judge-service/algorithm/saveOrUpdateExample',
-    method: 'post',
+    url: '/judge-service/algorithmEdit/deleteExample',
+    method: 'delete',
     data: data
   })
 }

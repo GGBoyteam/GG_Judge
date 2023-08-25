@@ -1,18 +1,14 @@
 package com.zhangsiyao.judge.service.impl;
 
-import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.common.constant.Language;
-import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.common.entity.judge.dao.*;
+import com.zhangsiyao.common.entity.judge.dto.AlgorithmDto;
 import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
-import com.zhangsiyao.common.entity.judge.dto.ProblemDto;
-import com.zhangsiyao.common.entity.judge.dto.ProblemExampleDto;
+import com.zhangsiyao.common.entity.judge.dto.ProblemAlgorithmExampleDto;
 import com.zhangsiyao.common.entity.judge.dto.ProblemSubmissionResultDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.common.utils.UserUtil;
@@ -20,7 +16,6 @@ import com.zhangsiyao.judge.compiler.ICompiler;
 import com.zhangsiyao.judge.compiler.JudgeResult;
 import com.zhangsiyao.judge.exception.AnswerException;
 import com.zhangsiyao.judge.exception.CodeCompileException;
-import com.zhangsiyao.judge.exception.CodeRunException;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
 import com.zhangsiyao.judge.mapper.ProblemMapper;
 import com.zhangsiyao.judge.service.*;
@@ -36,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * <p>
@@ -47,7 +41,7 @@ import java.util.function.Consumer;
  * @since 2023-08-09
  */
 @Service
-public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> implements IProblemService {
+public class AlgorithmServiceImpl extends ServiceImpl<ProblemMapper, Algorithm> implements IAlgorithmService {
 
     @Autowired
     StringRedisTemplate redisTemplate;
@@ -56,49 +50,49 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     ObjectMapper objectMapper;
 
     @Autowired
-    IExampleService exampleService;
+    IAlgorithmExampleService exampleService;
 
     @Autowired
-    IProblemTagService tagService;
+    IAlgorithmTagService tagService;
 
     @Autowired
-    IProblemTrueCodeService trueCodeService;
+    IAlgorithmTrueCodeService trueCodeService;
 
     @Autowired
-    IProblemTagRelationService tagRelationService;
+    IAlgorithmTagRelationService tagRelationService;
 
     @Autowired
-    IProblemTrueCodeService problemTrueCodeService;
+    IAlgorithmTrueCodeService problemTrueCodeService;
 
     @Autowired
     ICompilerService compilerService;
 
     @SneakyThrows
     @Override
-    public Page<ProblemDto> listByToken(ProblemQueryVo queryVo,String token) {
+    public Page<AlgorithmDto> listByToken(ProblemQueryVo queryVo, String token) {
         String username= UserUtil.getUsernameByToken(redisTemplate,token);
-        Page<Problem> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
-        LambdaQueryWrapper<Problem> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper=queryWrapper.eq(Problem::getAuthor,username);
+        Page<Algorithm> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
+        LambdaQueryWrapper<Algorithm> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper=queryWrapper.eq(Algorithm::getAuthor,username);
         if(StringUtils.hasText(queryVo.getTitle())){
-            queryWrapper=queryWrapper.like(Problem::getTitle,queryVo.getTitle());
+            queryWrapper=queryWrapper.like(Algorithm::getTitle,queryVo.getTitle());
         }
         if(queryVo.getStatus()!=null){
-            queryWrapper=queryWrapper.eq(Problem::getStatus,queryVo.getStatus());
+            queryWrapper=queryWrapper.eq(Algorithm::getStatus,queryVo.getStatus());
         }
-        Page<Problem> problemPage = this.getBaseMapper().selectPage(page, queryWrapper);
-        Page<ProblemDto> pages=new Page<>();
-        List<ProblemDto> list=new ArrayList<>();
+        Page<Algorithm> problemPage = this.getBaseMapper().selectPage(page, queryWrapper);
+        Page<AlgorithmDto> pages=new Page<>();
+        List<AlgorithmDto> list=new ArrayList<>();
         problemPage.getRecords().forEach((problem -> {
-            ProblemDto problemDto=new ProblemDto();
+            AlgorithmDto problemDto=new AlgorithmDto();
             BeanUtils.copyProperties(problem,problemDto);
-            LambdaQueryWrapper<ProblemTagRelation> tagRelationQueryWrapper= new LambdaQueryWrapper<ProblemTagRelation>().eq(ProblemTagRelation::getPid,problemDto.getPid());
+            LambdaQueryWrapper<AlgorithmTagRelation> tagRelationQueryWrapper= new LambdaQueryWrapper<AlgorithmTagRelation>().eq(AlgorithmTagRelation::getPid,problemDto.getPid());
             Set<Long> tagIds=new HashSet<>();
             tagRelationService.getBaseMapper().selectList(tagRelationQueryWrapper).forEach(relation->{
                 tagIds.add(relation.getTid());
             });
             if(tagIds.size()>0){
-                LambdaQueryWrapper<ProblemTag> tagQueryWrapper=new LambdaQueryWrapper<ProblemTag>().in(ProblemTag::getTid,tagIds);
+                LambdaQueryWrapper<AlgorithmTag> tagQueryWrapper=new LambdaQueryWrapper<AlgorithmTag>().in(AlgorithmTag::getTid,tagIds);
                 problemDto.setTags(tagService.list(tagQueryWrapper));
             }
             list.add(problemDto);
@@ -113,42 +107,42 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     }
 
     @Override
-    public Page<ProblemDto> listAll(ProblemQueryVo queryVo) {
-        Page<Problem> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
-        LambdaQueryWrapper<Problem> queryWrapper=new LambdaQueryWrapper<>();
+    public Page<AlgorithmDto> listAll(ProblemQueryVo queryVo) {
+        Page<Algorithm> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
+        LambdaQueryWrapper<Algorithm> queryWrapper=new LambdaQueryWrapper<>();
         if(StringUtils.hasText(queryVo.getTitle())){
-            queryWrapper=queryWrapper.like(Problem::getTitle,queryVo.getTitle());
+            queryWrapper=queryWrapper.like(Algorithm::getTitle,queryVo.getTitle());
         }
         if(queryVo.getStatus()!=null){
-            queryWrapper=queryWrapper.eq(Problem::getStatus,queryVo.getStatus());
+            queryWrapper=queryWrapper.eq(Algorithm::getStatus,queryVo.getStatus());
         }
         if(queryVo.getTags()!=null&&queryVo.getTags().size()>0){
-            LambdaQueryWrapper<ProblemTagRelation> tagQueryWrapper=new LambdaQueryWrapper<>();
-            tagQueryWrapper=tagQueryWrapper.in(ProblemTagRelation::getTid,queryVo.getTags());
+            LambdaQueryWrapper<AlgorithmTagRelation> tagQueryWrapper=new LambdaQueryWrapper<>();
+            tagQueryWrapper=tagQueryWrapper.in(AlgorithmTagRelation::getTid,queryVo.getTags());
             Set<Long> pids=new HashSet<>();
             tagRelationService.getBaseMapper().selectList(tagQueryWrapper).forEach(relaction->{
                 pids.add(relaction.getPid());
             });
             if(pids.size()>0){
-                queryWrapper=queryWrapper.in(Problem::getPid,pids);
+                queryWrapper=queryWrapper.in(Algorithm::getPid,pids);
             }else {
                 return new Page<>(queryVo.getPageNum(), queryVo.getPageSize());
             }
         }
 
-        Page<Problem> problemPage = this.getBaseMapper().selectPage(page, queryWrapper);
-        Page<ProblemDto> pages=new Page<>();
-        List<ProblemDto> list=new ArrayList<>();
+        Page<Algorithm> problemPage = this.getBaseMapper().selectPage(page, queryWrapper);
+        Page<AlgorithmDto> pages=new Page<>();
+        List<AlgorithmDto> list=new ArrayList<>();
         problemPage.getRecords().forEach((problem -> {
-            ProblemDto problemDto=new ProblemDto();
+            AlgorithmDto problemDto=new AlgorithmDto();
             BeanUtils.copyProperties(problem,problemDto);
-            LambdaQueryWrapper<ProblemTagRelation> tagRelationQueryWrapper= new LambdaQueryWrapper<ProblemTagRelation>().eq(ProblemTagRelation::getPid,problemDto.getPid());
+            LambdaQueryWrapper<AlgorithmTagRelation> tagRelationQueryWrapper= new LambdaQueryWrapper<AlgorithmTagRelation>().eq(AlgorithmTagRelation::getPid,problemDto.getPid());
             Set<Long> tagIds=new HashSet<>();
             tagRelationService.getBaseMapper().selectList(tagRelationQueryWrapper).forEach(relation->{
                 tagIds.add(relation.getTid());
             });
             if(tagIds.size()>0){
-                LambdaQueryWrapper<ProblemTag> tagQueryWrapper=new LambdaQueryWrapper<ProblemTag>().in(ProblemTag::getTid,tagIds);
+                LambdaQueryWrapper<AlgorithmTag> tagQueryWrapper=new LambdaQueryWrapper<AlgorithmTag>().in(AlgorithmTag::getTid,tagIds);
                 problemDto.setTags(tagService.list(tagQueryWrapper));
             }
             list.add(problemDto);
@@ -163,74 +157,74 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     }
 
     @Override
-    public Page<ProblemDto> listByAuthor(ProblemQueryVo queryVo) {
+    public Page<AlgorithmDto> listByAuthor(ProblemQueryVo queryVo) {
         return null;
     }
 
     @Override
-    public ProblemDto info(String pid) {
-        Problem problem = this.getById(pid);
-        ProblemDto problemDto=new ProblemDto();
-        BeanUtils.copyProperties(problem,problemDto);
-        LambdaQueryWrapper<ProblemTagRelation> tagRelationQueryWrapper= new LambdaQueryWrapper<ProblemTagRelation>().eq(ProblemTagRelation::getPid,problemDto.getPid());
+    public AlgorithmDto info(String pid) {
+        Algorithm algorithm = this.getById(pid);
+        AlgorithmDto problemDto=new AlgorithmDto();
+        BeanUtils.copyProperties(algorithm,problemDto);
+        LambdaQueryWrapper<AlgorithmTagRelation> tagRelationQueryWrapper= new LambdaQueryWrapper<AlgorithmTagRelation>().eq(AlgorithmTagRelation::getPid,problemDto.getPid());
         Set<Long> tagIds=new HashSet<>();
         tagRelationService.getBaseMapper().selectList(tagRelationQueryWrapper).forEach(relation->{
             tagIds.add(relation.getTid());
         });
         if(tagIds.size()>0){
-            LambdaQueryWrapper<ProblemTag> tagQueryWrapper=new LambdaQueryWrapper<ProblemTag>().in(ProblemTag::getTid,tagIds);
+            LambdaQueryWrapper<AlgorithmTag> tagQueryWrapper=new LambdaQueryWrapper<AlgorithmTag>().in(AlgorithmTag::getTid,tagIds);
             problemDto.setTags(tagService.list(tagQueryWrapper));
         }
-        LambdaQueryWrapper<Example> exampleQueryWrapper=new LambdaQueryWrapper<Example>().eq(Example::getPid,pid).eq(Example::getStatus,1);
-        problemDto.setExamples(exampleService.list(exampleQueryWrapper));
+        LambdaQueryWrapper<AlgorithmExample> exampleQueryWrapper=new LambdaQueryWrapper<AlgorithmExample>().eq(AlgorithmExample::getPid,pid).eq(AlgorithmExample::getStatus,1);
+        problemDto.setAlgorithmExamples(exampleService.list(exampleQueryWrapper));
         return problemDto;
     }
 
     @Override
-    public ProblemDto infoIncludeAllExamples(String pid, String token) {
+    public AlgorithmDto infoIncludeAllExamples(String pid, String token) {
         return null;
     }
 
     @Override
-    public List<ProblemTag> tags() {
+    public List<AlgorithmTag> tags() {
         return tagService.list();
     }
 
     @SneakyThrows
     @Override
-    public Page<ProblemTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, String token) {
+    public Page<AlgorithmTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, String token) {
         String username=UserUtil.getUsernameByToken(redisTemplate,token);
-        Problem problem=this.getById(queryVo.getPid());
-        if(!username.equals(problem.getAuthor())){
+        Algorithm algorithm =this.getById(queryVo.getPid());
+        if(!username.equals(algorithm.getAuthor())){
             throw new NotProblemAuthorException("您不是此题作者，无权查看此题目正确代码");
         }
-        Page<ProblemTrueCode> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
-        LambdaQueryWrapper<ProblemTrueCode> queryWrapper = new LambdaQueryWrapper<ProblemTrueCode>().eq(ProblemTrueCode::getPid,queryVo.getPid());
+        Page<AlgorithmTrueCode> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
+        LambdaQueryWrapper<AlgorithmTrueCode> queryWrapper = new LambdaQueryWrapper<AlgorithmTrueCode>().eq(AlgorithmTrueCode::getPid,queryVo.getPid());
         return trueCodeService.getBaseMapper().selectPage(page,queryWrapper);
     }
 
     @SneakyThrows
     @Override
-    public Page<ProblemExampleDto> examples(ProblemExampleQueryVo queryVo, String token) {
+    public Page<ProblemAlgorithmExampleDto> examples(AlgorithmExampleQueryVo queryVo, String token) {
         String username=UserUtil.getUsernameByToken(redisTemplate,token);
-        Problem problem=this.getById(queryVo.getPid());
-        if(!username.equals(problem.getAuthor())){
+        Algorithm algorithm =this.getById(queryVo.getPid());
+        if(!username.equals(algorithm.getAuthor())){
             throw new NotProblemAuthorException("您不是此题作者，无权查看此题目正确代码");
         }
-        Page<Example> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
-        LambdaQueryWrapper<Example> queryWrapper=new LambdaQueryWrapper<Example>().eq(Example::getPid,queryVo.getPid());
-        queryWrapper=queryWrapper.orderByDesc(Example::getStatus);
-        Page<Example> examplePage = exampleService.getBaseMapper().selectPage(page, queryWrapper);
-        return (Page<ProblemExampleDto>) examplePage.convert(example ->{
-            ProblemExampleDto cur=new ProblemExampleDto();
+        Page<AlgorithmExample> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
+        LambdaQueryWrapper<AlgorithmExample> queryWrapper=new LambdaQueryWrapper<AlgorithmExample>().eq(AlgorithmExample::getPid,queryVo.getPid());
+        queryWrapper=queryWrapper.orderByDesc(AlgorithmExample::getStatus);
+        Page<AlgorithmExample> examplePage = exampleService.getBaseMapper().selectPage(page, queryWrapper);
+        return (Page<ProblemAlgorithmExampleDto>) examplePage.convert(example ->{
+            ProblemAlgorithmExampleDto cur=new ProblemAlgorithmExampleDto();
             BeanUtils.copyProperties(example,cur);
             return cur;
         });
     }
 
     @Override
-    public CodeCompileAndRunResultDto testExample(ProblemExampleTestVo testVo) {
-        ProblemTrueCode code = problemTrueCodeService.getById(testVo.getCodeId());
+    public CodeCompileAndRunResultDto testExample(AlgorithmExampleTestVo testVo) {
+        AlgorithmTrueCode code = problemTrueCodeService.getById(testVo.getCodeId());
         CodeCompileRunVo codeCompileRunVo=new CodeCompileRunVo();
         codeCompileRunVo.setCode(code.getCode());
         codeCompileRunVo.setLanguage(Language.get(code.getLanguage()));
@@ -244,19 +238,19 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo,String token) {
-        Problem problem = this.getById(updateVo.getPid());
+        Algorithm algorithm = this.getById(updateVo.getPid());
         String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(problem.getAuthor())){
+        if(!username.equals(algorithm.getAuthor())){
             throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
         }
-        problem.setTitle(updateVo.getTitle());
-        problem.setStatus(updateVo.getStatus());
-        this.updateById(problem);
-        LambdaQueryWrapper<ProblemTagRelation> queryWrapper=new LambdaQueryWrapper<ProblemTagRelation>().eq(ProblemTagRelation::getPid,updateVo.getPid());
+        algorithm.setTitle(updateVo.getTitle());
+        algorithm.setStatus(updateVo.getStatus());
+        this.updateById(algorithm);
+        LambdaQueryWrapper<AlgorithmTagRelation> queryWrapper=new LambdaQueryWrapper<AlgorithmTagRelation>().eq(AlgorithmTagRelation::getPid,updateVo.getPid());
         tagRelationService.getBaseMapper().delete(queryWrapper);
-        List<ProblemTagRelation> tagRelations=new ArrayList<>();
+        List<AlgorithmTagRelation> tagRelations=new ArrayList<>();
         updateVo.getTags().forEach(tagId->{
-            tagRelations.add(new ProblemTagRelation(null,updateVo.getPid(),tagId));
+            tagRelations.add(new AlgorithmTagRelation(null,updateVo.getPid(),tagId));
         });
         tagRelationService.saveBatch(tagRelations);
     }
@@ -264,68 +258,68 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem> impl
     @SneakyThrows
     @Override
     public void updateProblemBody(ProblemBodyUpdateVo updateVo,String token) {
-        Problem problem = this.getById(updateVo.getPid());
+        Algorithm algorithm = this.getById(updateVo.getPid());
         String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(problem.getAuthor())){
+        if(!username.equals(algorithm.getAuthor())){
             throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
         }
-        BeanUtils.copyProperties(updateVo,problem);
-        this.updateById(problem);
+        BeanUtils.copyProperties(updateVo, algorithm);
+        this.updateById(algorithm);
     }
 
     @SneakyThrows
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrUpdateProblemTrueCode(ProblemTrueCodeUpdateVo updateVo, String token) {
-        Problem problem = this.getById(updateVo.getPid());
+        Algorithm algorithm = this.getById(updateVo.getPid());
         String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(problem.getAuthor())){
+        if(!username.equals(algorithm.getAuthor())){
             throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
         }
         if(compilerService.compile(updateVo.getCode(), updateVo.getLanguage(),updateVo.getVersion())!= JudgeResult.Status.Accepted){
             throw  new CodeCompileException("编译未成功，操作失败",null,null);
         }
-        ProblemTrueCode problemTrueCode=new ProblemTrueCode();
-        problemTrueCode.setPid(updateVo.getPid());
-        problemTrueCode.setCode(updateVo.getCode());
-        problemTrueCode.setLanguage(updateVo.getLanguage().getName());
-        problemTrueCode.setVersion(updateVo.getVersion());
-        problemTrueCode.setCodeId(updateVo.getCodeId());
-        problemTrueCodeService.saveOrUpdate(problemTrueCode);
+        AlgorithmTrueCode algorithmTrueCode =new AlgorithmTrueCode();
+        algorithmTrueCode.setPid(updateVo.getPid());
+        algorithmTrueCode.setCode(updateVo.getCode());
+        algorithmTrueCode.setLanguage(updateVo.getLanguage().getName());
+        algorithmTrueCode.setVersion(updateVo.getVersion());
+        algorithmTrueCode.setCodeId(updateVo.getCodeId());
+        problemTrueCodeService.saveOrUpdate(algorithmTrueCode);
     }
 
     @SneakyThrows
     @Override
-    public void saveOrUpdateProblemExample(ProblemExampleUpdateVo updateVo,String token) {
-        Problem problem = this.getById(updateVo.getPid());
+    public void saveOrUpdateProblemExample(AlgorithmAlgorithmExampleUpdateVo updateVo, String token) {
+        Algorithm algorithm = this.getById(updateVo.getPid());
         String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(problem.getAuthor())){
+        if(!username.equals(algorithm.getAuthor())){
             throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
         }
-        LambdaQueryWrapper<ProblemTrueCode> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper=queryWrapper.eq(ProblemTrueCode::getPid,updateVo.getPid());
-        List<ProblemTrueCode> codes = problemTrueCodeService.getBaseMapper().selectList(queryWrapper);
+        LambdaQueryWrapper<AlgorithmTrueCode> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper=queryWrapper.eq(AlgorithmTrueCode::getPid,updateVo.getPid());
+        List<AlgorithmTrueCode> codes = problemTrueCodeService.getBaseMapper().selectList(queryWrapper);
         if(!updateVo.getOutput().endsWith("\n")){
             updateVo.setOutput(updateVo.getOutput()+"\n");
         }
-        for(ProblemTrueCode code:codes){
+        for(AlgorithmTrueCode code:codes){
             JudgeResult result = compilerService.compileAndRun(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), updateVo.getInput());
             if(!result.getOutput().equals(updateVo.getOutput())){
                 throw new AnswerException(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), updateVo.getInput(),updateVo.getOutput(),result.getOutput());
             }
         }
-        Example example=new Example();
-        BeanUtils.copyProperties(updateVo,example);
-        exampleService.saveOrUpdate(example);
+        AlgorithmExample algorithmExample =new AlgorithmExample();
+        BeanUtils.copyProperties(updateVo, algorithmExample);
+        exampleService.saveOrUpdate(algorithmExample);
     }
 
     @SneakyThrows
     @Override
     public ProblemSubmissionResultDto submission(ProblemSubmissionVo submissionVo) {
         ICompiler compiler=compilerService.compiler(submissionVo.getLanguage());
-        LambdaQueryWrapper<Example> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper=queryWrapper.eq(Example::getPid,submissionVo.getPid());
-        List<Example> examples=this.exampleService.getBaseMapper().selectList(queryWrapper);
+        LambdaQueryWrapper<AlgorithmExample> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper=queryWrapper.eq(AlgorithmExample::getPid,submissionVo.getPid());
+        List<AlgorithmExample> algorithmExamples =this.exampleService.getBaseMapper().selectList(queryWrapper);
         compiler.compile(submissionVo.getCode(),submissionVo.getVersion());
 //        for(Example example:examples){
 //            compiler.run(example.getInput(),);

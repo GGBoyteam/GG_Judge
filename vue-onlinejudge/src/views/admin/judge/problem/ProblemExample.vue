@@ -8,7 +8,7 @@
                 <el-button type="primary" plain icon="Plus" @click="handleAdd" hasPermi="['system:role:add']">新增</el-button>
             </el-col>
             <el-col :span="1.5">
-                <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" hasPermi="['system:role:remove']">删除</el-button>
+                <el-button type="danger" plain icon="Delete" :disabled="!(ids&&ids.length>0)" @click="handleDelete" hasPermi="['system:role:remove']">删除</el-button>
             </el-col>
             <el-col :span="1.5">
                 <el-button
@@ -29,7 +29,7 @@
             <el-table-column label="样例输出" align="center" prop="output" :show-overflow-tooltip="true" width="300" />
             <el-table-column label="是否为展示样例" align="center" width="150">
                 <template #default="scope">
-                    <el-tag>{{scope.row==0?'隐藏':'展示'}}</el-tag>
+                    <el-tag>{{scope.row.status==0?'隐藏':'展示'}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" align="center" prop="createTime">
@@ -75,7 +75,7 @@
             </el-form-item>
             <el-form-item>
               <div>
-                <span>运行的代码：</span>
+                <span>测试代码：</span>
                 <el-select style="margin-right: 5px" v-model="form.codeId">
                     <el-option v-for="(code,index) in codes" :key="index" :label="code.language" :value="code.codeId"></el-option>
                 </el-select>
@@ -91,16 +91,15 @@
 </template>
 
 <script setup name="Role">
-import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role";
-import { roleRouteTreeSelect, treeSelect as menuTreeselect } from "@/api/system/route";
+import { delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role";
 import {
+    deleteAlgorithmExample,
     examples,
     getProblemTrueCode,
     saveAlgorithmExample,
-    saveOrUpdateExample,
     testExample,
     updateAlgorithmExample
-} from "@/api/oj/problem";
+} from "@/api/oj/algorithm";
 import {useRoute, useRouter} from "vue-router";
 import {nextTick, ref} from "vue";
 
@@ -115,10 +114,6 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-const menuExpand = ref(false);
-const menuNodeAll = ref(false);
-const deptExpand = ref(true);
-const deptNodeAll = ref(false);
 const menuRef = ref(null);
 
 
@@ -179,8 +174,8 @@ function handleTest() {
 }
 
 function handleSaveOrUpdate(){
-
-    if(form.eid!=undefined){
+    form.value.pid=pid.value
+    if(form.value.eid!=undefined){
         proxy.$modal.confirm(`确定更新样例点吗？`).then(res=>{
             confirmLoading.value=true;
             updateAlgorithmExample(form.value).then(res=>{
@@ -205,9 +200,14 @@ function handleSaveOrUpdate(){
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-    const roleIds = row.id || ids.value;
-    proxy.$modal.confirm('是否确认删除角色编号为"' + roleIds + '"的数据项?').then(function () {
-        return delRole(roleIds);
+    let exampleIds=[]
+    if(row.eid){
+        exampleIds.push(row.eid)
+    }else {
+         exampleIds=  ids.value;
+    }
+    proxy.$modal.confirm('是否确认删除样例编号为"' + exampleIds + '"的数据项?').then(function () {
+        return deleteAlgorithmExample({pid:pid.value,ids:exampleIds});
     }).then(() => {
         getList();
         proxy.$modal.msgSuccess("删除成功");
@@ -221,60 +221,27 @@ function handleExport() {
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {
-    ids.value = selection.map(item => item.id);
-    single.value = selection.length != 1;
-    multiple.value = !selection.length;
+    ids.value = selection.map(item =>{return item.eid});
 }
 
 
 /** 重置新增的表单以及其他数据  */
 function reset() {
-    if (menuRef.value != undefined) {
-        menuRef.value.setCheckedKeys([]);
-    }
-    menuExpand.value = false;
-    menuNodeAll.value = false;
-    deptExpand.value = true;
-    deptNodeAll.value = false;
-    // form.value = {
-    //     id: undefined,
-    //     name: undefined,
-    //     roleKey: undefined,
-    //     sort: 0,
-    //     status: 0,
-    //     routeIds: [],
-    //     deptIds: [],
-    //     menuCheckStrictly: true,
-    // };
-    proxy.resetForm("roleRef");
+    data.form={}
 }
 /** 添加角色 */
 function handleAdd() {
-    reset();
     open.value = true;
     title.value = "添加样例";
+    reset();
 }
 /** 修改角色 */
 function handleUpdate(row) {
     reset();
-    console.log(row.id)
-    const roleId = row.id || ids.value;
-    getRole(roleId).then(response => {
-        form.value = response.data;
-        form.value.sort = Number(form.value.sort);
-        open.value = true;
-        nextTick(() => {
-            roleMenu.then((res) => {
-                let checkedKeys = res.data.checkedKeys;
-                checkedKeys.forEach((v) => {
-                    nextTick(() => {
-                        menuRef.value.setChecked(v, true, false);
-                    });
-                });
-            });
-        });
-        title.value = "修改角色";
-    });
+    open.value = true;
+    title.value = "修改样例";
+    data.form=row
+
 }
 
 /** 取消按钮 */

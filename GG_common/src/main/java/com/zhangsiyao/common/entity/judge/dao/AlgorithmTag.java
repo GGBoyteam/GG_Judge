@@ -20,8 +20,8 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("problem_tag")
-public class ProblemTag implements Serializable {
+@TableName("algorithm_tag")
+public class AlgorithmTag implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

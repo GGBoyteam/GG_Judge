@@ -1,15 +1,15 @@
 <template>
-  <div class="problem-body">
-    <div id="problem-main">
-      <!--problem main-->
-      <el-row class="problem-box"
-              :id="'problem-box' + '-' + $route.name">
+  <div class="algorithm-body">
+    <div id="algorithm-main">
+      <!--algorithm main-->
+      <el-row class="algorithm-box"
+              :id="'algorithm-box' + '-' + $route.name">
         <el-col
             :sm="24"
             :md="11"
             :lg="12"
-            class="problem-left"
-            :id="'problem-left'+'-'+ $route.name"
+            class="algorithm-left"
+            :id="'algorithm-left'+'-'+ $route.name"
             style="height: 100%"
         >
           <el-tabs
@@ -27,7 +27,7 @@
               <div style="padding: 10px 10px 10px 10px" type="shadow" :id="'js-left'+'-'+ $route.name" class="js-left">
                 <div slot="header" class="panel-title">
                   <span style="font-size: 20px">{{problemInfo.title}}</span><br />
-                  <div class="problem-tag">
+                  <div class="algorithm-tag">
                     <span style="padding-right: 10px">
                       <el-popover placement="bottom" trigger="hover">
                         <template #reference>
@@ -79,7 +79,7 @@
                     </span>
                   </div>
 
-                  <div class="problem-menu">
+                  <div class="algorithm-menu">
                     <span>
                       <el-link
                           type="primary"
@@ -109,7 +109,7 @@
                     <span>作者：xiaozhang</span>
                   </div>
                 </div>
-                <div id="problem-content">
+                <div id="algorithm-content">
                   <div v-if="problemInfo.description">
                     <p class="title">描述</p>
                     <VditorPreview name="description" v-model="problemInfo.description"></VditorPreview>
@@ -277,7 +277,7 @@
           </el-tabs>
         </el-col>
         <div
-            class="problem-resize hidden-sm-and-down"
+            class="algorithm-resize hidden-sm-and-down"
             :id="'js-center'+'-'+ $route.name"
             title="语言"
         >
@@ -314,8 +314,8 @@
             :sm="24"
             :md="11"
             :lg="11"
-            class="problem-right"
-            :id="'problem-right' + '-' + $route.name"
+            class="algorithm-right"
+            :id="'algorithm-right' + '-' + $route.name"
             style="height: 100%"
         >
           <el-card
@@ -562,7 +562,7 @@ import {ref} from "vue";
 import VditorPreview from "@/components/VditorPreview/index.vue";
 import CodeInput from "@/components/CodeInput/index.vue";
 import {getToken} from "@/utils/auth";
-import {getProblem} from "@/api/oj/problem";
+import {getProblem} from "@/api/oj/algorithm";
 import {useRoute} from "vue-router";
 
 const route=useRoute()
@@ -622,13 +622,13 @@ getProblemInfo()
 </style>
 
 <style scoped>
- .problem-menu {
+ .algorithm-menu {
    float: left;
  }
 a {
   color: #3091f2 !important ;
 }
-.problem-menu span {
+.algorithm-menu span {
   margin-left: 5px;
 }
 .el-link {
@@ -674,7 +674,7 @@ a {
   padding-right: 15px;
 }
 @media screen and (min-width: 992px) {
-  .problem-body {
+  .algorithm-body {
     margin-left: 3%;
     margin-top: 1%;
   }
@@ -697,13 +697,13 @@ a {
   #js-right-bottom {
     height: 49px;
   }
-  .problem-tag {
+  .algorithm-tag {
     display: inline;
   }
-  .problem-menu {
+  .algorithm-menu {
     float: right;
   }
-  .problem-menu span {
+  .algorithm-menu span {
     margin-left: 10px;
   }
   .question-intr {
@@ -712,19 +712,19 @@ a {
 }
 
 @media screen and (min-width: 992px) {
-  .problem-box {
+  .algorithm-box {
     width: 100%;
     height: 100%;
     overflow: hidden;
   }
-  .problem-left {
+  .algorithm-left {
     width: 50%; /*左侧初始化宽度*/
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     float: left;
   }
-  .problem-resize {
+  .algorithm-resize {
     cursor: col-resize;
     position: absolute;
     top: 330px;
@@ -738,10 +738,10 @@ a {
     font-size: 32px;
     color: white;
   }
-  .problem-resize:hover .right-fold {
+  .algorithm-resize:hover .right-fold {
     display: block;
   }
-  .problem-resize:hover .fold:before {
+  .algorithm-resize:hover .fold:before {
     content: "";
     position: absolute;
     display: block;
@@ -774,10 +774,10 @@ a {
   }
 
   /*拖拽区鼠标悬停样式*/
-  .problem-resize:hover {
+  .algorithm-resize:hover {
     color: #444444;
   }
-  .problem-right {
+  .algorithm-right {
     height: 100%;
     float: left;
     width: 50%;
@@ -804,15 +804,15 @@ a {
   width: 220px;
 }
 
-#problem-content {
+#algorithm-content {
 }
-#problem-content .title {
+#algorithm-content .title {
   font-size: 16px;
   font-weight: 600;
   margin: 25px 0 8px 0;
   color: #3091f2;
 }
-#problem-content .copy {
+#algorithm-content .copy {
   padding-left: 8px;
 }
 

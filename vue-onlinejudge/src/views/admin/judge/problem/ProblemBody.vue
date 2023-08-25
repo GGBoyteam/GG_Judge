@@ -1,10 +1,10 @@
 <template>
-  <div class="problem-body">
-    <div id="problem-main">
-      <!--problem main-->
-      <el-row class="problem-box"
-              :id="'problem-box' + '-' + $route.name">
-        <el-col :sm="24" :md="11" :lg="12" class="problem-left" :id="'problem-left'+'-'+ $route.name" style="height: 100%">
+  <div class="algorithm-body">
+    <div id="algorithm-main">
+      <!--algorithm main-->
+      <el-row class="algorithm-box"
+              :id="'algorithm-box' + '-' + $route.name">
+        <el-col :sm="24" :md="11" :lg="12" class="algorithm-left" :id="'algorithm-left'+'-'+ $route.name" style="height: 100%">
           <el-tabs model-value="problemDetail" type="border-card">
             <el-tab-pane name="problemDetail" :v-loading="false">
               <template #label>
@@ -14,7 +14,7 @@
                    </span>
               </template>
               <div style="padding: 10px 10px 10px 10px" type="shadow" :id="'js-left'+'-'+ $route.name" class="js-left">
-                <div id="problem-content">
+                <div id="algorithm-content">
                   <div>
                     <p class="title">描述</p>
                     <VditorEdit name="description" v-model="problemInfo.description"></VditorEdit>
@@ -38,7 +38,7 @@
             </el-tab-pane>
           </el-tabs>
         </el-col>
-        <el-col :sm="24" :md="11" :lg="12 " class="problem-left" :id="'problem-left'+'-'+ $route.name" style="height: 100%">
+        <el-col :sm="24" :md="11" :lg="12 " class="algorithm-left" :id="'algorithm-left'+'-'+ $route.name" style="height: 100%">
           <el-tabs model-value="problemDetail" type="border-card">
             <el-tab-pane name="problemDetail" :v-loading="false">
               <template #label>
@@ -50,7 +50,7 @@
               <div style="padding: 10px 10px 10px 10px" type="shadow" :id="'js-left'+'-'+ $route.name" class="js-left">
                 <div slot="header" class="panel-title">
                   <span style="font-size: 20px">{{problemInfo.title}}</span><br />
-                  <div class="problem-tag">
+                  <div class="algorithm-tag">
                     <span style="padding-right: 10px">
                       <el-popover placement="bottom" trigger="hover">
                         <template #reference>
@@ -102,7 +102,7 @@
                     </span>
                   </div>
 
-                  <div class="problem-menu">
+                  <div class="algorithm-menu">
                     <span>
                       <el-link
                           type="primary"
@@ -129,7 +129,7 @@
                     <span>作者：xiaozhang</span>
                   </div>
                 </div>
-                <div id="problem-content">
+                <div id="algorithm-content">
                   <div>
                     <p class="title">描述</p>
                     <VditorPreview name="description_preview" v-model="problemInfo.description"></VditorPreview>
@@ -184,7 +184,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="problem-bottom">
+    <div class="algorithm-bottom">
       <div class="button-group">
         <el-button type="primary" @click="Submission">更新题面</el-button>
         <el-button @click="Cancel">取消设置</el-button>
@@ -197,7 +197,7 @@ import {ref, watch} from "vue";
 import VditorPreview from "@/components/VditorPreview/index.vue";
 import CodeInput from "@/components/CodeInput/index.vue";
 import {getToken} from "@/utils/auth";
-import {getProblem, updateProblemBody} from "@/api/oj/problem";
+import {getProblem, updateProblemBody} from "@/api/oj/algorithm";
 import {delConfig} from "@/api/system/config";
 import router from "@/router";
 import {useRouter} from "vue-router";
@@ -237,19 +237,19 @@ export default {
       updateProblemBody(problemInfo.value).then(res=>{
         getProblem(pid.value)
         proxy.$modal.confirm('更新成功,是否离开当前页面？').then(function () {
-          let obj={ path: "/judge/problem" }
+          let obj={ path: "/judge/algorithm" }
           proxy.$tab.closeOpenPage(obj);
         }).then(function (){
-          router.push('/admin/judge/problem')
+          router.push('/admin/judge/algorithm')
         }).catch(() => {})
       })
     }
     function Cancel(){
       proxy.$modal.confirm('是否离开当前页面？').then(function () {
-        let obj={ path: "/judge/problem" }
+        let obj={ path: "/judge/algorithm" }
         proxy.$tab.closeOpenPage(obj);
       }).then(function (){
-        router.push('/admin/judge/problem')
+        router.push('/admin/judge/algorithm')
       }).catch(() => {})
     }
 
@@ -278,13 +278,13 @@ export default {
 </style>
 
 <style scoped>
-.problem-menu {
+.algorithm-menu {
   float: left;
 }
 a {
   color: #3091f2 !important ;
 }
-.problem-menu span {
+.algorithm-menu span {
   margin-left: 5px;
 }
 .el-link {
@@ -330,7 +330,7 @@ a {
   padding-right: 15px;
 }
 @media screen and (min-width: 992px) {
-  .problem-body {
+  .algorithm-body {
   }
   .js-left {
     height: 730px !important;
@@ -351,13 +351,13 @@ a {
   #js-right-bottom {
     height: 49px;
   }
-  .problem-tag {
+  .algorithm-tag {
     display: inline;
   }
-  .problem-menu {
+  .algorithm-menu {
     float: right;
   }
-  .problem-menu span {
+  .algorithm-menu span {
     margin-left: 10px;
   }
   .question-intr {
@@ -366,19 +366,19 @@ a {
 }
 
 @media screen and (min-width: 992px) {
-  .problem-box {
+  .algorithm-box {
     width: 100%;
     height: 100%;
     overflow: hidden;
   }
-  .problem-left {
+  .algorithm-left {
     width: 50%; /*左侧初始化宽度*/
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     float: left;
   }
-  .problem-resize {
+  .algorithm-resize {
     cursor: col-resize;
     position: absolute;
     top: 330px;
@@ -392,10 +392,10 @@ a {
     font-size: 32px;
     color: white;
   }
-  .problem-resize:hover .right-fold {
+  .algorithm-resize:hover .right-fold {
     display: block;
   }
-  .problem-resize:hover .fold:before {
+  .algorithm-resize:hover .fold:before {
     content: "";
     position: absolute;
     display: block;
@@ -428,10 +428,10 @@ a {
   }
 
   /*拖拽区鼠标悬停样式*/
-  .problem-resize:hover {
+  .algorithm-resize:hover {
     color: #444444;
   }
-  .problem-right {
+  .algorithm-right {
     height: 100%;
     float: left;
     width: 50%;
@@ -458,15 +458,15 @@ a {
   width: 220px;
 }
 
-#problem-content {
+#algorithm-content {
 }
-#problem-content .title {
+#algorithm-content .title {
   font-size: 16px;
   font-weight: 600;
   margin: 25px 0 8px 0;
   color: #3091f2;
 }
-#problem-content .copy {
+#algorithm-content .copy {
   padding-left: 8px;
 }
 
@@ -573,7 +573,7 @@ a {
   border-color: #67c23a;
   color: #fff;
 }
-.problem-bottom{
+.algorithm-bottom{
   margin-top: 15px;
   width: 100%;
   height: 50px;

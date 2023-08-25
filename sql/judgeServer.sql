@@ -2,7 +2,8 @@
 SQLyog Ultimate v12.09 (64 bit)
 MySQL - 5.7.36 : Database - judgeServer
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -62,11 +63,11 @@ CREATE TABLE `example` (
 
 /*Data for the table `example` */
 
-/*Table structure for table `problem` */
+/*Table structure for table `algorithm` */
 
-DROP TABLE IF EXISTS `problem`;
+DROP TABLE IF EXISTS `algorithm`;
 
-CREATE TABLE `problem` (
+CREATE TABLE `algorithm` (
   `pid` bigint(255) NOT NULL AUTO_INCREMENT COMMENT '题目id',
   `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '题目标题',
   `author` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '题目作者',
@@ -78,9 +79,9 @@ CREATE TABLE `problem` (
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*Data for the table `problem` */
+/*Data for the table `algorithm` */
 
-insert  into `problem`(`pid`,`title`,`author`,`description`,`input_description`,`output_description`,`example_description`,`status`) values (1,'Hello,World','1090199643','编写一个能够输出 `Hello,World!` 的程序。\n\n提示：\n\n* 使用英文标点符号；\n* `Hello,World!` 逗号后面**没有**空格。\n* `H` 和 `W` 为**大写**字母。\n','无\n','无\n','\n',0);
+insert  into `algorithm`(`pid`,`title`,`author`,`description`,`input_description`,`output_description`,`example_description`,`status`) values (1,'Hello,World','1090199643','编写一个能够输出 `Hello,World!` 的程序。\n\n提示：\n\n* 使用英文标点符号；\n* `Hello,World!` 逗号后面**没有**空格。\n* `H` 和 `W` 为**大写**字母。\n','无\n','无\n','\n',0);
 
 /*Table structure for table `problem_tag` */
 

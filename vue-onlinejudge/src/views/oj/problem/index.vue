@@ -5,7 +5,7 @@
         <div slot="header">
           <el-row :gutter="20" style="margin-bottom: 0.5em;" justify="center" align="middle">
             <el-col :xs="24" :sm="6">
-              <span class="problem-list-title">题目列表</span>
+              <span class="algorithm-list-title">题目列表</span>
             </el-col>
             <el-col :xs="24" :sm="6" >
               <el-input
@@ -46,7 +46,7 @@
           </el-row>
 
           <section>
-            <b class="problem-filter">题库</b>
+            <b class="algorithm-filter">题库</b>
             <div>
               <el-tag
                   class="filter-item"
@@ -85,7 +85,7 @@
           </section>
 
           <section>
-            <b class="problem-filter">难度</b>
+            <b class="algorithm-filter">难度</b>
             <div>
               <el-tag
                   class="filter-item"
@@ -105,7 +105,7 @@
           </section>
           <div v-if="filterTags&&filterTags.length > 0">
             <el-row>
-              <b class="problem-filter">标签</b>
+              <b class="algorithm-filter">标签</b>
               <el-tag
                   :key="index"
                   v-for="(tag, index) in filterTags"
@@ -232,7 +232,7 @@
 
 <script setup>
 import {ref} from "vue";
-import {getTags, list} from "@/api/oj/problem";
+import {getTags, list} from "@/api/oj/algorithm";
 import {Refresh, Search} from "@element-plus/icons-vue";
 import {useRouter} from "vue-router";
 const router=useRouter()
@@ -254,7 +254,7 @@ function tagList(){
     })
 }
 function problemDetail(row) {
-  router.push({path:"/oj/problem/detail",query:{pid:row.pid}})
+  router.push({path:"/oj/algorithm/detail",query:{pid:row.pid}})
 }
 function problemList(){
     let tagFilters=[];
@@ -288,7 +288,7 @@ problemList()
 </script>
 
 <style scoped>
-.problem-list-title {
+.algorithm-list-title {
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
@@ -304,7 +304,7 @@ section {
   align-items: baseline;
   margin-bottom: 0.8em;
 }
-.problem-filter {
+.algorithm-filter {
   margin-right: 1em;
   font-weight: bolder;
   white-space: nowrap;

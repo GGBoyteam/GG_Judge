@@ -1,8 +1,8 @@
 package com.zhangsiyao.judge.service.impl;
 
-import com.zhangsiyao.common.entity.judge.dao.ProblemTagRelation;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmTagRelation;
 import com.zhangsiyao.judge.mapper.ProblemTagRelationMapper;
-import com.zhangsiyao.judge.service.IProblemTagRelationService;
+import com.zhangsiyao.judge.service.IAlgorithmTagRelationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-08-10
  */
 @Service
-public class ProblemTagRelationServiceImpl extends ServiceImpl<ProblemTagRelationMapper, ProblemTagRelation> implements IProblemTagRelationService {
+public class AlgorithmTagRelationServiceImpl extends ServiceImpl<ProblemTagRelationMapper, AlgorithmTagRelation> implements IAlgorithmTagRelationService {
 
 }

@@ -1,6 +1,6 @@
 package com.zhangsiyao.judge.service;
 
-import com.zhangsiyao.common.entity.judge.dao.ProblemTrueCode;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmTrueCode;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author zhangsiyao
  * @since 2023-08-12
  */
-public interface IProblemTrueCodeService extends IService<ProblemTrueCode> {
+public interface IAlgorithmTrueCodeService extends IService<AlgorithmTrueCode> {
 
 }

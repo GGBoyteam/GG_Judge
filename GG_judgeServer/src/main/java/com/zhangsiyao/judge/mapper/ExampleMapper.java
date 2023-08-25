@@ -1,6 +1,6 @@
 package com.zhangsiyao.judge.mapper;
 
-import com.zhangsiyao.common.entity.judge.dao.Example;
+import com.zhangsiyao.common.entity.judge.dao.AlgorithmExample;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-08-09
  */
 @Mapper
-public interface ExampleMapper extends BaseMapper<Example> {
+public interface ExampleMapper extends BaseMapper<AlgorithmExample> {
 
 }
