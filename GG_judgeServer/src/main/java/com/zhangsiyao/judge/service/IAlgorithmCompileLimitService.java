@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmCompileLimit;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.judge.dto.AlgorithmCompileLimitDto;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmCompileLimitDeleteVo;
 
 /**
  * <p>
@@ -16,10 +17,10 @@ import com.zhangsiyao.common.entity.judge.dto.AlgorithmCompileLimitDto;
 public interface IAlgorithmCompileLimitService extends IService<AlgorithmCompileLimit> {
     IPage<AlgorithmCompileLimitDto> compilers(Long pid, Long pageNum, Long pageSize);
 
-    void saveCompilerLimit(Long pid,String language,Long time,Long memory);
+    void saveCompilerLimit(AlgorithmCompileLimit compileLimit,String token);
 
-    void updateCompilerLimit(Long pid,Long id,String language,Long time,Long memory);
+    void updateCompilerLimit(AlgorithmCompileLimit compileLimit,String token);
 
-    void deleteCompilerLimit(Long[] ids);
+    void deleteCompilerLimit(AlgorithmCompileLimitDeleteVo deleteVo,String token);
 
 }

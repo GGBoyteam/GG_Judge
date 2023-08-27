@@ -64,11 +64,6 @@ public class AlgorithmController {
         return R.success(problemService.testExample(testVo));
     }
 
-    @PostMapping("/saveOrUpdateExample")
-    public R<String> saveOrUpdateExample(@RequestBody AlgorithmAlgorithmExampleUpdateVo updateVo, @RequestHeader("Authorization") String token){
-        problemService.saveOrUpdateProblemExample(updateVo,token);
-        return R.success();
-    }
 
     @GetMapping("/tags")
     public R<List<AlgorithmTag>> tags(){
@@ -93,11 +88,6 @@ public class AlgorithmController {
         return R.success();
     }
 
-    @PostMapping("/saveOrUpdateProblemExample")
-    public R<String> saveOrUpdateProblemExample(@RequestBody AlgorithmAlgorithmExampleUpdateVo updateVo, @RequestHeader("Authorization") String token){
-        problemService.saveOrUpdateProblemExample(updateVo,token);
-        return R.success();
-    }
 
     @PostMapping("/submission")
     public R<ProblemSubmissionResultDto> submission(@RequestBody ProblemSubmissionVo problemSubmissionVo){

@@ -8,6 +8,6 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AlgorithmAlgorithmExampleSaveVo extends AlgorithmExample implements Serializable {
+public class AlgorithmExampleSaveVo extends AlgorithmExample implements Serializable {
 
 }

@@ -8,5 +8,5 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AlgorithmAlgorithmExampleUpdateVo extends AlgorithmExample implements Serializable {
+public class AlgorithmExampleUpdateVo extends AlgorithmExample implements Serializable {
 }

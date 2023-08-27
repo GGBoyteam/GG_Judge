@@ -85,7 +85,7 @@ export function addCompileLimit(data){
   return request({
     url: '/judge-service/algorithmEdit/addCompileLimit',
     method: 'post',
-    params: data
+    data: data
   })
 }
 
@@ -93,7 +93,7 @@ export function updateCompileLimit(data){
   return request({
     url: '/judge-service/algorithmEdit/updateCompileLimit',
     method: 'post',
-    params: data
+    data: data
   })
 }
 

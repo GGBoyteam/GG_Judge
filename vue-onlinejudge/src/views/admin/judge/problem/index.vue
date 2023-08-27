@@ -350,6 +350,8 @@ function getCompiler(){
 }
 
 function getLimitList(){
+    limitSet.value=new Set()
+    selectCompilers.value=[]
     listLimit(data.limitQueryParams).then(res=>{
         limitList.value=res.data.records
         limitTotal.value=res.data.total
@@ -383,7 +385,7 @@ function openAddLimit(row){
 function deleteCompilerLimit(){
     let str=limitSelect.value.join(",");
     proxy.$modal.confirm(`确认删除id为[`+str+`]的编译器限制信息吗`).then(()=>{
-        deleteCompileLimit(limitSelect.value).then(res=>{
+        deleteCompileLimit({pid:data.pid,ids:limitSelect.value}).then(res=>{
             getLimitList()
             proxy.$modal.msgSuccess(`id为[`+str+`]的编译器限制信息删除成功`);
         })

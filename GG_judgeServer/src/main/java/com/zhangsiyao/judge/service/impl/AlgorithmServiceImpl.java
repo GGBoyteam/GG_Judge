@@ -287,31 +287,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
         algorithmTrueCode.setCodeId(updateVo.getCodeId());
         problemTrueCodeService.saveOrUpdate(algorithmTrueCode);
     }
-
-    @SneakyThrows
-    @Override
-    public void saveOrUpdateProblemExample(AlgorithmAlgorithmExampleUpdateVo updateVo, String token) {
-        Algorithm algorithm = this.getById(updateVo.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
-        LambdaQueryWrapper<AlgorithmTrueCode> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper=queryWrapper.eq(AlgorithmTrueCode::getPid,updateVo.getPid());
-        List<AlgorithmTrueCode> codes = problemTrueCodeService.getBaseMapper().selectList(queryWrapper);
-        if(!updateVo.getOutput().endsWith("\n")){
-            updateVo.setOutput(updateVo.getOutput()+"\n");
-        }
-        for(AlgorithmTrueCode code:codes){
-            JudgeResult result = compilerService.compileAndRun(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), updateVo.getInput());
-            if(!result.getOutput().equals(updateVo.getOutput())){
-                throw new AnswerException(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), updateVo.getInput(),updateVo.getOutput(),result.getOutput());
-            }
-        }
-        AlgorithmExample algorithmExample =new AlgorithmExample();
-        BeanUtils.copyProperties(updateVo, algorithmExample);
-        exampleService.saveOrUpdate(algorithmExample);
-    }
+    
 
     @SneakyThrows
     @Override

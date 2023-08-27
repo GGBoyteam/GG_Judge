@@ -57,7 +57,6 @@ public interface IAlgorithmService extends IService<Algorithm> {
 
     void saveOrUpdateProblemTrueCode(ProblemTrueCodeUpdateVo updateVo, String token);
 
-    void saveOrUpdateProblemExample(AlgorithmAlgorithmExampleUpdateVo updateVo, String token);
 
     ProblemSubmissionResultDto submission(ProblemSubmissionVo submissionVo);
     void deleteTrueCode(String codeId);
