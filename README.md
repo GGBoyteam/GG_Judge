@@ -13,6 +13,7 @@
 | GG_judgeServer  | 项目判题模块                                           |
 | GG_system       | 项目系统模块                                           |
 | deploy          | 项目线上环境搭建脚本                                   |
+| deploylocal     | 项目本地开发环境搭建脚本                               |
 | sql             | mysql初始化sql文件                                     |
 | vue-onlinejudge | 项目前端页面                                           |
 | .gitignore      | git忽略文件配置文件                                    |
