@@ -1,0 +1,6 @@
+FROM mysql:5.7
+COPY ./sql  /tmp/sql
+RUN mv /tmp/sql/*.* /docker-entrypoint-initdb.d
+RUN rm -rf /tmp/sql
+
+RUN chmod -R 777 /docker-entrypoint-initdb.d/
