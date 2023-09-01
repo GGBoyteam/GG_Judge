@@ -50,7 +50,7 @@ public interface IAlgorithmService extends IService<Algorithm> {
 
     CodeCompileAndRunResultDto testExample(AlgorithmExampleTestVo testVo);
 
-    void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo, String token);
+    void updateBaseInfo(AlgorithmBaseInfoUpdateVo updateVo, String token);
 
     void updateProblemBody(ProblemBodyUpdateVo updateVo,String token);
 

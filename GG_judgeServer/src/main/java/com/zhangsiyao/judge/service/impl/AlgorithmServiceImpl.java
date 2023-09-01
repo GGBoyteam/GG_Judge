@@ -14,7 +14,6 @@ import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.common.utils.UserUtil;
 import com.zhangsiyao.judge.compiler.ICompiler;
 import com.zhangsiyao.judge.compiler.JudgeResult;
-import com.zhangsiyao.judge.exception.AnswerException;
 import com.zhangsiyao.judge.exception.CodeCompileException;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
 import com.zhangsiyao.judge.mapper.AlgorithmMapper;
@@ -237,7 +236,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     @SneakyThrows
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateBaseInfo(ProblemBaseInfoUpdateVo updateVo,String token) {
+    public void updateBaseInfo(AlgorithmBaseInfoUpdateVo updateVo,String token) {
         Algorithm algorithm = this.getById(updateVo.getPid());
         String username = UserUtil.getUsernameByToken(redisTemplate, token);
         if(!username.equals(algorithm.getAuthor())){

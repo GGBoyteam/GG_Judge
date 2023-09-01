@@ -4,6 +4,7 @@ import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.judge.service.IAlgorithmExampleService;
 import com.zhangsiyao.judge.service.IAlgorithmCompileLimitService;
+import com.zhangsiyao.judge.service.IAlgorithmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,20 @@ public class AlgorithmEditController {
 
     @Autowired
     IAlgorithmExampleService exampleService;
+
+    @Autowired
+    IAlgorithmService algorithmService;
+
+    /**
+     * 更新题目基本信息
+     * */
+    @PostMapping("/updateBaseInfo")
+    public R<String> updateBaseInfo(@RequestBody AlgorithmBaseInfoUpdateVo updateVo,
+                                    @RequestHeader("Authorization") String token){
+        algorithmService.updateBaseInfo(updateVo,token);
+        return R.success();
+    }
+
 
     /**
      * 添加编译器限制信息
@@ -41,7 +56,8 @@ public class AlgorithmEditController {
      * 删除编译器限制信息
      * */
     @DeleteMapping("/deleteCompileLimit")
-    public R<String> deleteCompileLimit(@RequestBody AlgorithmCompileLimitDeleteVo deleteVo,@RequestHeader("Authorization") String token){
+    public R<String> deleteCompileLimit(@RequestBody AlgorithmCompileLimitDeleteVo deleteVo,
+                                        @RequestHeader("Authorization") String token){
         compileLimitService.deleteCompilerLimit(deleteVo,token);
         return R.success();
     }

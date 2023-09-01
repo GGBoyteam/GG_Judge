@@ -70,11 +70,6 @@ public class AlgorithmController {
         return R.success(problemService.tags());
     }
 
-    @PostMapping("/updateProblemBaseInfo")
-    public R<String> updateProblemBaseInfo(@RequestBody ProblemBaseInfoUpdateVo updateVo,@RequestHeader("Authorization") String token){
-        problemService.updateBaseInfo(updateVo,token);
-        return R.success();
-    }
 
     @PostMapping("/updateProblemBody")
     public R<String> updateProblemBody(@RequestBody ProblemBodyUpdateVo updateVo,@RequestHeader("Authorization") String token){
