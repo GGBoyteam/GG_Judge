@@ -256,7 +256,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
 
     @SneakyThrows
     @Override
-    public void updateProblemBody(ProblemBodyUpdateVo updateVo,String token) {
+    public void updateBody(AlgorithmBodyUpdateVo updateVo, String token) {
         Algorithm algorithm = this.getById(updateVo.getPid());
         String username = UserUtil.getUsernameByToken(redisTemplate, token);
         if(!username.equals(algorithm.getAuthor())){

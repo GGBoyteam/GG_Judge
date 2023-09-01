@@ -128,17 +128,17 @@ export function addPost(data) {
   })
 }
 
-export function updateProblemBaseInfo(data) {
+export function updateAlgorithmBaseInfo(data) {
   return request({
-    url: '/judge-service/algorithm/updateProblemBaseInfo',
+    url: '/judge-service/algorithmEdit/updateBaseInfo',
     method: 'post',
     data: data
   })
 }
 
-export function updateProblemBody(data) {
+export function updateAlgorithmBody(data) {
   return request({
-    url: '/judge-service/algorithm/updateProblemBody',
+    url: '/judge-service/algorithmEdit/updateBody',
     method: 'post',
     data: data
   })

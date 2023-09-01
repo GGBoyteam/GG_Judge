@@ -71,11 +71,6 @@ public class AlgorithmController {
     }
 
 
-    @PostMapping("/updateProblemBody")
-    public R<String> updateProblemBody(@RequestBody ProblemBodyUpdateVo updateVo,@RequestHeader("Authorization") String token){
-        problemService.updateProblemBody(updateVo,token);
-        return R.success();
-    }
 
     @PostMapping("/saveOrUpdateProblemTrueCode")
     public R<String> saveOrUpdateProblemTrueCode(@RequestBody ProblemTrueCodeUpdateVo updateVo,@RequestHeader("Authorization") String token){

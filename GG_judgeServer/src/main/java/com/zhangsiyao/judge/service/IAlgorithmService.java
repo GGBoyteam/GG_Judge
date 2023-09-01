@@ -52,7 +52,7 @@ public interface IAlgorithmService extends IService<Algorithm> {
 
     void updateBaseInfo(AlgorithmBaseInfoUpdateVo updateVo, String token);
 
-    void updateProblemBody(ProblemBodyUpdateVo updateVo,String token);
+    void updateBody(AlgorithmBodyUpdateVo updateVo, String token);
 
 
     void saveOrUpdateProblemTrueCode(ProblemTrueCodeUpdateVo updateVo, String token);

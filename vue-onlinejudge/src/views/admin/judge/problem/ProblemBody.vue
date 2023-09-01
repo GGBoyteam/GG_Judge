@@ -197,7 +197,7 @@ import {ref, watch} from "vue";
 import VditorPreview from "@/components/VditorPreview/index.vue";
 import CodeInput from "@/components/CodeInput/index.vue";
 import {getToken} from "@/utils/auth";
-import {getProblem, updateProblemBody} from "@/api/oj/algorithm";
+import {getProblem, updateAlgorithmBody} from "@/api/oj/algorithm";
 import {delConfig} from "@/api/system/config";
 import router from "@/router";
 import {useRouter} from "vue-router";
@@ -234,7 +234,7 @@ export default {
 
     function Submission(){
       problemInfo.value.pid=pid.value
-      updateProblemBody(problemInfo.value).then(res=>{
+      updateAlgorithmBody(problemInfo.value).then(res=>{
         getProblem(pid.value)
         proxy.$modal.confirm('更新成功,是否离开当前页面？').then(function () {
           let obj={ path: "/judge/algorithm" }

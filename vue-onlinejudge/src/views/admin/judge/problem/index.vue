@@ -252,7 +252,7 @@ import {
     addPost,
     delPost,
     getProblem,
-    updateProblemBaseInfo,
+    updateAlgorithmBaseInfo,
     getTags,
     listLimit,
     compiler, addCompileLimit, updateCompileLimit, deleteCompileLimit
@@ -494,7 +494,7 @@ function submitForm() {
     if (valid) {
       console.log(form.value.pid!= undefined)
       if (form.value.pid!= undefined) {
-        updateProblemBaseInfo(form.value).then(response => {
+        updateAlgorithmBaseInfo(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();

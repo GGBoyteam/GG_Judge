@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class ProblemBodyUpdateVo implements Serializable {
+public class AlgorithmBodyUpdateVo implements Serializable {
 
     private Long pid;
 

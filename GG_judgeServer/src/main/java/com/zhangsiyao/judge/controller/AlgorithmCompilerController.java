@@ -4,7 +4,6 @@ import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
 import com.zhangsiyao.common.entity.judge.dto.CompilerDto;
 import com.zhangsiyao.common.entity.judge.vo.CodeCompileRunVo;
-import com.zhangsiyao.judge.compiler.JudgeResult;
 import com.zhangsiyao.judge.service.ICompilerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/compiler")
-public class CompilerController {
+public class AlgorithmCompilerController {
 
     @Autowired
     ICompilerService compilerService;

@@ -31,6 +31,16 @@ public class AlgorithmEditController {
         return R.success();
     }
 
+    /**
+     * 更新题目题面信息
+     * */
+    @PostMapping("/updateBody")
+    public R<String> updateBody(AlgorithmBodyUpdateVo updateVo,
+                                @RequestHeader("Authorization") String token){
+        algorithmService.updateBody(updateVo,token);
+        return R.success();
+    }
+
 
     /**
      * 添加编译器限制信息
