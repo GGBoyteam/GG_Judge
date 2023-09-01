@@ -1,10 +1,12 @@
 package com.zhangsiyao.judge.controller;
 
+import com.zhangsiyao.common.constant.Language;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.judge.service.IAlgorithmExampleService;
 import com.zhangsiyao.judge.service.IAlgorithmCompileLimitService;
 import com.zhangsiyao.judge.service.IAlgorithmService;
+import com.zhangsiyao.judge.service.IAlgorithmTrueCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,10 @@ public class AlgorithmEditController {
     @Autowired
     IAlgorithmService algorithmService;
 
+    @Autowired
+    IAlgorithmTrueCodeService trueCodeService;
+
+
     /**
      * 更新题目基本信息
      * */
@@ -35,12 +41,31 @@ public class AlgorithmEditController {
      * 更新题目题面信息
      * */
     @PostMapping("/updateBody")
-    public R<String> updateBody(AlgorithmBodyUpdateVo updateVo,
+    public R<String> updateBody(@RequestBody AlgorithmBodyUpdateVo updateVo,
                                 @RequestHeader("Authorization") String token){
         algorithmService.updateBody(updateVo,token);
         return R.success();
     }
 
+    /**
+     * 更新正确代码
+     * */
+    @PostMapping("/updateTrueCode")
+    public R<String> updateTrueCode(@RequestBody AlgorithmTrueCodeUpdateVo updateVo,
+                                    @RequestHeader("Authorization") String token){
+        trueCodeService.updateTrueCode(updateVo,token);
+        return R.success();
+    }
+
+    /**
+     * 添加正确代码
+     * */
+    @PostMapping("/addTrueCode")
+    public R<String> addTrueCode(@RequestBody AlgorithmTrueCodeSaveVo saveVo,
+                                 @RequestHeader("Authorization") String token){
+        trueCodeService.saveTrueCode(saveVo,token);
+        return R.success();
+    }
 
     /**
      * 添加编译器限制信息

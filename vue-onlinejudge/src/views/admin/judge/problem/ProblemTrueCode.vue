@@ -97,7 +97,12 @@
 </template>
 <script setup>
 
-import {deleteTrueCode, getProblemTrueCode, saveOrUpdateProblemTrueCode} from "@/api/oj/algorithm";
+import {
+    addAlgorithmTrueCode,
+    deleteTrueCode,
+    getProblemTrueCode,
+    saveOrUpdateProblemTrueCode, updateAlgorithmTrueCode
+} from "@/api/oj/algorithm";
 import {ref} from "vue";
 import {useRoute} from "vue-router";
 const { proxy } = getCurrentInstance();
@@ -107,7 +112,7 @@ const pid=ref('')
 const language=ref('C++')
 const code=ref(undefined)
 const version=ref('11')
-const codeId=ref('')
+const codeId=ref(undefined)
 const select=ref('add')
 const drawerVisible=ref(false)
 const queryParams=ref({
@@ -131,12 +136,21 @@ function Submission(){
         pid: pid.value,
         codeId: codeId.value
     }
-    proxy.$modal.confirm(`确认${select.value=='add'?'新增':'修改'}代码吗？`).then(()=>{
-        saveOrUpdateProblemTrueCode(form).then(res=>{
-            getTrueCodeList()
-            proxy.$modal.msgSuccess(`${select.value=='add'?'新增':'修改'}代码成功！`)
+    if(select.value=='add'){
+        proxy.$modal.confirm(`确认${select.value=='add'?'新增':'修改'}代码吗？`).then(()=>{
+            addAlgorithmTrueCode(form).then(res=>{
+                getTrueCodeList()
+                proxy.$modal.msgSuccess(`${select.value=='add'?'新增':'修改'}代码成功！`)
+            })
         })
-    })
+    }else {
+        proxy.$modal.confirm(`确认${select.value=='add'?'新增':'修改'}代码吗？`).then(()=>{
+            updateAlgorithmTrueCode(form).then(res=>{
+                getTrueCodeList()
+                proxy.$modal.msgSuccess(`${select.value=='add'?'新增':'修改'}代码成功！`)
+            })
+        })
+    }
 }
 
 function addOrUpdate(){
@@ -146,6 +160,7 @@ function addOrUpdate(){
 function handleRowClick(row){
     select.value='update'
     code.value=row.code
+    language.value=row.language
     codeId.value=row.codeId;
 }
 

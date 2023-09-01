@@ -62,9 +62,9 @@ public class AlgorithmExampleServiceImpl extends ServiceImpl<AlgorithmExampleMap
             algorithmExample.setOutput(algorithmExample.getOutput()+"\n");
         }
         for(AlgorithmTrueCode code:codes){
-            JudgeResult result = compilerService.compileAndRun(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), algorithmExample.getInput());
+            JudgeResult result = compilerService.compileAndRun(code.getLanguage(), code.getVersion(), code.getCode(), algorithmExample.getInput());
             if(!result.getOutput().equals(algorithmExample.getOutput())){
-                throw new AnswerException(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), algorithmExample.getInput(), algorithmExample.getOutput(),result.getOutput());
+                throw new AnswerException(code.getLanguage(), code.getVersion(), code.getCode(), algorithmExample.getInput(), algorithmExample.getOutput(),result.getOutput());
             }
         }
         this.save(algorithmExample);
@@ -85,10 +85,10 @@ public class AlgorithmExampleServiceImpl extends ServiceImpl<AlgorithmExampleMap
             algorithmExample.setOutput(algorithmExample.getOutput()+"\n");
         }
         for(AlgorithmTrueCode code:codes){
-            JudgeResult result = compilerService.compileAndRun(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), algorithmExample.getInput());
+            JudgeResult result = compilerService.compileAndRun(code.getLanguage(), code.getVersion(), code.getCode(), algorithmExample.getInput());
             if(!result.getOutput().equals(algorithmExample.getOutput())){
                 System.out.println("错误！！！！");
-                throw new AnswerException(Language.get(code.getLanguage()), code.getVersion(), code.getCode(), algorithmExample.getInput(), algorithmExample.getOutput(),result.getOutput());
+                throw new AnswerException(code.getLanguage(), code.getVersion(), code.getCode(), algorithmExample.getInput(), algorithmExample.getOutput(),result.getOutput());
             }
         }
         this.updateById(algorithmExample);

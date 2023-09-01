@@ -14,7 +14,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ public class CompilerServiceImpl implements ICompilerService {
 
 
     public ICompiler compiler(Language language){
-        if(language==Language.CPP){
+        if(language==Language.Cpp){
             return new CppCompiler();
         }else {
             return null;

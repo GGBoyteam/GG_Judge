@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Language {
 
-    JAVA("Java"),
-    CPP("C++"),
-    PYTHON("Python");
+    Java("Java"),
+    Cpp("Cpp"),
+    Python("Python");
     private String name;
+
 
     Language(String name) {
         this.name = name;
@@ -22,13 +23,8 @@ public enum Language {
         this.name = name;
     }
 
-    public static Language get(String name){
-        if (name.equals(CPP.name)){
-            return CPP;
-        }else if(name.equals(JAVA.name)){
-            return JAVA;
-        }else {
-            return PYTHON;
-        }
+    @Override
+    public String toString() {
+        return name;
     }
 }

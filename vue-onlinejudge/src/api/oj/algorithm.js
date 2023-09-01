@@ -144,6 +144,22 @@ export function updateAlgorithmBody(data) {
   })
 }
 
+export function updateAlgorithmTrueCode(data){
+  return request({
+    url: '/judge-service/algorithmEdit/updateTrueCode',
+    method: 'post',
+    data: data
+  })
+}
+
+export function addAlgorithmTrueCode(data){
+  return request({
+    url: '/judge-service/algorithmEdit/addTrueCode',
+    method: 'post',
+    data: data
+  })
+}
+
 
 export function saveOrUpdateProblemTrueCode(data) {
   return request({

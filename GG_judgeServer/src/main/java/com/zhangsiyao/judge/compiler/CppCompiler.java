@@ -3,7 +3,6 @@ package com.zhangsiyao.judge.compiler;
 import com.zhangsiyao.common.constant.Language;
 import com.zhangsiyao.judge.compiler.annotation.Compiler;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -12,7 +11,7 @@ import java.util.*;
  */
 @SuppressWarnings("allap")
 @Service
-@Compiler(language = Language.CPP,version = {"11"})
+@Compiler(language = Language.Cpp,version = {"11"})
 public class CppCompiler extends AbstractCompiler {
 
     @Override

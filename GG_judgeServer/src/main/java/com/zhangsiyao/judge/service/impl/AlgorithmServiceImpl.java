@@ -226,7 +226,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
         AlgorithmTrueCode code = problemTrueCodeService.getById(testVo.getCodeId());
         CodeCompileRunVo codeCompileRunVo=new CodeCompileRunVo();
         codeCompileRunVo.setCode(code.getCode());
-        codeCompileRunVo.setLanguage(Language.get(code.getLanguage()));
+        codeCompileRunVo.setLanguage(code.getLanguage());
         codeCompileRunVo.setVersion(code.getVersion());
         codeCompileRunVo.setInput(testVo.getInput());
         return compilerService.compileAndRun(codeCompileRunVo);
@@ -266,26 +266,6 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
         this.updateById(algorithm);
     }
 
-    @SneakyThrows
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saveOrUpdateProblemTrueCode(ProblemTrueCodeUpdateVo updateVo, String token) {
-        Algorithm algorithm = this.getById(updateVo.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
-        if(compilerService.compile(updateVo.getCode(), updateVo.getLanguage(),updateVo.getVersion())!= JudgeResult.Status.Accepted){
-            throw  new CodeCompileException("编译未成功，操作失败",null,null);
-        }
-        AlgorithmTrueCode algorithmTrueCode =new AlgorithmTrueCode();
-        algorithmTrueCode.setPid(updateVo.getPid());
-        algorithmTrueCode.setCode(updateVo.getCode());
-        algorithmTrueCode.setLanguage(updateVo.getLanguage().getName());
-        algorithmTrueCode.setVersion(updateVo.getVersion());
-        algorithmTrueCode.setCodeId(updateVo.getCodeId());
-        problemTrueCodeService.saveOrUpdate(algorithmTrueCode);
-    }
     
 
     @SneakyThrows
