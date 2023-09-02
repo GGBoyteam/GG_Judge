@@ -22,57 +22,68 @@ import java.util.List;
 public class AlgorithmController {
 
     @Autowired
-    IAlgorithmService problemService;
+    IAlgorithmService algorithmService;
 
     @Autowired
-    IAlgorithmCompileLimitService problemCompileLimitService;
+    IAlgorithmCompileLimitService compileLimitService;
 
+    /**
+     * 分页获取算法题目列表(启用的题目)
+     * */
     @GetMapping("/list")
-    public R<Page<AlgorithmDto>> list(ProblemQueryVo queryVo){
-        return R.success(problemService.listAll(queryVo));
+    public R<Page<AlgorithmDto>> list(AlgorithmQueryVo queryVo){
+        return R.success(algorithmService.listAll(queryVo));
     }
 
+    /**
+     * 分页获取出题人为当前账户用户的算法题目列表
+     * */
     @GetMapping("/listByToken")
-    public R<Page<AlgorithmDto>> listByToken(ProblemQueryVo queryVo, @RequestHeader("Authorization") String token){
-        return R.success(problemService.listByToken(queryVo,token));
+    public R<Page<AlgorithmDto>> listByToken(AlgorithmQueryVo queryVo,
+                                             @RequestHeader("Authorization") String token){
+        return R.success(algorithmService.listByToken(queryVo,token));
     }
 
+    /**
+     * 获取算法题目信息
+     * */
     @GetMapping("/info/{pid}")
-    public R<AlgorithmDto> info(@PathVariable String pid, @RequestHeader("Authorization") String token){
-        return R.success(problemService.info(pid));
+    public R<AlgorithmDto> info(@PathVariable String pid){
+        return R.success(algorithmService.info(pid));
     }
+
 
     @GetMapping("/trueCodeListByToken")
     public R<Page<AlgorithmTrueCode>> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, @RequestHeader("Authorization") String token){
-        return R.success(problemService.trueCodeListByToken(queryVo,token));
+        return R.success(algorithmService.trueCodeListByToken(queryVo,token));
     }
 
     @GetMapping("/examples")
     public R<Page<ProblemAlgorithmExampleDto>> examples(AlgorithmExampleQueryVo queryVo, @RequestHeader("Authorization") String token){
-        return R.success(problemService.examples(queryVo,token));
+        return R.success(algorithmService.examples(queryVo,token));
     }
 
     @GetMapping("/compilerLimits")
     public R<IPage<AlgorithmCompileLimitDto>> compilerLimits(@RequestParam("pid") Long pid,
                                                              @RequestParam("pageNum") Long pageNum,
                                                              @RequestParam("pageSize") Long pageSize){
-        return R.success(problemCompileLimitService.compilers(pid,pageNum,pageSize));
+        return R.success(compileLimitService.compilers(pid,pageNum,pageSize));
     }
 
     @PostMapping("/testExample")
     public R<CodeCompileAndRunResultDto> testExample(@RequestBody AlgorithmExampleTestVo testVo){
-        return R.success(problemService.testExample(testVo));
+        return R.success(algorithmService.testExample(testVo));
     }
 
     @GetMapping("/tags")
     public R<List<AlgorithmTag>> tags(){
-        return R.success(problemService.tags());
+        return R.success(algorithmService.tags());
     }
 
 
     @PostMapping("/submission")
     public R<ProblemSubmissionResultDto> submission(@RequestBody ProblemSubmissionVo problemSubmissionVo){
-        return R.success(problemService.submission(problemSubmissionVo));
+        return R.success(algorithmService.submission(problemSubmissionVo));
     }
 
 }

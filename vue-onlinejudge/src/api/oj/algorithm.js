@@ -161,17 +161,12 @@ export function addAlgorithmTrueCode(data){
 }
 
 
-export function saveOrUpdateProblemTrueCode(data) {
+
+export function deleteTrueCode(data){
   return request({
-    url: '/judge-service/algorithm/saveOrUpdateProblemTrueCode',
-    method: 'post',
+    url: '/judge-service/algorithmEdit/deleteTrueCode',
+    method: 'delete',
     data: data
-  })
-}
-export function deleteTrueCode(id){
-  return request({
-    url: '/judge-service/algorithm/deleteTrueCode/'+id,
-    method: 'delete'
   })
 }
 

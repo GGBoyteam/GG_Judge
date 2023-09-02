@@ -16,6 +16,7 @@
           </template>
           <div class="js-left">
             <el-table ref="table" :data="trueCodeData" style="width: 100%;height: 90%" :highlight-current-row="true" @row-click="handleRowClick">
+              <el-table-column type="selection" width="55" />
               <el-table-column prop="codeId" label="代码id" width="100" />
               <el-table-column prop="language" label="语言" width="100" />
               <el-table-column prop="version" label="版本" width="100"/>
@@ -101,9 +102,9 @@ import {
     addAlgorithmTrueCode,
     deleteTrueCode,
     getProblemTrueCode,
-    saveOrUpdateProblemTrueCode, updateAlgorithmTrueCode
+    updateAlgorithmTrueCode
 } from "@/api/oj/algorithm";
-import {ref} from "vue";
+import {getCurrentInstance, ref} from "vue";
 import {useRoute} from "vue-router";
 const { proxy } = getCurrentInstance();
 const route=useRoute()
@@ -165,8 +166,10 @@ function handleRowClick(row){
 }
 
 function handleDelete(row) {
+    let ids=[]
+    ids.push(row.codeId)
     proxy.$modal.confirm(`确定删除编号为${row.codeId}的代码吗？`).then(()=>{
-        deleteTrueCode(row.codeId).then(()=>{
+        deleteTrueCode({pid:pid.value,ids:ids}).then(()=>{
             proxy.$modal.msgSuccess("删除成功！")
         }).catch(()=>{
             proxy.$modal.msgError("删除失败！")

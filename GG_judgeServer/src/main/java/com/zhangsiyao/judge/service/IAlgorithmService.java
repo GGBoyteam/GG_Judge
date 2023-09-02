@@ -26,14 +26,14 @@ public interface IAlgorithmService extends IService<Algorithm> {
     /**
      * 通过token查询作者出的题目列表
      * */
-    Page<AlgorithmDto> listByToken(ProblemQueryVo queryVo, String token);
+    Page<AlgorithmDto> listByToken(AlgorithmQueryVo queryVo, String token);
 
     /**
      * 分页查询所有启用的题目
      * */
-    Page<AlgorithmDto> listAll(ProblemQueryVo queryVo);
+    Page<AlgorithmDto> listAll(AlgorithmQueryVo queryVo);
 
-    Page<AlgorithmDto> listByAuthor(ProblemQueryVo queryVo);
+    Page<AlgorithmDto> listByAuthor(AlgorithmQueryVo queryVo);
 
     /**
      * 查看问题信息(不包括判题样例)

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangsiyao.common.constant.Language;
 import com.zhangsiyao.common.entity.judge.dao.*;
 import com.zhangsiyao.common.entity.judge.dto.AlgorithmDto;
 import com.zhangsiyao.common.entity.judge.dto.CodeCompileAndRunResultDto;
@@ -13,8 +12,6 @@ import com.zhangsiyao.common.entity.judge.dto.ProblemSubmissionResultDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.common.utils.UserUtil;
 import com.zhangsiyao.judge.compiler.ICompiler;
-import com.zhangsiyao.judge.compiler.JudgeResult;
-import com.zhangsiyao.judge.exception.CodeCompileException;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
 import com.zhangsiyao.judge.mapper.AlgorithmMapper;
 import com.zhangsiyao.judge.service.*;
@@ -68,7 +65,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
 
     @SneakyThrows
     @Override
-    public Page<AlgorithmDto> listByToken(ProblemQueryVo queryVo, String token) {
+    public Page<AlgorithmDto> listByToken(AlgorithmQueryVo queryVo, String token) {
         String username= UserUtil.getUsernameByToken(redisTemplate,token);
         Page<Algorithm> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<Algorithm> queryWrapper=new LambdaQueryWrapper<>();
@@ -106,7 +103,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     }
 
     @Override
-    public Page<AlgorithmDto> listAll(ProblemQueryVo queryVo) {
+    public Page<AlgorithmDto> listAll(AlgorithmQueryVo queryVo) {
         Page<Algorithm> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<Algorithm> queryWrapper=new LambdaQueryWrapper<>();
         if(StringUtils.hasText(queryVo.getTitle())){
@@ -156,7 +153,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     }
 
     @Override
-    public Page<AlgorithmDto> listByAuthor(ProblemQueryVo queryVo) {
+    public Page<AlgorithmDto> listByAuthor(AlgorithmQueryVo queryVo) {
         return null;
     }
 

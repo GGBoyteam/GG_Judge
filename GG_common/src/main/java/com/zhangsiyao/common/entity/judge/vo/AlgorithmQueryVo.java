@@ -9,7 +9,7 @@ import java.util.List;
  * @author iii
  */
 @Data
-public class ProblemQueryVo implements Serializable {
+public class AlgorithmQueryVo implements Serializable {
     private Long pid;
     private String title;
     private Integer status;
