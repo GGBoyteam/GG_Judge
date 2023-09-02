@@ -30,9 +30,9 @@ public class AlgorithmController {
     /**
      * 分页获取算法题目列表(启用的题目)
      * */
-    @GetMapping("/list")
+    @GetMapping("/listEnabled")
     public R<Page<AlgorithmDto>> list(AlgorithmQueryVo queryVo){
-        return R.success(algorithmService.listAll(queryVo));
+        return R.success(algorithmService.listEnabled(queryVo));
     }
 
     /**

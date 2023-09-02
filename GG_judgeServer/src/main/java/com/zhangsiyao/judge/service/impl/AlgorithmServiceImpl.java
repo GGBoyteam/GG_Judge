@@ -103,15 +103,13 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     }
 
     @Override
-    public Page<AlgorithmDto> listAll(AlgorithmQueryVo queryVo) {
+    public Page<AlgorithmDto> listEnabled(AlgorithmQueryVo queryVo) {
         Page<Algorithm> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<Algorithm> queryWrapper=new LambdaQueryWrapper<>();
         if(StringUtils.hasText(queryVo.getTitle())){
             queryWrapper=queryWrapper.like(Algorithm::getTitle,queryVo.getTitle());
         }
-        if(queryVo.getStatus()!=null){
-            queryWrapper=queryWrapper.eq(Algorithm::getStatus,queryVo.getStatus());
-        }
+        queryWrapper=queryWrapper.eq(Algorithm::getStatus,0);
         if(queryVo.getTags()!=null&&queryVo.getTags().size()>0){
             LambdaQueryWrapper<AlgorithmTagRelation> tagQueryWrapper=new LambdaQueryWrapper<>();
             tagQueryWrapper=tagQueryWrapper.in(AlgorithmTagRelation::getTid,queryVo.getTags());

@@ -15,6 +15,5 @@ public class AlgorithmQueryVo implements Serializable {
     private Integer status;
     private Long pageSize;
     private Long pageNum;
-
     private List<Long> tags;
 }

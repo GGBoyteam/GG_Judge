@@ -31,7 +31,7 @@ public interface IAlgorithmService extends IService<Algorithm> {
     /**
      * 分页查询所有启用的题目
      * */
-    Page<AlgorithmDto> listAll(AlgorithmQueryVo queryVo);
+    Page<AlgorithmDto> listEnabled(AlgorithmQueryVo queryVo);
 
     Page<AlgorithmDto> listByAuthor(AlgorithmQueryVo queryVo);
 
