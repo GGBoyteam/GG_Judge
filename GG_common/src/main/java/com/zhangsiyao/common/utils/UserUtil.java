@@ -12,4 +12,7 @@ public class UserUtil {
         UserLogin userLogin=objectMapper.readValue(redisTemplate.opsForValue().get(token),UserLogin.class);
         return userLogin.getUsername();
     }
+
+
+
 }

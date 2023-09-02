@@ -68,6 +68,16 @@ public class AlgorithmEditController {
     }
 
     /**
+     * 删除正确代码
+     * */
+    @DeleteMapping("/deleteTrueCode")
+    public R<String> deleteTrueCode(@RequestBody AlgorithmTrueCodeDeleteVo deleteVo,
+                                    @RequestHeader("Authorization") String token){
+        trueCodeService.deleteTrueCode(deleteVo,token);
+        return R.success();
+    }
+
+    /**
      * 添加编译器限制信息
      * */
     @PostMapping("/addCompileLimit")
@@ -126,5 +136,4 @@ public class AlgorithmEditController {
         exampleService.deleteExample(deleteVo.getPid(),deleteVo.getIds(),token);
         return R.success();
     }
-
 }

@@ -1,7 +1,6 @@
 package com.zhangsiyao.judge.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.zhangsiyao.common.constant.Language;
 import com.zhangsiyao.common.entity.judge.dao.Algorithm;
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmExample;
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmTrueCode;
@@ -41,7 +40,7 @@ public class AlgorithmExampleServiceImpl extends ServiceImpl<AlgorithmExampleMap
     ICompilerService compilerService;
 
     @Autowired
-    IAlgorithmService problemService;
+    IAlgorithmService algorithmService;
 
     @Autowired
     IAlgorithmTrueCodeService problemTrueCodeService;
@@ -50,11 +49,8 @@ public class AlgorithmExampleServiceImpl extends ServiceImpl<AlgorithmExampleMap
     @SneakyThrows
     @Override
     public void saveExample(AlgorithmExample algorithmExample, String token) {
-        Algorithm algorithm = problemService.getById(algorithmExample.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        Algorithm algorithm = algorithmService.getById(algorithmExample.getPid());
+        algorithmService.checkAuthor(algorithm,token);
         LambdaQueryWrapper<AlgorithmTrueCode> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper=queryWrapper.eq(AlgorithmTrueCode::getPid, algorithmExample.getPid());
         List<AlgorithmTrueCode> codes = problemTrueCodeService.getBaseMapper().selectList(queryWrapper);
@@ -73,11 +69,8 @@ public class AlgorithmExampleServiceImpl extends ServiceImpl<AlgorithmExampleMap
     @SneakyThrows
     @Override
     public void updateExample(AlgorithmExample algorithmExample, String token) {
-        Algorithm algorithm = problemService.getById(algorithmExample.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        Algorithm algorithm = algorithmService.getById(algorithmExample.getPid());
+        algorithmService.checkAuthor(algorithm,token);
         LambdaQueryWrapper<AlgorithmTrueCode> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper=queryWrapper.eq(AlgorithmTrueCode::getPid, algorithmExample.getPid());
         List<AlgorithmTrueCode> codes = problemTrueCodeService.getBaseMapper().selectList(queryWrapper);
@@ -97,11 +90,8 @@ public class AlgorithmExampleServiceImpl extends ServiceImpl<AlgorithmExampleMap
     @SneakyThrows
     @Override
     public void deleteExample(Long pid,List<Long> ids, String token) {
-        Algorithm algorithm = problemService.getById(pid);
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        Algorithm algorithm = algorithmService.getById(pid);
+        algorithmService.checkAuthor(algorithm,token);
         this.removeByIds(ids);
     }
 

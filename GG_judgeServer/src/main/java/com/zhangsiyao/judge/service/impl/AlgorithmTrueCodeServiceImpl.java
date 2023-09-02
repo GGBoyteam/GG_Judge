@@ -2,6 +2,7 @@ package com.zhangsiyao.judge.service.impl;
 
 import com.zhangsiyao.common.entity.judge.dao.Algorithm;
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmTrueCode;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmTrueCodeDeleteVo;
 import com.zhangsiyao.common.entity.judge.vo.AlgorithmTrueCodeSaveVo;
 import com.zhangsiyao.common.entity.judge.vo.AlgorithmTrueCodeUpdateVo;
 import com.zhangsiyao.common.utils.UserUtil;
@@ -64,5 +65,10 @@ public class AlgorithmTrueCodeServiceImpl extends ServiceImpl<AlgorithmTrueCodeM
             throw  new CodeCompileException("编译未成功，操作失败",null,null);
         }
         this.save(saveVo);
+    }
+
+    @Override
+    public void deleteTrueCode(AlgorithmTrueCodeDeleteVo deleteVo, String token) {
+
     }
 }

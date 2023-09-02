@@ -54,6 +54,7 @@ public interface IAlgorithmService extends IService<Algorithm> {
 
     void updateBody(AlgorithmBodyUpdateVo updateVo, String token);
 
+    boolean checkAuthor(Algorithm algorithm, String token);
 
     ProblemSubmissionResultDto submission(ProblemSubmissionVo submissionVo);
     void deleteTrueCode(String codeId);

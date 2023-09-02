@@ -64,25 +64,15 @@ public class AlgorithmController {
         return R.success(problemService.testExample(testVo));
     }
 
-
     @GetMapping("/tags")
     public R<List<AlgorithmTag>> tags(){
         return R.success(problemService.tags());
     }
 
 
-
-
     @PostMapping("/submission")
     public R<ProblemSubmissionResultDto> submission(@RequestBody ProblemSubmissionVo problemSubmissionVo){
         return R.success(problemService.submission(problemSubmissionVo));
     }
-
-    @DeleteMapping("/deleteTrueCode/{codeId}")
-    public R<String> deleteTrueCode(@PathVariable String codeId){
-        problemService.deleteTrueCode(codeId);
-        return R.success();
-    }
-
 
 }

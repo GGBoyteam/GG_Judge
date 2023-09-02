@@ -192,11 +192,8 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     @SneakyThrows
     @Override
     public Page<AlgorithmTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, String token) {
-        String username=UserUtil.getUsernameByToken(redisTemplate,token);
         Algorithm algorithm =this.getById(queryVo.getPid());
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权查看此题目正确代码");
-        }
+        checkAuthor(algorithm,token);
         Page<AlgorithmTrueCode> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<AlgorithmTrueCode> queryWrapper = new LambdaQueryWrapper<AlgorithmTrueCode>().eq(AlgorithmTrueCode::getPid,queryVo.getPid());
         return trueCodeService.getBaseMapper().selectPage(page,queryWrapper);
@@ -205,11 +202,8 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     @SneakyThrows
     @Override
     public Page<ProblemAlgorithmExampleDto> examples(AlgorithmExampleQueryVo queryVo, String token) {
-        String username=UserUtil.getUsernameByToken(redisTemplate,token);
         Algorithm algorithm =this.getById(queryVo.getPid());
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权查看此题目正确代码");
-        }
+        checkAuthor(algorithm,token);
         Page<AlgorithmExample> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<AlgorithmExample> queryWrapper=new LambdaQueryWrapper<AlgorithmExample>().eq(AlgorithmExample::getPid,queryVo.getPid());
         queryWrapper=queryWrapper.orderByDesc(AlgorithmExample::getStatus);
@@ -238,10 +232,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     @Transactional(rollbackFor = Exception.class)
     public void updateBaseInfo(AlgorithmBaseInfoUpdateVo updateVo,String token) {
         Algorithm algorithm = this.getById(updateVo.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        checkAuthor(algorithm,token);
         algorithm.setTitle(updateVo.getTitle());
         algorithm.setStatus(updateVo.getStatus());
         this.updateById(algorithm);
@@ -258,15 +249,21 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     @Override
     public void updateBody(AlgorithmBodyUpdateVo updateVo, String token) {
         Algorithm algorithm = this.getById(updateVo.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        checkAuthor(algorithm,token);
         BeanUtils.copyProperties(updateVo, algorithm);
         this.updateById(algorithm);
     }
 
-    
+    @SneakyThrows
+    @Override
+    public boolean checkAuthor(Algorithm algorithm, String token) {
+        String username = UserUtil.getUsernameByToken(redisTemplate, token);
+        if(!username.equals(algorithm.getAuthor())){
+            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
+        }
+        return true;
+    }
+
 
     @SneakyThrows
     @Override

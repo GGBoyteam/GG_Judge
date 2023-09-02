@@ -2,6 +2,7 @@ package com.zhangsiyao.judge.service;
 
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmTrueCode;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmTrueCodeDeleteVo;
 import com.zhangsiyao.common.entity.judge.vo.AlgorithmTrueCodeSaveVo;
 import com.zhangsiyao.common.entity.judge.vo.AlgorithmTrueCodeUpdateVo;
 
@@ -18,5 +19,7 @@ public interface IAlgorithmTrueCodeService extends IService<AlgorithmTrueCode> {
     public void updateTrueCode(AlgorithmTrueCodeUpdateVo updateVo,String token);
 
     public void saveTrueCode(AlgorithmTrueCodeSaveVo saveVo,String token);
+
+    public void deleteTrueCode(AlgorithmTrueCodeDeleteVo deleteVo,String token);
 
 }

@@ -53,10 +53,7 @@ public class AlgorithmCompileLimitServiceImpl extends ServiceImpl<AlgorithmCompi
     @Override
     public void saveCompilerLimit(AlgorithmCompileLimit compileLimit,String token) {
         Algorithm algorithm = algorithmService.getById(compileLimit.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        algorithmService.checkAuthor(algorithm,token);
         this.save(compileLimit);
     }
 
@@ -64,10 +61,7 @@ public class AlgorithmCompileLimitServiceImpl extends ServiceImpl<AlgorithmCompi
     @Override
     public void updateCompilerLimit(AlgorithmCompileLimit compileLimit,String token) {
         Algorithm algorithm = algorithmService.getById(compileLimit.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        algorithmService.checkAuthor(algorithm,token);
         this.updateById(compileLimit);
     }
 
@@ -75,10 +69,7 @@ public class AlgorithmCompileLimitServiceImpl extends ServiceImpl<AlgorithmCompi
     @Override
     public void deleteCompilerLimit(AlgorithmCompileLimitDeleteVo deleteVo, String token) {
         Algorithm algorithm = algorithmService.getById(deleteVo.getPid());
-        String username = UserUtil.getUsernameByToken(redisTemplate, token);
-        if(!username.equals(algorithm.getAuthor())){
-            throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
-        }
+        algorithmService.checkAuthor(algorithm,token);
         this.removeByIds(deleteVo.getIds());
     }
 }
