@@ -26,7 +26,7 @@ public interface IAlgorithmService extends IService<Algorithm> {
     /**
      * 通过token查询作者出的题目列表
      * */
-    Page<AlgorithmDto> listByToken(AlgorithmQueryVo queryVo, String token);
+    Page<AlgorithmDto> myAlgorithmProblems(AlgorithmQueryVo queryVo, String token);
 
     /**
      * 分页查询所有启用的题目

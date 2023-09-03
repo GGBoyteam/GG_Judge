@@ -12,6 +12,9 @@ import com.zhangsiyao.judge.service.IAlgorithmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -31,58 +34,63 @@ public class AlgorithmController {
      * 分页获取算法题目列表(启用的题目)
      * */
     @GetMapping("/listEnabled")
-    public R<Page<AlgorithmDto>> list(AlgorithmQueryVo queryVo){
+    public R list(@Valid AlgorithmQueryVo queryVo){
         return R.success(algorithmService.listEnabled(queryVo));
     }
 
     /**
      * 分页获取出题人为当前账户用户的算法题目列表
      * */
-    @GetMapping("/listByToken")
-    public R<Page<AlgorithmDto>> listByToken(AlgorithmQueryVo queryVo,
-                                             @RequestHeader("Authorization") String token){
-        return R.success(algorithmService.listByToken(queryVo,token));
+    @GetMapping("/myAlgorithmProblems")
+    public R listByToken(@Valid AlgorithmQueryVo queryVo,
+                         @RequestHeader("Authorization") String token){
+        return R.success(algorithmService.myAlgorithmProblems(queryVo,token));
     }
 
     /**
-     * 获取算法题目信息
+     * 获取完整的算法题目信息
      * */
-    @GetMapping("/info/{pid}")
-    public R<AlgorithmDto> info(@PathVariable String pid){
+    @GetMapping("/info")
+    public R info(@RequestParam("pid") String pid){
         return R.success(algorithmService.info(pid));
     }
 
 
-    @GetMapping("/trueCodeListByToken")
-    public R<Page<AlgorithmTrueCode>> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, @RequestHeader("Authorization") String token){
+    /**
+     * 分页获取正确代码列表
+     * */
+    @GetMapping("/trueCodeList")
+    public R trueCodeListByToken(@Valid ProblemTrueCodeQueryVo queryVo,
+                                 @RequestHeader("Authorization") String token){
         return R.success(algorithmService.trueCodeListByToken(queryVo,token));
     }
 
-    @GetMapping("/examples")
-    public R<Page<ProblemAlgorithmExampleDto>> examples(AlgorithmExampleQueryVo queryVo, @RequestHeader("Authorization") String token){
+    @GetMapping("/exampleList")
+    public R examples(@Valid AlgorithmExampleQueryVo queryVo,
+                      @RequestHeader("Authorization") String token){
         return R.success(algorithmService.examples(queryVo,token));
     }
 
-    @GetMapping("/compilerLimits")
-    public R<IPage<AlgorithmCompileLimitDto>> compilerLimits(@RequestParam("pid") Long pid,
+    @GetMapping("/compilerLimitList")
+    public R compilerLimits(@RequestParam("pid") Long pid,
                                                              @RequestParam("pageNum") Long pageNum,
                                                              @RequestParam("pageSize") Long pageSize){
         return R.success(compileLimitService.compilers(pid,pageNum,pageSize));
     }
 
     @PostMapping("/testExample")
-    public R<CodeCompileAndRunResultDto> testExample(@RequestBody AlgorithmExampleTestVo testVo){
+    public R testExample(@RequestBody AlgorithmExampleTestVo testVo){
         return R.success(algorithmService.testExample(testVo));
     }
 
     @GetMapping("/tags")
-    public R<List<AlgorithmTag>> tags(){
+    public R tags(){
         return R.success(algorithmService.tags());
     }
 
 
     @PostMapping("/submission")
-    public R<ProblemSubmissionResultDto> submission(@RequestBody ProblemSubmissionVo problemSubmissionVo){
+    public R submission(@RequestBody ProblemSubmissionVo problemSubmissionVo){
         return R.success(algorithmService.submission(problemSubmissionVo));
     }
 

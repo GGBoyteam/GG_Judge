@@ -65,7 +65,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
 
     @SneakyThrows
     @Override
-    public Page<AlgorithmDto> listByToken(AlgorithmQueryVo queryVo, String token) {
+    public Page<AlgorithmDto> myAlgorithmProblems(AlgorithmQueryVo queryVo, String token) {
         String username= UserUtil.getUsernameByToken(redisTemplate,token);
         Page<Algorithm> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
         LambdaQueryWrapper<Algorithm> queryWrapper=new LambdaQueryWrapper<>();
@@ -108,6 +108,9 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
         LambdaQueryWrapper<Algorithm> queryWrapper=new LambdaQueryWrapper<>();
         if(StringUtils.hasText(queryVo.getTitle())){
             queryWrapper=queryWrapper.like(Algorithm::getTitle,queryVo.getTitle());
+        }
+        if(StringUtils.hasText(queryVo.getAuthor())){
+            queryWrapper=queryWrapper.like(Algorithm::getAuthor,queryVo.getAuthor());
         }
         queryWrapper=queryWrapper.eq(Algorithm::getStatus,0);
         if(queryVo.getTags()!=null&&queryVo.getTags().size()>0){
