@@ -1,11 +1,6 @@
 package com.zhangsiyao.judge.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.judge.dao.AlgorithmTag;
-import com.zhangsiyao.common.entity.judge.dao.AlgorithmTrueCode;
-import com.zhangsiyao.common.entity.judge.dto.*;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.judge.service.IAlgorithmCompileLimitService;
 import com.zhangsiyao.judge.service.IAlgorithmService;
@@ -13,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * @author iii
@@ -60,35 +52,52 @@ public class AlgorithmController {
      * 分页获取正确代码列表
      * */
     @GetMapping("/trueCodeList")
-    public R trueCodeListByToken(@Valid ProblemTrueCodeQueryVo queryVo,
-                                 @RequestHeader("Authorization") String token){
-        return R.success(algorithmService.trueCodeListByToken(queryVo,token));
+    public R trueCodeList(@Valid AlgorithmTrueCodeQueryVo queryVo,
+                          @RequestHeader("Authorization") String token){
+        return R.success(algorithmService.trueCodeList(queryVo,token));
     }
 
+    /**
+     * 分页获取样例列表
+     * */
     @GetMapping("/exampleList")
     public R examples(@Valid AlgorithmExampleQueryVo queryVo,
                       @RequestHeader("Authorization") String token){
-        return R.success(algorithmService.examples(queryVo,token));
+        return R.success(algorithmService.exampleList(queryVo,token));
     }
 
+    /**
+     * 分页获取编译器限制列表
+     * */
     @GetMapping("/compilerLimitList")
-    public R compilerLimits(@RequestParam("pid") Long pid,
-                                                             @RequestParam("pageNum") Long pageNum,
-                                                             @RequestParam("pageSize") Long pageSize){
-        return R.success(compileLimitService.compilers(pid,pageNum,pageSize));
+    public R compilerLimitsList(@Valid AlgorithmCompileLimitQueryVo queryVo,
+                                @RequestHeader("Authorization") String token){
+        return R.success(compileLimitService.compileLimitList(queryVo,token));
     }
 
-    @PostMapping("/testExample")
-    public R testExample(@RequestBody AlgorithmExampleTestVo testVo){
-        return R.success(algorithmService.testExample(testVo));
-    }
 
+    /**
+     * 获取算法题目标签
+     * */
     @GetMapping("/tags")
     public R tags(){
         return R.success(algorithmService.tags());
     }
 
 
+    /**
+     * 算法样例测试运行
+     * */
+    @PostMapping("/testExample")
+    public R test(@RequestBody AlgorithmExampleTestVo testVo,
+                  @RequestHeader("Authorization") String token){
+        return R.success(algorithmService.testExample(testVo,token));
+    }
+
+    
+    /**
+     * 代码提交运行
+     * */
     @PostMapping("/submission")
     public R submission(@RequestBody ProblemSubmissionVo problemSubmissionVo){
         return R.success(algorithmService.submission(problemSubmissionVo));

@@ -7,6 +7,7 @@ import com.zhangsiyao.common.entity.judge.dao.Algorithm;
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmCompileLimit;
 import com.zhangsiyao.common.entity.judge.dto.AlgorithmCompileLimitDto;
 import com.zhangsiyao.common.entity.judge.vo.AlgorithmCompileLimitDeleteVo;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmCompileLimitQueryVo;
 import com.zhangsiyao.common.utils.UserUtil;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
 import com.zhangsiyao.judge.mapper.AlgorithmCompileLimitMapper;
@@ -39,10 +40,12 @@ public class AlgorithmCompileLimitServiceImpl extends ServiceImpl<AlgorithmCompi
     IAlgorithmService algorithmService;
 
     @Override
-    public IPage<AlgorithmCompileLimitDto> compilers(Long pid, Long pageNum, Long pageSize) {
+    public IPage compileLimitList(AlgorithmCompileLimitQueryVo queryVo, String token) {
+        Algorithm algorithm=algorithmService.getById(queryVo.getPid());
+        algorithmService.checkAuthor(algorithm,token);
         LambdaQueryWrapper<AlgorithmCompileLimit> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper=queryWrapper.eq(AlgorithmCompileLimit::getPid,pid);
-        return this.baseMapper.selectPage(new Page<>(pageNum,pageSize),queryWrapper).convert(limit->{
+        queryWrapper=queryWrapper.eq(AlgorithmCompileLimit::getPid,queryVo.getPid());
+        return this.baseMapper.selectPage(new Page<>(queryVo.getPageNum(),queryVo.getPageSize()),queryWrapper).convert(limit->{
             AlgorithmCompileLimitDto problemCompileLimitDto=new AlgorithmCompileLimitDto();
             BeanUtils.copyProperties(limit,problemCompileLimitDto);
             return problemCompileLimitDto;

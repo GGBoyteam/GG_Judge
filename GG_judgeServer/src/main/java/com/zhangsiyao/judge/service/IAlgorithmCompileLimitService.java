@@ -3,8 +3,8 @@ package com.zhangsiyao.judge.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhangsiyao.common.entity.judge.dao.AlgorithmCompileLimit;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zhangsiyao.common.entity.judge.dto.AlgorithmCompileLimitDto;
 import com.zhangsiyao.common.entity.judge.vo.AlgorithmCompileLimitDeleteVo;
+import com.zhangsiyao.common.entity.judge.vo.AlgorithmCompileLimitQueryVo;
 
 /**
  * <p>
@@ -15,7 +15,7 @@ import com.zhangsiyao.common.entity.judge.vo.AlgorithmCompileLimitDeleteVo;
  * @since 2023-08-22
  */
 public interface IAlgorithmCompileLimitService extends IService<AlgorithmCompileLimit> {
-    IPage<AlgorithmCompileLimitDto> compilers(Long pid, Long pageNum, Long pageSize);
+    IPage compileLimitList(AlgorithmCompileLimitQueryVo queryVo,String token);
 
     void saveCompilerLimit(AlgorithmCompileLimit compileLimit,String token);
 

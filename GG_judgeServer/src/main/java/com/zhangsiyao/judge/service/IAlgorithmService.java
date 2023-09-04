@@ -44,11 +44,11 @@ public interface IAlgorithmService extends IService<Algorithm> {
 
     List<AlgorithmTag> tags();
 
-    Page<AlgorithmTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, String token);
+    Page<AlgorithmTrueCode> trueCodeList(AlgorithmTrueCodeQueryVo queryVo, String token);
 
-    Page<ProblemAlgorithmExampleDto> examples(AlgorithmExampleQueryVo queryVo, String token);
+    Page<ProblemAlgorithmExampleDto> exampleList(AlgorithmExampleQueryVo queryVo, String token);
 
-    CodeCompileAndRunResultDto testExample(AlgorithmExampleTestVo testVo);
+    CodeCompileAndRunResultDto testExample(AlgorithmExampleTestVo testVo,String token);
 
     void updateBaseInfo(AlgorithmBaseInfoUpdateVo updateVo, String token);
 
@@ -57,5 +57,4 @@ public interface IAlgorithmService extends IService<Algorithm> {
     boolean checkAuthor(Algorithm algorithm, String token);
 
     ProblemSubmissionResultDto submission(ProblemSubmissionVo submissionVo);
-    void deleteTrueCode(String codeId);
 }

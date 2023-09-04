@@ -12,6 +12,7 @@ import com.zhangsiyao.common.entity.judge.dto.ProblemSubmissionResultDto;
 import com.zhangsiyao.common.entity.judge.vo.*;
 import com.zhangsiyao.common.utils.UserUtil;
 import com.zhangsiyao.judge.compiler.ICompiler;
+import com.zhangsiyao.judge.exception.ExampleCheckException;
 import com.zhangsiyao.judge.exception.NotProblemAuthorException;
 import com.zhangsiyao.judge.mapper.AlgorithmMapper;
 import com.zhangsiyao.judge.service.*;
@@ -57,8 +58,6 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     @Autowired
     IAlgorithmTagRelationService tagRelationService;
 
-    @Autowired
-    IAlgorithmTrueCodeService problemTrueCodeService;
 
     @Autowired
     ICompilerService compilerService;
@@ -189,7 +188,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
 
     @SneakyThrows
     @Override
-    public Page<AlgorithmTrueCode> trueCodeListByToken(ProblemTrueCodeQueryVo queryVo, String token) {
+    public Page<AlgorithmTrueCode> trueCodeList(AlgorithmTrueCodeQueryVo queryVo, String token) {
         Algorithm algorithm =this.getById(queryVo.getPid());
         checkAuthor(algorithm,token);
         Page<AlgorithmTrueCode> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
@@ -199,7 +198,7 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
 
     @SneakyThrows
     @Override
-    public Page<ProblemAlgorithmExampleDto> examples(AlgorithmExampleQueryVo queryVo, String token) {
+    public Page<ProblemAlgorithmExampleDto> exampleList(AlgorithmExampleQueryVo queryVo, String token) {
         Algorithm algorithm =this.getById(queryVo.getPid());
         checkAuthor(algorithm,token);
         Page<AlgorithmExample> page=Page.of(queryVo.getPageNum(),queryVo.getPageSize());
@@ -214,15 +213,23 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     }
 
     @Override
-    public CodeCompileAndRunResultDto testExample(AlgorithmExampleTestVo testVo) {
-        AlgorithmTrueCode code = problemTrueCodeService.getById(testVo.getCodeId());
+    @SneakyThrows
+    public CodeCompileAndRunResultDto testExample(AlgorithmExampleTestVo testVo,String token) {
+        Algorithm algorithm= this.getById(testVo.getPid());
+        checkAuthor(algorithm,token);
+        AlgorithmTrueCode code = trueCodeService.getById(testVo.getCodeId());
+        if(code==null){
+            throw new Exception("正确代码不存在");
+        }
+        if(!code.getPid().equals(algorithm.getPid())){
+            throw new ExampleCheckException("题目没有id为"+testVo.getCodeId()+"的正确代码");
+        }
         CodeCompileRunVo codeCompileRunVo=new CodeCompileRunVo();
         codeCompileRunVo.setCode(code.getCode());
         codeCompileRunVo.setLanguage(code.getLanguage());
         codeCompileRunVo.setVersion(code.getVersion());
         codeCompileRunVo.setInput(testVo.getInput());
         return compilerService.compileAndRun(codeCompileRunVo);
-
     }
 
     @SneakyThrows
@@ -255,6 +262,9 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
     @SneakyThrows
     @Override
     public boolean checkAuthor(Algorithm algorithm, String token) {
+        if(algorithm==null){
+            throw new Exception("题目不存在");
+        }
         String username = UserUtil.getUsernameByToken(redisTemplate, token);
         if(!username.equals(algorithm.getAuthor())){
             throw new NotProblemAuthorException("您不是此题作者，无权修改此题目");
@@ -275,10 +285,5 @@ public class AlgorithmServiceImpl extends ServiceImpl<AlgorithmMapper, Algorithm
 //            compiler.run(example.getInput(),);
 //        }
         return null;
-    }
-
-    @Override
-    public void deleteTrueCode(String codeId) {
-        problemTrueCodeService.removeById(codeId);
     }
 }

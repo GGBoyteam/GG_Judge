@@ -7,16 +7,18 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class ProblemTrueCodeQueryVo implements Serializable {
+public class AlgorithmCompileLimitQueryVo implements Serializable {
 
     @NotNull
-    private Long pid;
-
-    @NotNull
-    @Min(1)
-    private Long pageNum;
+    Long pid;
 
     @NotNull
     @Min(1)
-    private Long pageSize;
+    Long pageNum;
+
+    @NotNull
+    @Min(1)
+    Long pageSize;
+
+
 }

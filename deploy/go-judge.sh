@@ -28,10 +28,13 @@ EOF
 
 systemctl daemon-reload
 
-
 systemctl restart docker
 
-docker run -it --restart=always --privileged -p 5050:5050 criyle/executorserver
+cd /root/deploy/Dockerfile
+
+docker build -f ./go-judge -t judge .
+
+docker run -it --restart=always --privileged -p 5050:5050 judge
 
 
 echo user.max_user_namespaces=10000 >> /etc/sysctl.d/98-userns.conf

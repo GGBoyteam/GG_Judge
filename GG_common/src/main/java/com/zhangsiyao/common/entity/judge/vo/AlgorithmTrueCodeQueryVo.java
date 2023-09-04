@@ -2,19 +2,21 @@ package com.zhangsiyao.common.entity.judge.vo;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class AlgorithmExampleTestVo implements Serializable {
+public class AlgorithmTrueCodeQueryVo implements Serializable {
 
     @NotNull
     private Long pid;
 
     @NotNull
-    private Long codeId;
+    @Min(1)
+    private Long pageNum;
 
-    private String input;
-
-    private String output;
+    @NotNull
+    @Min(1)
+    private Long pageSize;
 }
