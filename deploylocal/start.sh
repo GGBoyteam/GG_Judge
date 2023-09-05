@@ -47,7 +47,7 @@ docker run \
 
 docker stop nacos
 docker rm nacos
-docker run -it \
+docker run \
 -e NACOS_AUTH_ENABLE=true \
 -e PREFER_HOST_MODE=ip \
 -e MODE=standalone \
@@ -62,4 +62,22 @@ docker run -it \
 -p 9849:9848 \
 --name nacos \
 --restart=always \
-nacos/nacos-server:2.0.3
+-d nacos/nacos-server:2.0.3
+
+docker stop redis
+docker rm redis
+docker run \
+--name redis \
+--restart=always \
+-p 6379:6379 \
+-d redis
+
+docker build -f ./gojudge_dockerfile -t gojudge .
+
+docker run --restart=always --privileged -p 5050:5050 -d gojudge
+
+echo user.max_user_namespaces=10000 >> /etc/sysctl.d/98-userns.conf
+
+sysctl -p
+
+reboot

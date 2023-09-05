@@ -1,0 +1,21 @@
+FROM criyle/executorserver:v1.6.10
+
+RUN touch /etc/apt/sources.list
+RUN rm -r /etc/apt/sources.list.d
+RUN echo "deb http://mirrors.aliyun.com/debian/ bookworm main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb-src http://mirrors.aliyun.com/debian/ bookworm main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb http://mirrors.aliyun.com/debian-security/ bookworm-security main InRelease" >> /etc/apt/sources.list
+RUN echo "deb-src http://mirrors.aliyun.com/debian-security/ bookworm-security main InRelease" >> /etc/apt/sources.list
+RUN echo "deb http://mirrors.aliyun.com/debian/ bookworm-updates main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb-src http://mirrors.aliyun.com/debian/ bookworm-updates main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb http://mirrors.aliyun.com/debian/ bookworm-backports main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb-src http://mirrors.aliyun.com/debian/ bookworm-backports main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb http://mirrors.bfsu.edu.cn/debian/ bookworm main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb-src http://mirrors.bfsu.edu.cn/debian/ bookworm main non-free contrib" >> /etc/apt/sources.list
+RUN apt-get clean
+RUN apt-get update
+
+RUN apt-get -y install g++
+RUN apt-get -y install openjdk-17-jdk
+RUN apt-get -y install python3
+RUN apt-get -y install nodejs
