@@ -4,7 +4,7 @@
 
 > 系统要求：**Centos7**</br>
 >
-> 需要把虚拟机IP设置为**192.168.56.10**
+> 需要把虚拟机IP设置为：**192.168.56.10**
 
 ```sh
 # 从github上下载本地环境部署包
@@ -38,7 +38,9 @@ sh /home/deploylocal/start.sh
 
 # 团队协作开发工具
 
-postman团队:[点击加入](https://app.getpostman.com/join-team?invite_code=3f7acb69e9c71961909ec0fecc71fd69)
+> apifox连接七天内有效，如果邀请链接失效，请联系QQ：2963456487
+
+apifox团队:[点击加入](https://app.apifox.com/invite/project?token=OxO142nQwznADBEEmclE2)
 
 
 
