@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Judge" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <option name="ALTERNATIVE_JRE_PATH" value="corretto-1.8" />
+    <module name="GG_judgeServer" />
+    <option name="PROGRAM_PARAMETERS" value="--server.port=8082" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.zhangsiyao.judge.GgJudgeApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
