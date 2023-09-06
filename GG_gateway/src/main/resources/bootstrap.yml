@@ -6,11 +6,9 @@ server:
       force: true
       force-request: true
       force-response: true
-datasource:
-  name: judgeServer
 spring:
   application:
-    name: judgeServer
+    name: gateway
   cloud:
     nacos:
       config:

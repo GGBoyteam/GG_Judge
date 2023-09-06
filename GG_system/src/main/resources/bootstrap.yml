@@ -7,10 +7,10 @@ server:
       force-request: true
       force-response: true
 datasource:
-  name: judgeServer
+  name: system
 spring:
   application:
-    name: judgeServer
+    name: system-service
   cloud:
     nacos:
       config:
