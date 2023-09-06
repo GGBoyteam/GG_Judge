@@ -7,18 +7,15 @@ server:
       force-request: true
       force-response: true
 datasource:
-  name: judgeServer
+  name: auth
 spring:
   application:
-    name: judgeServer
+    name: auth
   cloud:
     nacos:
       config:
         file-extension: yaml
         extension-configs:
-          - data-id: route.yaml
-            group: gateway
-            refresh: true
           - data-id: redis.yaml
             group: env
             refresh: true

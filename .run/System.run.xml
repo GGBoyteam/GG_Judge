@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="System" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <module name="GG_system" />
+    <option name="PROGRAM_PARAMETERS" value="--server.port=8083" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.zhangsiyao.system.GgSystemApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
