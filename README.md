@@ -4,7 +4,7 @@
 
 ```sh
 # 从github上下载本地环境部署包
-curl -J -L -o /home/deploylocal.tar https://github.com/mc23101/GG_Judge/releases/download/localenvironment/deploylocal.tar
+curl -J -L -o /home/deploylocal.tar https://github.com/GGBoyteam/GG_Judge/releases/download/localenvironment/deploylocal.tar
 # 从gitee上下载本地环境部署包
 curl -J -L -o /home/deploylocal.tar https://gitee.com/zhangsisiyao/ggjudgerelease/releases/download/localenv/deploylocal.tar
 
