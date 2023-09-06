@@ -10,7 +10,7 @@ datasource:
   name: judgeServer
 spring:
   application:
-    name: judgeServer
+    name: judge-service
   cloud:
     nacos:
       config:

@@ -10,7 +10,7 @@ datasource:
   name: auth
 spring:
   application:
-    name: auth
+    name: auth-service
   cloud:
     nacos:
       config:
