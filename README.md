@@ -2,6 +2,10 @@
 
 开发环境部署详见：[本地开发环境部署](https://github.com/mc23101/GG_Judge_Wiki/wiki/%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2)
 
+> 系统要求：**Centos7**</br>
+>
+> 需要把虚拟机IP设置为**192.168.56.10**
+
 ```sh
 # 从github上下载本地环境部署包
 curl -J -L -o /home/deploylocal.tar https://github.com/GGBoyteam/GG_Judge/releases/download/localenvironment/deploylocal.tar
@@ -14,10 +18,6 @@ tar -xf /home/deploylocal.tar
 # 运行脚本
 sh /home/deploylocal/start.sh
 ```
-
-
-
-
 
 # 项目根目录介绍
 
