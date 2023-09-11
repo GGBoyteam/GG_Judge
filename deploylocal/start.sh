@@ -72,6 +72,9 @@ docker run \
 -p 6379:6379 \
 -d redis
 
+docker stop gojudge
+docker rm gojudge
+
 docker build -f ./gojudge_dockerfile -t gojudge .
 
 docker run --restart=always --privileged -p 5050:5050 -d gojudge
