@@ -1,5 +1,6 @@
 package com.zhangsiyao.auth.service;
 
+import com.zhangsiyao.common.entity.auth.dao.Auth;
 import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
@@ -14,7 +15,7 @@ import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
  * @author author
  * @since 2023-07-27
  */
-public interface IAuthService extends IService<UserLogin> {
+public interface IAuthService extends IService<Auth> {
     void register(UserPasswordVo passwordVo);
 
     AuthResultDto loginByPassword(UserPasswordVo passwordVo) ;
