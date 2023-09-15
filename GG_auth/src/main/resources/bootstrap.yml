@@ -7,7 +7,7 @@ server:
       force-request: true
       force-response: true
 datasource:
-  name: auth
+  name: system
 spring:
   application:
     name: auth-service

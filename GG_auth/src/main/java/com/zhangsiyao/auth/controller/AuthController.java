@@ -3,7 +3,7 @@ package com.zhangsiyao.auth.controller;
 import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
 import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
-import com.zhangsiyao.auth.service.IUserloginService;
+import com.zhangsiyao.auth.service.IAuthService;
 import com.zhangsiyao.common.entity.common.dto.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    IUserloginService userloginService;
+    IAuthService userloginService;
 
     @PostMapping("/login")
     public R<AuthResultDto> passwordLogin(@RequestBody UserPasswordVo userPasswordVo)  {

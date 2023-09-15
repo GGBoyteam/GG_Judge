@@ -14,7 +14,7 @@ import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
  * @author author
  * @since 2023-07-27
  */
-public interface IUserloginService extends IService<UserLogin> {
+public interface IAuthService extends IService<UserLogin> {
     void register(UserPasswordVo passwordVo);
 
     AuthResultDto loginByPassword(UserPasswordVo passwordVo) ;
