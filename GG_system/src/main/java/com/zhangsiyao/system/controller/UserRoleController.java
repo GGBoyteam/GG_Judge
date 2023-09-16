@@ -3,7 +3,7 @@ package com.zhangsiyao.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.User;
 import com.zhangsiyao.common.entity.system.dao.UserRole;
 import com.zhangsiyao.common.entity.system.dto.RoleDto;
 import com.zhangsiyao.common.entity.system.vo.RoleAllocateUserVo;
@@ -33,12 +33,12 @@ public class UserRoleController {
     }
 
     @GetMapping("/allocatedUser")
-    public R<Page<UserInfo>> allocatedUserList(RoleAllocateUserVo allocateUserVo){
+    public R<Page<User>> allocatedUserList(RoleAllocateUserVo allocateUserVo){
         return R.success(userRoleService.allocateUserList(allocateUserVo));
     }
 
     @GetMapping("/unallocatedUser")
-    public R<Page<UserInfo>> unallocatedUserList(RoleAllocateUserVo allocateUserVo){
+    public R<Page<User>> unallocatedUserList(RoleAllocateUserVo allocateUserVo){
         return R.success(userRoleService.unallocateUserList(allocateUserVo));
     }
 

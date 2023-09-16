@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.auth.component.Md5Component;
 import com.zhangsiyao.common.component.JwtComponent;
 import com.zhangsiyao.common.entity.auth.dao.Auth;
-import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
-import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.AuthAddOrUpdate;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.exception.LoginException;
 import com.zhangsiyao.common.exception.RegisterException;
@@ -68,8 +67,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth> implements IA
             throw new LoginException("登录失败，密码错误");
         }
         String token = jwtComponent.createToken(user.getUsername());
-        ObjectMapper objectMapper=new ObjectMapper();
-        redisTemplate.opsForValue().set(token,objectMapper.writeValueAsString(user),3,TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(token,user.getUsername(),3,TimeUnit.HOURS);
         AuthResultDto authResultDto=new AuthResultDto();
         authResultDto.setToken(token);
         return authResultDto;
@@ -83,7 +81,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth> implements IA
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addOrUpdate(UserLoginAddOrUpdate addOrUpdate) {
+    public void addOrUpdate(AuthAddOrUpdate addOrUpdate) {
         Auth id = this.getById(addOrUpdate.getUsername());
         if(id==null){
             id=new Auth();

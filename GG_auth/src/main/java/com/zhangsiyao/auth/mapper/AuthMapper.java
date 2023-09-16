@@ -1,7 +1,6 @@
 package com.zhangsiyao.auth.mapper;
 
 import com.zhangsiyao.common.entity.auth.dao.Auth;
-import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

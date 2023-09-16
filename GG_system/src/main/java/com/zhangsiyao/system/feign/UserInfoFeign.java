@@ -1,6 +1,6 @@
 package com.zhangsiyao.system.feign;
 
-import com.zhangsiyao.system.service.IUserInfoService;
+import com.zhangsiyao.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +14,7 @@ import java.util.List;
 public class UserInfoFeign {
 
     @Autowired
-    IUserInfoService userInfoService;
+    IUserService userInfoService;
     @GetMapping("/permissions/{username}")
     public List<String> permissions(@PathVariable String username){
         return userInfoService.permissions(username);

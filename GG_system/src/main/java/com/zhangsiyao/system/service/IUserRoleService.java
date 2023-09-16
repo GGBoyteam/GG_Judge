@@ -2,7 +2,7 @@ package com.zhangsiyao.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.system.dao.Role;
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.User;
 import com.zhangsiyao.common.entity.system.dao.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.system.dto.RoleDto;
@@ -26,9 +26,9 @@ public interface IUserRoleService extends IService<UserRole> {
 
     void update(UserAddOrUpdateVo addOrUpdateVo);
 
-    Page<UserInfo> allocateUserList(RoleAllocateUserVo allocateUserVo);
+    Page<User> allocateUserList(RoleAllocateUserVo allocateUserVo);
 
-    Page<UserInfo> unallocateUserList(RoleAllocateUserVo allocateUserVo);
+    Page<User> unallocateUserList(RoleAllocateUserVo allocateUserVo);
 
     Page<Role> listByUserId(RoleUserQueryVo roleUserQueryVo);
 }

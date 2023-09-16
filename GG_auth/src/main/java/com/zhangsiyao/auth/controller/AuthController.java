@@ -1,7 +1,7 @@
 package com.zhangsiyao.auth.controller;
 
 import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
-import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.AuthAddOrUpdate;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.auth.service.IAuthService;
 import com.zhangsiyao.common.entity.common.dto.R;
@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/addOrUpdate")
-    public R<String> saveOrUpdate(@RequestBody UserLoginAddOrUpdate addOrUpdate){
+    public R<String> saveOrUpdate(@RequestBody AuthAddOrUpdate addOrUpdate){
         userloginService.addOrUpdate(addOrUpdate);
         return R.success();
     }

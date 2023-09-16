@@ -4,22 +4,21 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangsiyao.common.entity.auth.dao.UserLogin;
-import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.AuthAddOrUpdate;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
 import com.zhangsiyao.common.entity.system.dao.RolePermission;
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.User;
 import com.zhangsiyao.common.entity.system.dao.UserRole;
-import com.zhangsiyao.common.entity.system.dto.UserInfoDto;
+import com.zhangsiyao.common.entity.system.dto.UserDto;
 import com.zhangsiyao.common.entity.system.dto.UserPermissionDto;
 import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.common.entity.system.vo.UserQueryVo;
 import com.zhangsiyao.common.exception.RegisterException;
 import com.zhangsiyao.common.service.feign.UserAuthService;
-import com.zhangsiyao.system.mapper.UserInfoMapper;
+import com.zhangsiyao.system.mapper.UserMapper;
 import com.zhangsiyao.system.service.IRolePermissionService;
-import com.zhangsiyao.system.service.IUserInfoService;
+import com.zhangsiyao.system.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhangsiyao.system.service.IUserRoleService;
 import lombok.SneakyThrows;
@@ -44,7 +43,7 @@ import java.util.Set;
  * @since 2023-07-28
  */
 @Service
-public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements IUserInfoService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
     StringRedisTemplate redisTemplate;
@@ -65,9 +64,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public R<UserPermissionDto> getInfo(String token) {
         UserPermissionDto userPermissionDto =new UserPermissionDto();
         try {
-            UserLogin user = objectMapper.readValue(redisTemplate.opsForValue().get(token), UserLogin.class);
-            LambdaQueryWrapper<UserInfo> userInfoLambdaQueryWrapper=new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUsername,user.getUsername());
-            UserInfo one = this.getOne(userInfoLambdaQueryWrapper);
+            String username = objectMapper.readValue(redisTemplate.opsForValue().get(token), String.class);
+            LambdaQueryWrapper<User> userInfoLambdaQueryWrapper=new LambdaQueryWrapper<User>().eq(User::getUsername,username);
+            User one = this.getOne(userInfoLambdaQueryWrapper);
             userPermissionDto.setInfo(one);
             LambdaQueryWrapper<UserRole> queryWrapper=new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId,one.getId());
             List<UserRole> userRoles=userRoleService.list(queryWrapper);
@@ -88,17 +87,17 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     }
 
     @Override
-    public Page<UserInfo> list(UserQueryVo queryVo) {
-        LambdaQueryWrapper<UserInfo> queryWrapper=new LambdaQueryWrapper<>();
-        Page<UserInfo> page=Page.of(queryVo.getPageNum(), queryVo.getPageSize());
+    public Page<User> list(UserQueryVo queryVo) {
+        LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
+        Page<User> page=Page.of(queryVo.getPageNum(), queryVo.getPageSize());
         if(!StringUtils.isEmpty(queryVo.getPhone())){
-            queryWrapper=queryWrapper.like(UserInfo::getPhone,queryVo.getPhone());
+            queryWrapper=queryWrapper.like(User::getPhone,queryVo.getPhone());
         }
         if(!StringUtils.isEmpty(queryVo.getUsername())){
-            queryWrapper=queryWrapper.like(UserInfo::getUsername,queryVo.getUsername());
+            queryWrapper=queryWrapper.like(User::getUsername,queryVo.getUsername());
         }
         if(queryVo.getStatus()!=null){
-            queryWrapper=queryWrapper.eq(UserInfo::getStatus,queryVo.getStatus());
+            queryWrapper=queryWrapper.eq(User::getStatus,queryVo.getStatus());
         }
         return this.getBaseMapper().selectPage(page,queryWrapper);
     }
@@ -107,11 +106,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @SneakyThrows
     @Transactional(rollbackFor = Exception.class)
     public void add(UserAddOrUpdateVo addOrUpdateVo) {
-        LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUsername, addOrUpdateVo.getUsername());
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>().eq(User::getUsername, addOrUpdateVo.getUsername());
         if(this.count(queryWrapper)!=0){
             throw new RegisterException("该账户经存在");
         }
-        UserLoginAddOrUpdate passwordVo=new UserLoginAddOrUpdate();
+        AuthAddOrUpdate passwordVo=new AuthAddOrUpdate();
         passwordVo.setUsername(addOrUpdateVo.getUsername());
         passwordVo.setPassword(addOrUpdateVo.getPassword());
         userAuthService.register(passwordVo);
@@ -136,7 +135,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Override
     public void update(UserAddOrUpdateVo addOrUpdateVo) {
-        UserInfo info = this.getById(addOrUpdateVo.getId());
+        User info = this.getById(addOrUpdateVo.getId());
         if(info==null){
             return;
         }
@@ -160,9 +159,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     }
 
     @Override
-    public UserInfoDto info(String id) {
-        UserInfo info = this.getById(id);
-        UserInfoDto userInfoDto=new UserInfoDto();
+    public UserDto info(String id) {
+        User info = this.getById(id);
+        UserDto userInfoDto=new UserDto();
         BeanUtils.copyProperties(info,userInfoDto);
         List<Long> roleIds=new ArrayList<>();
         LambdaQueryWrapper<UserRole> queryWrapper=new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId,id);
@@ -173,10 +172,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Override
     public List<String> permissions(String username) {
-        LambdaQueryWrapper<UserInfo> userInfoLambdaQueryWrapper=new LambdaQueryWrapper<>();
-        userInfoLambdaQueryWrapper=userInfoLambdaQueryWrapper.eq(UserInfo::getUsername,username);
-        UserInfo userInfo = this.baseMapper.selectOne(userInfoLambdaQueryWrapper);
-        LambdaQueryWrapper<UserRole> queryWrapper=new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId,userInfo.getId());
+        LambdaQueryWrapper<User> userInfoLambdaQueryWrapper=new LambdaQueryWrapper<>();
+        userInfoLambdaQueryWrapper=userInfoLambdaQueryWrapper.eq(User::getUsername,username);
+        User user = this.baseMapper.selectOne(userInfoLambdaQueryWrapper);
+        LambdaQueryWrapper<UserRole> queryWrapper=new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, user.getId());
         List<UserRole> userRoles=userRoleService.list(queryWrapper);
         Set<String> permissions =new HashSet<>();
         for (UserRole userRole:userRoles){

@@ -1,7 +1,6 @@
 package com.zhangsiyao.common.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangsiyao.common.entity.auth.dao.UserLogin;
 import com.zhangsiyao.common.service.feign.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -44,9 +43,9 @@ public class JwtAuthencationTokenFilter extends OncePerRequestFilter {
             return;
         }
         ObjectMapper objectMapper=new ObjectMapper();
-        UserLogin user=objectMapper.readValue(userinfo, UserLogin.class);
+        String username=objectMapper.readValue(userinfo, String.class);
         List<GrantedAuthority> permissions=new ArrayList<>();
-        List<String> userPermissions = systemService.permissions(user.getUsername());
+        List<String> userPermissions = systemService.permissions(username);
         for(String p:userPermissions){
             permissions.add(new SimpleGrantedAuthority(p));
         }
