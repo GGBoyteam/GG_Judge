@@ -3,7 +3,7 @@ package com.zhangsiyao.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.system.dao.Role;
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.User;
 import com.zhangsiyao.common.entity.system.dao.UserRole;
 import com.zhangsiyao.common.entity.system.dto.RoleDto;
 import com.zhangsiyao.common.entity.system.vo.RoleAllocateUserVo;
@@ -11,7 +11,7 @@ import com.zhangsiyao.common.entity.system.vo.RoleUserQueryVo;
 import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.system.mapper.UserRoleMapper;
 import com.zhangsiyao.system.service.IRoleService;
-import com.zhangsiyao.system.service.IUserInfoService;
+import com.zhangsiyao.system.service.IUserService;
 import com.zhangsiyao.system.service.IUserRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -40,7 +40,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     IRoleService roleService;
 
     @Autowired
-    IUserInfoService userInfoService;
+    IUserService userInfoService;
 
     @Override
     public List<RoleDto> getRoleByUserId(String id) {
@@ -72,8 +72,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     }
 
     @Override
-    public Page<UserInfo> allocateUserList(RoleAllocateUserVo allocateUserVo) {
-        Page<UserInfo> page;
+    public Page<User> allocateUserList(RoleAllocateUserVo allocateUserVo) {
+        Page<User> page;
         if(allocateUserVo==null||allocateUserVo.getPageNum()==null||allocateUserVo.getPageSize()==null){
             page=Page.of(1,Long.MAX_VALUE);
         }else {
@@ -87,22 +87,22 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         Set<Long> userIds=new HashSet<>();
         userIds.add(0L);
         this.baseMapper.selectList(queryWrapper).forEach(userRole -> userIds.add(userRole.getUserId()));
-        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper<>();
         if(userIds.size()>0){
-            lambdaQueryWrapper=lambdaQueryWrapper.in(UserInfo::getId,userIds);
+            lambdaQueryWrapper=lambdaQueryWrapper.in(User::getId,userIds);
         }
         if(allocateUserVo!=null&&allocateUserVo.getUsername()!=null){
-            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getUsername,allocateUserVo.getUsername());
+            lambdaQueryWrapper=lambdaQueryWrapper.like(User::getUsername,allocateUserVo.getUsername());
         }
         if(allocateUserVo!=null&&allocateUserVo.getPhone()!=null){
-            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getPhone,allocateUserVo.getPhone());
+            lambdaQueryWrapper=lambdaQueryWrapper.like(User::getPhone,allocateUserVo.getPhone());
         }
         return userInfoService.getBaseMapper().selectPage(page,lambdaQueryWrapper);
     }
 
     @Override
-    public Page<UserInfo> unallocateUserList(RoleAllocateUserVo allocateUserVo) {
-        Page<UserInfo> page;
+    public Page<User> unallocateUserList(RoleAllocateUserVo allocateUserVo) {
+        Page<User> page;
         if(allocateUserVo==null||allocateUserVo.getPageNum()==null||allocateUserVo.getPageSize()==null){
             page=Page.of(1,Long.MAX_VALUE);
         }else {
@@ -114,15 +114,15 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         }
         Set<Long> userIds=new HashSet<>();
         this.baseMapper.selectList(queryWrapper).forEach(userRole -> userIds.add(userRole.getUserId()));
-        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper<>();
         if(userIds.size()>0){
-            lambdaQueryWrapper=lambdaQueryWrapper.notIn(UserInfo::getId,userIds);
+            lambdaQueryWrapper=lambdaQueryWrapper.notIn(User::getId,userIds);
         }
         if(allocateUserVo!=null&&allocateUserVo.getUsername()!=null){
-            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getUsername,allocateUserVo.getUsername());
+            lambdaQueryWrapper=lambdaQueryWrapper.like(User::getUsername,allocateUserVo.getUsername());
         }
         if(allocateUserVo!=null&&allocateUserVo.getPhone()!=null){
-            lambdaQueryWrapper=lambdaQueryWrapper.like(UserInfo::getPhone,allocateUserVo.getPhone());
+            lambdaQueryWrapper=lambdaQueryWrapper.like(User::getPhone,allocateUserVo.getPhone());
         }
         return userInfoService.getBaseMapper().selectPage(page,lambdaQueryWrapper);
     }

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
-import com.zhangsiyao.common.entity.system.dto.UserInfoDto;
+import com.zhangsiyao.common.entity.system.dao.User;
+import com.zhangsiyao.common.entity.system.dto.UserDto;
 import com.zhangsiyao.common.entity.system.dto.UserPermissionDto;
 import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.common.entity.system.vo.UserQueryVo;
@@ -20,10 +20,10 @@ import java.util.List;
  * @author zhangsiyao
  * @since 2023-07-28
  */
-public interface IUserInfoService extends IService<UserInfo> {
+public interface IUserService extends IService<User> {
     R<UserPermissionDto> getInfo(String token);
 
-    Page<UserInfo> list(UserQueryVo queryVo);
+    Page<User> list(UserQueryVo queryVo);
 
     void add(UserAddOrUpdateVo addOrUpdateVo);
 
@@ -33,7 +33,7 @@ public interface IUserInfoService extends IService<UserInfo> {
 
     void resetPwd(UserPasswordVo userPasswordVo);
 
-    UserInfoDto info(String id);
+    UserDto info(String id);
 
     List<String> permissions(String username);
 }

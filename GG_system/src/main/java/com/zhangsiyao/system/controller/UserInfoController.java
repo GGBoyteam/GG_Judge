@@ -3,12 +3,12 @@ package com.zhangsiyao.system.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.entity.common.dto.R;
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
-import com.zhangsiyao.common.entity.system.dto.UserInfoDto;
+import com.zhangsiyao.common.entity.system.dao.User;
+import com.zhangsiyao.common.entity.system.dto.UserDto;
 import com.zhangsiyao.common.entity.system.dto.UserPermissionDto;
 import com.zhangsiyao.common.entity.system.vo.UserAddOrUpdateVo;
 import com.zhangsiyao.common.entity.system.vo.UserQueryVo;
-import com.zhangsiyao.system.service.IUserInfoService;
+import com.zhangsiyao.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserInfoController {
 
     @Autowired
-    IUserInfoService userInfoService;
+    IUserService userInfoService;
 
     @GetMapping("/getInfo")
     public R<UserPermissionDto> getInfo(@RequestHeader("Authorization") String token){
@@ -25,7 +25,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/list")
-    public R<Page<UserInfo>> list(UserQueryVo queryVo){
+    public R<Page<User>> list(UserQueryVo queryVo){
         return R.success(userInfoService.list(queryVo));
     }
 
@@ -44,7 +44,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/info/{id}")
-    public R<UserInfoDto> info(@PathVariable String id){
+    public R<UserDto> info(@PathVariable String id){
         return R.success(userInfoService.info(id));
     }
 

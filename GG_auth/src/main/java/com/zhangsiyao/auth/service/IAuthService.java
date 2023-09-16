@@ -1,9 +1,9 @@
 package com.zhangsiyao.auth.service;
 
-import com.zhangsiyao.common.entity.auth.dao.UserLogin;
+import com.zhangsiyao.common.entity.auth.dao.Auth;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
-import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.AuthAddOrUpdate;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 
 /**
@@ -14,14 +14,14 @@ import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
  * @author author
  * @since 2023-07-27
  */
-public interface IUserloginService extends IService<UserLogin> {
+public interface IAuthService extends IService<Auth> {
     void register(UserPasswordVo passwordVo);
 
     AuthResultDto loginByPassword(UserPasswordVo passwordVo) ;
 
     void logout(String token);
 
-    void addOrUpdate(UserLoginAddOrUpdate addOrUpdate);
+    void addOrUpdate(AuthAddOrUpdate addOrUpdate);
 
     void delete(String id);
 

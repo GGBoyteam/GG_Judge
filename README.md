@@ -7,16 +7,7 @@
 > 需要把虚拟机IP设置为：**192.168.56.10**
 
 ```sh
-# 从github上下载本地环境部署包
-curl -J -L -o /home/deploylocal.tar https://github.com/GGBoyteam/GG_Judge/releases/download/localenvironment/deploylocal.tar
-# 从gitee上下载本地环境部署包
-curl -J -L -o /home/deploylocal.tar https://gitee.com/zhangsisiyao/ggjudgerelease/releases/download/localenv/deploylocal.tar
-
-# 解压环境包
-tar -xf /home/deploylocal.tar
-
-# 运行脚本
-sh /home/deploylocal/start.sh
+curl -sJL http://gitee.com/zhangsisiyao/ggjudgerelease/releases/download/localenv/install.sh | sh
 ```
 
 # 项目根目录介绍

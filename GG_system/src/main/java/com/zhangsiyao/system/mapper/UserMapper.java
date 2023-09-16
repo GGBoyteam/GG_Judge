@@ -1,6 +1,6 @@
 package com.zhangsiyao.system.mapper;
 
-import com.zhangsiyao.common.entity.system.dao.UserInfo;
+import com.zhangsiyao.common.entity.system.dao.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-07-28
  */
 @Mapper
-public interface UserInfoMapper extends BaseMapper<UserInfo> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

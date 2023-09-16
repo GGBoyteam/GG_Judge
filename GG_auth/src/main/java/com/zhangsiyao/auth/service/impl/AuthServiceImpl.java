@@ -3,14 +3,14 @@ package com.zhangsiyao.auth.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangsiyao.auth.component.Md5Component;
 import com.zhangsiyao.common.component.JwtComponent;
-import com.zhangsiyao.common.entity.auth.dao.UserLogin;
+import com.zhangsiyao.common.entity.auth.dao.Auth;
 import com.zhangsiyao.common.entity.auth.dto.AuthResultDto;
-import com.zhangsiyao.common.entity.auth.vo.UserLoginAddOrUpdate;
+import com.zhangsiyao.common.entity.auth.vo.AuthAddOrUpdate;
 import com.zhangsiyao.common.entity.auth.vo.UserPasswordVo;
 import com.zhangsiyao.common.exception.LoginException;
 import com.zhangsiyao.common.exception.RegisterException;
-import com.zhangsiyao.auth.mapper.UserloginMapper;
-import com.zhangsiyao.auth.service.IUserloginService;
+import com.zhangsiyao.auth.mapper.AuthMapper;
+import com.zhangsiyao.auth.service.IAuthService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2023-07-27
  */
 @Service
-public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin> implements IUserloginService {
+public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth> implements IAuthService {
 
     @Autowired
     Md5Component md5Component;
@@ -45,20 +45,20 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
     @SneakyThrows
     @Override
     public void register(UserPasswordVo passwordVo) {
-        List<UserLogin> list = this.query().eq("username",passwordVo.getUsername()).list();
+        List<Auth> list = this.query().eq("username",passwordVo.getUsername()).list();
         if(list.size()>0){
             throw new RegisterException("账号已经被注册");
         }
-        UserLogin userlogin=new UserLogin();
-        userlogin.setUsername(passwordVo.getUsername());
-        userlogin.setPassword(md5Component.md5Hex(passwordVo.getPassword()));
-        this.save(userlogin);
+        Auth auth=new Auth();
+        auth.setUsername(passwordVo.getUsername());
+        auth.setPassword(md5Component.md5Hex(passwordVo.getPassword()));
+        this.save(auth);
     }
 
     @SneakyThrows
     @Override
     public AuthResultDto loginByPassword(UserPasswordVo passwordVo) {
-        UserLogin user = this.query().eq("username", passwordVo.getUsername()).one();
+        Auth user = this.query().eq("username", passwordVo.getUsername()).one();
         String inputPassword=md5Component.md5Hex(passwordVo.getPassword());
         if(user==null){
             throw new LoginException("登录失败，账号不存在");
@@ -67,8 +67,7 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
             throw new LoginException("登录失败，密码错误");
         }
         String token = jwtComponent.createToken(user.getUsername());
-        ObjectMapper objectMapper=new ObjectMapper();
-        redisTemplate.opsForValue().set(token,objectMapper.writeValueAsString(user),3,TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(token,user.getUsername(),3,TimeUnit.HOURS);
         AuthResultDto authResultDto=new AuthResultDto();
         authResultDto.setToken(token);
         return authResultDto;
@@ -82,10 +81,10 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addOrUpdate(UserLoginAddOrUpdate addOrUpdate) {
-        UserLogin id = this.getById(addOrUpdate.getUsername());
+    public void addOrUpdate(AuthAddOrUpdate addOrUpdate) {
+        Auth id = this.getById(addOrUpdate.getUsername());
         if(id==null){
-            id=new UserLogin();
+            id=new Auth();
         }
         BeanUtils.copyProperties(addOrUpdate,id);
         id.setPassword(md5Component.md5Hex(addOrUpdate.getPassword()));
@@ -100,8 +99,8 @@ public class UserloginServiceImpl extends ServiceImpl<UserloginMapper, UserLogin
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void resetPwd(UserPasswordVo passwordVo) {
-        UserLogin userLogin = this.getById(passwordVo.getUsername());
-        userLogin.setPassword(md5Component.md5Hex(passwordVo.getPassword()));
-        this.updateById(userLogin);
+        Auth auth = this.getById(passwordVo.getUsername());
+        auth.setPassword(md5Component.md5Hex(passwordVo.getPassword()));
+        this.updateById(auth);
     }
 }
